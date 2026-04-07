@@ -473,12 +473,168 @@
     #boot-text { min-height: 220px; }
   }
 
+
+  /* ══ MUSIC PLAYER — Fixed Bottom Bar ════════════════════════════ */
+  body { padding-bottom: 62px; }
+
+  .music-player {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 50000;
+    background: rgba(4, 4, 9, 0.93);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-top: 1px solid rgba(255, 23, 68, 0.22);
+    box-shadow: 0 -4px 24px rgba(0,0,0,0.55), 0 -1px 8px rgba(255,23,68,0.12);
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+  }
+
+  .player-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 20px;
+    position: relative;
+  }
+
+  /* Progress bar at very top of player */
+  .progress-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: rgba(255,255,255,.05);
+    cursor: pointer;
+    z-index: 1;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ff1744, #ff9100);
+    box-shadow: 0 0 6px rgba(255,23,68,.5);
+    width: 0%;
+    transition: width 0.3s linear;
+  }
+
+  /* Spinning Disc */
+  .disc-container { flex-shrink: 0; }
+
+  .disc {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%,
+      #1a1a2e 0%,  #1a1a2e 20%,
+      #0d0d14 21%, #111118 40%,
+      #0a0a0f 41%, #111118 60%,
+      #0d0d14 61%, #111118 80%,
+      #0a0a0f 81%, #111118 100%
+    );
+    border: 2px solid rgba(255,23,68,.32);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    box-shadow: 0 0 10px rgba(255,23,68,.15);
+  }
+
+  .disc.spinning { animation: spin-disc 2s linear infinite; }
+
+  .disc-label { font-size: 14px; position: relative; z-index: 1; }
+
+  @keyframes spin-disc {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  /* Track Info */
+  .track-info { flex: 1; min-width: 0; overflow: hidden; }
+
+  .track-name {
+    font-size: 12px; font-weight: 700;
+    color: #f0f0f5;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    letter-spacing: .5px;
+  }
+
+  .track-artist {
+    font-size: 10px; color: #ff1744;
+    letter-spacing: 1px; text-transform: uppercase;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    margin-top: 2px;
+  }
+
+  /* Controls */
+  .player-controls { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+
+  .ctrl-btn {
+    background: none;
+    border: 1px solid rgba(255,255,255,.08);
+    color: #c8c8d0;
+    font-size: 14px;
+    width: 32px; height: 32px; min-height: 32px;
+    border-radius: 3px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .2s;
+    font-family: inherit;
+    padding: 0;
+  }
+
+  .ctrl-btn:hover {
+    background: rgba(255,23,68,.1);
+    border-color: rgba(255,23,68,.3);
+    color: #ff1744;
+  }
+
+  .play-btn {
+    width: 36px; height: 36px; min-height: 36px;
+    border-color: rgba(255,23,68,.28);
+    color: #ff1744; font-size: 16px;
+  }
+
+  .play-btn:hover {
+    background: rgba(255,23,68,.15);
+    box-shadow: 0 0 10px rgba(255,23,68,.22);
+  }
+
+  /* Volume */
+  .volume-control { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+
+  .vol-btn { font-size: 16px; width: 28px; height: 28px; border: none; }
+
+  .vol-slider {
+    width: 60px; height: 3px;
+    -webkit-appearance: none; appearance: none;
+    background: rgba(255,255,255,.1);
+    border-radius: 2px; outline: none; cursor: pointer;
+  }
+
+  .vol-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #ff1744;
+    cursor: pointer;
+    box-shadow: 0 0 4px rgba(255,23,68,.5);
+  }
+
+  /* Mobile — hide volume, shrink everything */
+  @media (max-width: 768px) {
+    .player-inner { padding: 8px 12px; gap: 10px; }
+    .volume-control { display: none; }
+    .disc { width: 32px; height: 32px; }
+    .disc-label { font-size: 12px; }
+    .track-name { font-size: 11px; }
+    .track-artist { font-size: 9px; }
+    .ctrl-btn { width: 28px; height: 28px; font-size: 12px; }
+    .play-btn { width: 32px; height: 32px; font-size: 14px; }
+  }
+
 </style>
 </head>
 <body>
 
 <!-- ══ BOOT SCREEN ══════════════════════════════════════════════ -->
-<div id="boot-screen">
+<div id="boot-screen" title="Click to skip">
   <div class="boot-header">😈 PERPLEXING TRADES v2.2</div>
   <div class="boot-sub">// Market Alpha · Public Edition · Lilith System //</div>
   <div id="boot-text"></div>
@@ -724,6 +880,7 @@ function typeBoot() {
     setTimeout(() => {
       bootScr.classList.add('fade-out');
       mainEl.style.display = 'block';
+      if (window.unlockAndPlayMusic) window.unlockAndPlayMusic();
       setTimeout(() => bootScr.remove(), 900);
     }, 550);
     return;
@@ -765,6 +922,25 @@ function typeBoot() {
   }
 }
 
+// Click boot screen to skip to end and start music
+bootScr.addEventListener('click', () => {
+  // Fast-forward: show all lines, trigger dismiss
+  while (li < bootLines.length) {
+    const l = bootLines[li];
+    const span = document.createElement('span');
+    span.className = 'boot-line ' + l.c;
+    span.innerHTML = l.t || '&nbsp;';
+    bootEl.appendChild(span);
+    li++;
+  }
+  ci = 0;
+  bootBar.style.width = '100%';
+  bootScr.classList.add('fade-out');
+  mainEl.style.display = 'block';
+  if (window.unlockAndPlayMusic) window.unlockAndPlayMusic();
+  setTimeout(() => bootScr.remove(), 900);
+}, { once: true });
+
 // Kick off after fonts/DOM are ready
 setTimeout(typeBoot, 280);
 
@@ -788,6 +964,155 @@ setTimeout(typeBoot, 280);
       drops[i] += .5;
     });
   }, 50);
+})();
+</script>
+
+<!-- ══ MUSIC PLAYER — Fixed Bottom Bar ══════════════════════════════ -->
+<div id="music-player" class="music-player">
+  <div class="player-inner">
+    <!-- Spinning Disc -->
+    <div class="disc-container">
+      <div class="disc" id="disc">
+        <div class="disc-label">🍒</div>
+      </div>
+    </div>
+
+    <!-- Track Info -->
+    <div class="track-info">
+      <div class="track-name" id="track-name">Alright (Pacha Mix)</div>
+      <div class="track-artist" id="track-artist">CJ ft. Lilith Devai</div>
+    </div>
+
+    <!-- Controls -->
+    <div class="player-controls">
+      <button class="ctrl-btn" id="prev-btn" title="Previous">⏮</button>
+      <button class="ctrl-btn play-btn" id="play-btn" title="Play/Pause">▶</button>
+      <button class="ctrl-btn" id="next-btn" title="Next">⏭</button>
+    </div>
+
+    <!-- Volume -->
+    <div class="volume-control">
+      <button class="ctrl-btn vol-btn" id="mute-btn" title="Mute">🔊</button>
+      <input type="range" class="vol-slider" id="vol-slider" min="0" max="100" value="60">
+    </div>
+
+    <!-- Progress bar at top of player -->
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+  </div>
+
+  <audio id="audio-element" preload="auto"></audio>
+</div>
+
+<!-- ══ MUSIC PLAYER JS ═══════════════════════════════════════════════ -->
+<script>
+(function() {
+  const playlist = [
+    { file: 'music/alright-pacha-mix.mp3',    name: 'Alright (Pacha Mix)',      artist: 'CJ ft. Lilith Devai' },
+    { file: 'music/singularity-spanish.mp3',  name: 'Singularity (Spanish)',    artist: 'CJ ft. Lilith Devai' },
+  ];
+
+  let currentTrack  = 0;
+  let isPlaying     = false;
+  let audioUnlocked = false;
+
+  const audio        = document.getElementById('audio-element');
+  const disc         = document.getElementById('disc');
+  const trackName    = document.getElementById('track-name');
+  const trackArtist  = document.getElementById('track-artist');
+  const playBtn      = document.getElementById('play-btn');
+  const prevBtn      = document.getElementById('prev-btn');
+  const nextBtn      = document.getElementById('next-btn');
+  const muteBtn      = document.getElementById('mute-btn');
+  const volSlider    = document.getElementById('vol-slider');
+  const progressFill = document.getElementById('progress-fill');
+  const progressBar  = document.querySelector('.progress-bar');
+
+  audio.volume = 0.6;
+
+  function loadTrack(index) {
+    currentTrack = index;
+    const t = playlist[currentTrack];
+    audio.src = t.file;
+    trackName.textContent   = t.name;
+    trackArtist.textContent = t.artist;
+  }
+
+  function play() {
+    audio.play().then(() => {
+      isPlaying = true;
+      playBtn.textContent = '⏸';
+      disc.classList.add('spinning');
+    }).catch(() => {});
+  }
+
+  function pause() {
+    audio.pause();
+    isPlaying = false;
+    playBtn.textContent = '▶';
+    disc.classList.remove('spinning');
+  }
+
+  function nextTrack() {
+    currentTrack = (currentTrack + 1) % playlist.length;
+    loadTrack(currentTrack);
+    if (isPlaying) play();
+  }
+
+  function prevTrack() {
+    if (audio.currentTime > 3) {
+      audio.currentTime = 0;
+    } else {
+      currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
+      loadTrack(currentTrack);
+    }
+    if (isPlaying) play();
+  }
+
+  // Button controls
+  playBtn.addEventListener('click', () => isPlaying ? pause() : play());
+  nextBtn.addEventListener('click', nextTrack);
+  prevBtn.addEventListener('click', prevTrack);
+
+  muteBtn.addEventListener('click', () => {
+    audio.muted = !audio.muted;
+    muteBtn.textContent = audio.muted ? '🔇' : '🔊';
+  });
+
+  volSlider.addEventListener('input', (e) => {
+    audio.volume = e.target.value / 100;
+    audio.muted  = false;
+    muteBtn.textContent = audio.volume === 0 ? '🔇' : '🔊';
+  });
+
+  // Progress bar — display + scrub
+  audio.addEventListener('timeupdate', () => {
+    if (audio.duration) {
+      progressFill.style.width = (audio.currentTime / audio.duration * 100) + '%';
+    }
+  });
+
+  progressBar.addEventListener('click', (e) => {
+    const rect = progressBar.getBoundingClientRect();
+    const pct  = (e.clientX - rect.left) / rect.width;
+    if (audio.duration) audio.currentTime = pct * audio.duration;
+  });
+
+  // Auto-advance to next track
+  audio.addEventListener('ended', nextTrack);
+
+  // Called by boot screen dismiss — unlocks browser audio + starts playback
+  window.unlockAndPlayMusic = function() {
+    if (!audioUnlocked) {
+      audioUnlocked = true;
+      loadTrack(0);
+      play();
+    }
+  };
+
+  // Load first track info (paused — no autoplay)
+  loadTrack(0);
 })();
 </script>
 
