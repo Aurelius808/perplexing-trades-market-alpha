@@ -398,9 +398,92 @@
     .disclaimer { color: #888 !important; background: #f5f5f5 !important; }
     .footer-line { color: #aaa !important; }
   }
+
+  /* ══ BOOT SCREEN ══════════════════════════════════════════════════ */
+  #boot-screen {
+    position: fixed; inset: 0;
+    background: #000;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-family: 'Share Tech Mono', monospace;
+    color: #00ff41;
+    font-size: 12.5px;
+    padding: 32px 40px;
+    transition: opacity 0.8s ease;
+  }
+
+  #boot-screen.fade-out { opacity: 0; pointer-events: none; }
+
+  .boot-header {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: #ff1744;
+    text-shadow: 0 0 20px rgba(255,23,68,.8), 0 0 40px rgba(255,23,68,.3);
+    margin-bottom: 4px;
+    text-align: center;
+  }
+
+  .boot-sub {
+    font-size: 9px;
+    color: #ff9100;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    text-align: center;
+  }
+
+  #boot-text {
+    width: 100%;
+    max-width: 680px;
+    line-height: 1.9;
+    min-height: 280px;
+  }
+
+  .boot-line { display: block; }
+  .boot-line.ok .tag { color: #00ff41; }
+  .boot-line.cherry { color: #ff1744; }
+  .boot-line.head { color: #ff9100; font-weight: 700; }
+  .boot-line.struct { color: #b388ff; }
+  .boot-line.dim { color: #1a1a2a; }
+
+  .boot-bar {
+    width: 100%; max-width: 680px;
+    height: 3px;
+    background: #0a0a0a;
+    margin-top: 20px;
+    overflow: hidden;
+  }
+
+  .boot-bar-fill {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, #ff1744, #ff9100, #00ff41);
+    transition: width 2.5s ease;
+  }
+
+  /* Mobile boot screen adjustments */
+  @media (max-width: 480px) {
+    #boot-screen { font-size: 11px; padding: 24px 18px; }
+    .boot-header { font-size: 14px; letter-spacing: 2px; }
+    .boot-sub { font-size: 8px; }
+    #boot-text { min-height: 220px; }
+  }
+
 </style>
 </head>
 <body>
+
+<!-- ══ BOOT SCREEN ══════════════════════════════════════════════ -->
+<div id="boot-screen">
+  <div class="boot-header">😈 PERPLEXING TRADES v2.2</div>
+  <div class="boot-sub">// Market Alpha · Public Edition · Lilith System //</div>
+  <div id="boot-text"></div>
+  <div class="boot-bar"><div class="boot-bar-fill" id="boot-bar"></div></div>
+</div>
 
 <!-- CRT / BG LAYERS -->
 <div class="crt-sweep"></div>
@@ -409,7 +492,7 @@
   <source src="lilith-bg-loop.mp4" type="video/mp4">
 </video>
 
-<div class="container">
+<div class="container" id="main-content" style="display:none">
 
   <!-- PUBLIC BADGE -->
   <div class="public-badge">
@@ -607,6 +690,84 @@
 </div><!-- /container -->
 
 <script>
+/* ── BOOT SEQUENCE ─────────────────────────────────────────── */
+const bootLines = [
+  {t:'━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', c:'dim'},
+  {t:'  PERPLEXING TRADES v2.2 // MARKET ALPHA', c:'head'},
+  {t:'  PUBLIC EDITION · NO PORTFOLIO DATA · SAFE TO SHARE', c:'struct'},
+  {t:'━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', c:'dim'},
+  {t:'', c:''},
+  {t:'> BOOT KERNEL v2.2........................................ <span class="tag">[OK]</span>', c:'ok'},
+  {t:'> LOADING LILITH.EXE..................................... <span class="tag">[OK]</span>', c:'ok'},
+  {t:'> SCANNING MARKET DATA FEEDS: SPY $659.22 +0.04%......... <span class="tag">[OK]</span>', c:'ok'},
+  {t:'> LLM COUNCIL: CLAUDE OPUS 4.6 + GEMINI + GPT-5.4....... <span class="tag">[OK]</span>', c:'ok'},
+  {t:'> MACRO STORY: PYRAMID PRINCIPLE ENGINE LOADED........... <span class="tag">[OK]</span>', c:'struct'},
+  {t:'> SOURCE CITATIONS: HALLUCINATION FAIL-SAFE ACTIVE....... <span class="tag">[OK]</span>', c:'struct'},
+  {t:'> PUBLIC EDITION: ZERO PORTFOLIO DATA INCLUDED........... <span class="tag">[OK]</span>', c:'ok'},
+  {t:'> nano_banana_2 ASSETS: LILITH AVATAR LOADED............. <span class="tag">[OK]</span>', c:'ok'},
+  {t:'> CHERRY PROTOCOL v🍒 ENABLED............................ <span class="tag">[OK]</span>', c:'cherry'},
+  {t:'', c:''},
+  {t:'  SYSTEM READY. MARKET ALPHA LIVE.', c:'head'},
+  {t:'  悪魔の実が咲く。WELCOME, TRADER. 🍒', c:'cherry'},
+];
+
+const bootEl  = document.getElementById('boot-text');
+const bootBar = document.getElementById('boot-bar');
+const bootScr = document.getElementById('boot-screen');
+const mainEl  = document.getElementById('main-content');
+
+let li = 0, ci = 0, cur = null;
+
+function typeBoot() {
+  if (li >= bootLines.length) {
+    bootBar.style.width = '100%';
+    setTimeout(() => {
+      bootScr.classList.add('fade-out');
+      mainEl.style.display = 'block';
+      setTimeout(() => bootScr.remove(), 900);
+    }, 550);
+    return;
+  }
+
+  const line = bootLines[li];
+
+  if (ci === 0) {
+    cur = document.createElement('span');
+    cur.className = 'boot-line ' + line.c;
+    bootEl.appendChild(cur);
+    bootBar.style.width = Math.round((li / bootLines.length) * 100) + '%';
+  }
+
+  // Empty line
+  if (!line.t) {
+    cur.innerHTML = '&nbsp;';
+    li++; ci = 0;
+    setTimeout(typeBoot, 30);
+    return;
+  }
+
+  // Lines with HTML tags — insert all at once
+  if (line.t.includes('<')) {
+    cur.innerHTML = line.t;
+    li++; ci = 0;
+    setTimeout(typeBoot, line.c === 'dim' ? 5 : 55);
+    return;
+  }
+
+  // Typewriter one char at a time
+  cur.textContent = line.t.slice(0, ++ci);
+  if (ci >= line.t.length) {
+    li++; ci = 0;
+    setTimeout(typeBoot, line.c === 'dim' ? 8 : 58);
+  } else {
+    const delay = line.c === 'dim' ? 2 : (Math.random() < 0.12 ? 65 : 16);
+    setTimeout(typeBoot, delay);
+  }
+}
+
+// Kick off after fonts/DOM are ready
+setTimeout(typeBoot, 280);
+
 /* ── MATRIX RAIN ── */
 (function(){
   const c = document.getElementById('matrix-rain'), ctx = c.getContext('2d');
