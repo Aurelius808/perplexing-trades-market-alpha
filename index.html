@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Perplexing Trades — Market Alpha. AI-powered stock market research and macro analysis. Public edition, updated daily.">
+<title>🍒 Perplexing Trades — Market Alpha · Public Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;500;600;700;800;900&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════════════════════
+   PERPLEXING TRADES — MARKET ALPHA
+   PUBLIC EDITION · No Portfolio Data · Safe to Share
+   nano_banana_2 + Veo 3 // Lilith System v2.2
+   ════════════════════════════════════════════════════════ */
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --glow: #ff9100; --glow-rgb: 255, 145, 0;
+    --cherry: #ff1744; --cherry-rgb: 255, 23, 68;
+    --bear: #ff3d3d; --bull: #00ff41; --bull-rgb: 0, 255, 65;
+    --neutral: #ff9100;
+    --bg: #03030a; --bg-panel: #0b0b16; --bg-card: #0f0f1a; --bg-card-hover: #141425;
+    --text-bright: #f5f5ff; --text-primary: #c8c8d8;
+    --text-dim: #606075; --text-muted: #353548;
+    --border: rgba(255,255,255,.05);
+  }
+
+  body { background: var(--bg); color: var(--text-primary); font-family: 'Share Tech Mono', monospace; min-height: 100vh; overflow-x: hidden; }
+
+  /* ── CRT (screen only) ── */
+  @media screen {
+    body::before { content:''; position:fixed; inset:0; background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.14) 3px,rgba(0,0,0,.14) 4px); pointer-events:none; z-index:9999; }
+    body::after { content:''; position:fixed; inset:0; background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.6) 100%); pointer-events:none; z-index:9998; }
+  }
+
+  #matrix-rain { position:fixed; inset:0; z-index:0; opacity:.05; pointer-events:none; }
+  #bg-video { position:fixed; inset:0; width:100%; height:100%; object-fit:cover; z-index:1; opacity:.035; pointer-events:none; }
+  .crt-sweep { position:fixed; left:0; right:0; height:120px; background:linear-gradient(to bottom,transparent,rgba(var(--glow-rgb),.016),rgba(var(--glow-rgb),.024),rgba(var(--glow-rgb),.016),transparent); pointer-events:none; z-index:9; animation:sweep-down 6s linear infinite; }
+  @keyframes sweep-down { 0%{top:-120px} 100%{top:100vh} }
+
+  /* ── ANIMATIONS ── */
+  @keyframes pulse { 0%,100%{opacity:.65} 50%{opacity:1} }
+  @keyframes glow-pulse { 0%,100%{text-shadow:0 0 6px var(--glow),0 0 12px var(--glow)} 50%{text-shadow:0 0 12px var(--glow),0 0 24px var(--glow),0 0 40px rgba(var(--glow-rgb),.5)} }
+  @keyframes cherry-glow { 0%,100%{text-shadow:0 0 6px var(--cherry),0 0 12px var(--cherry)} 50%{text-shadow:0 0 14px var(--cherry),0 0 28px var(--cherry),0 0 44px rgba(255,23,68,.4)} }
+  @keyframes cursor-blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  @keyframes slide-up { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes badge-pulse { 0%,100%{box-shadow:0 0 5px rgba(255,23,68,.3)} 50%{box-shadow:0 0 16px rgba(255,23,68,.6),0 0 32px rgba(255,23,68,.2)} }
+  @keyframes avatar-ring { 0%,100%{box-shadow:0 0 0 2px var(--cherry),0 0 18px rgba(255,23,68,.35)} 50%{box-shadow:0 0 0 3px var(--cherry),0 0 28px rgba(255,23,68,.65),0 0 50px rgba(255,23,68,.2)} }
+  @keyframes orbit { 0%{transform:rotate(0deg) translateX(34px) rotate(0deg)} 100%{transform:rotate(360deg) translateX(34px) rotate(-360deg)} }
+  @keyframes flicker { 0%,100%{opacity:1} 93%{opacity:1} 93.3%{opacity:.75} 93.6%{opacity:1} 97%{opacity:.9} 97.4%{opacity:1} }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 960px; margin: 0 auto; padding: 28px 22px 60px; position: relative; z-index: 10; animation: flicker 12s infinite; }
+
+  /* ── PUBLIC BADGE ── */
+  .public-badge {
+    display: inline-flex; align-items: center; gap: 9px;
+    padding: 5px 16px 5px 12px;
+    background: rgba(255,23,68,.08);
+    border: 1px solid rgba(255,23,68,.35);
+    border-radius: 20px;
+    margin-bottom: 22px;
+    animation: badge-pulse 3s ease-in-out infinite;
+  }
+
+  .public-badge-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--cherry); box-shadow: 0 0 8px var(--cherry); animation: pulse 1.5s infinite; }
+  .public-badge-text { font-family: 'Orbitron', sans-serif; font-size: 8px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--cherry); }
+  .public-badge-sep { color: var(--text-muted); font-size: 10px; }
+  .public-badge-safe { font-size: 9px; color: var(--text-dim); letter-spacing: 1px; }
+
+  /* ── HEADER ── */
+  .header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding-bottom: 22px; margin-bottom: 28px;
+    border-bottom: 1px solid rgba(255,145,0,.15);
+    position: relative;
+  }
+  .header::after { content:''; position:absolute; bottom:-1px; left:0; width:160px; height:1px; background:linear-gradient(90deg,var(--cherry),var(--glow),transparent); box-shadow:0 0 8px var(--glow); }
+
+  .header-left { display: flex; align-items: center; gap: 16px; }
+
+  .lilith-wrap { position: relative; flex-shrink: 0; }
+  .lilith-avatar { width: 64px; height: 64px; border-radius: 50%; overflow: hidden; animation: avatar-ring 3s ease-in-out infinite; background: var(--bg-card); }
+  .lilith-avatar img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; filter: saturate(1.15); }
+  .lilith-wrap::after { content: '🍒'; position: absolute; font-size: 10px; top: -3px; right: -3px; animation: orbit 4s linear infinite; transform-origin: 36px 36px; }
+
+  .system-name { font-family: 'Orbitron', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--glow); animation: glow-pulse 4s infinite; }
+  .report-title { font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 900; color: var(--text-bright); letter-spacing: -.3px; line-height: 1.1; }
+  .timestamp { font-size: 10px; color: var(--text-dim); letter-spacing: .5px; margin-top: 2px; }
+  .timestamp::before { content: '> '; color: var(--glow); }
+  .lilith-callsign { font-size: 8.5px; color: var(--cherry); letter-spacing: 1.5px; text-transform: uppercase; animation: cherry-glow 3s infinite; margin-top: 3px; }
+  .lilith-callsign::before { content: '// '; color: var(--text-muted); }
+
+  .header-right { text-align: right; padding-top: 4px; }
+  .market-num { font-family: 'Orbitron', sans-serif; font-size: 34px; font-weight: 900; letter-spacing: -1.5px; line-height: 1; }
+  .market-num.flat { color: var(--neutral); text-shadow: 0 0 14px rgba(255,145,0,.5); }
+  .market-num.positive { color: var(--bull); text-shadow: 0 0 14px rgba(0,255,65,.5); }
+  .market-num.negative { color: var(--bear); text-shadow: 0 0 14px rgba(255,61,61,.5); }
+  .market-lbl { font-family: 'Orbitron', sans-serif; font-size: 7.5px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2.5px; margin-top: 3px; }
+  .market-status { font-size: 8.5px; color: var(--neutral); margin-top: 2px; animation: pulse 2s infinite; }
+  .market-status::before { content: '● '; }
+
+  /* ── SECTION TAGS ── */
+  .section-tag { font-family: 'Orbitron', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .section-tag::before { content: '▸'; font-size: 10px; }
+  .section-tag::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, currentColor, transparent); opacity: .2; }
+  .section-tag .jp { font-family: 'Noto Sans JP', sans-serif; font-size: 8px; font-weight: 300; opacity: .35; letter-spacing: 1px; }
+  .section-tag.macro { color: var(--neutral); }
+  .section-tag.plays { color: var(--glow); }
+  .section-tag.opts { color: var(--bull); }
+  .section-tag.lilith { color: var(--cherry); }
+
+  /* ══════════════════════════════════════════════════════
+     MACRO STORY — THE CENTERPIECE
+  ══════════════════════════════════════════════════════ */
+  .macro-box {
+    background: var(--bg-panel);
+    border: 1px solid rgba(var(--glow-rgb), .15);
+    border-radius: 3px;
+    padding: 22px 22px 18px 26px;
+    margin-bottom: 28px;
+    position: relative; overflow: hidden;
+    animation: slide-up .4s ease-out;
+  }
+  .macro-box::before { content:''; position:absolute; top:0; left:0; width:4px; height:100%; background:linear-gradient(180deg,var(--glow),rgba(var(--glow-rgb),.2)); box-shadow:0 0 14px var(--glow); }
+  .macro-box::after { content:''; position:absolute; inset:0; background:repeating-linear-gradient(-55deg,transparent,transparent 16px,rgba(var(--glow-rgb),.008) 16px,rgba(var(--glow-rgb),.008) 17px); pointer-events:none; }
+
+  .macro-label { font-family:'Orbitron',sans-serif; font-size:7.5px; letter-spacing:3px; color:var(--glow); text-transform:uppercase; margin-bottom:14px; opacity:.65; position:relative; z-index:1; }
+
+  /* THE HEADLINE */
+  .macro-headline {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 15px; font-weight: 900; line-height: 1.35;
+    color: var(--neutral);
+    text-shadow: 0 0 18px rgba(var(--glow-rgb), .35), 0 0 36px rgba(var(--glow-rgb), .15);
+    padding: 13px 16px;
+    border: 1px solid rgba(var(--glow-rgb), .22);
+    border-left: 3px solid var(--glow);
+    background: rgba(var(--glow-rgb), .05);
+    border-radius: 2px;
+    margin-bottom: 20px;
+    position: relative; z-index: 1;
+    animation: slide-up .5s ease-out;
+  }
+  .macro-headline::before { content: '// THE HEADLINE //'; display: block; font-size: 7px; letter-spacing: 3px; color: var(--glow); opacity: .6; margin-bottom: 6px; }
+
+  /* THE STORY */
+  .macro-narrative { position: relative; z-index: 1; margin-bottom: 20px; }
+  .macro-para { font-size: 13.5px; line-height: 1.82; color: var(--text-primary); margin-bottom: 14px; }
+  .macro-para:last-child { margin-bottom: 0; }
+  .s-bull { color: var(--bull); font-weight: 700; }
+  .s-bear { color: var(--bear); font-weight: 700; }
+  .s-neutral { color: var(--neutral); font-weight: 700; }
+  .s-hi { color: var(--text-bright); font-weight: 700; }
+  .cite { font-size: 9px; color: var(--glow); vertical-align: super; opacity: .8; font-family: 'Share Tech Mono', monospace; }
+  .cursor::after { content: '█'; color: var(--glow); animation: cursor-blink .9s step-end infinite; margin-left: 2px; font-size: .88em; }
+
+  /* KEY NUMBERS TABLE */
+  .kn-label { font-family:'Orbitron',sans-serif; font-size:7.5px; letter-spacing:2.5px; color:var(--text-dim); text-transform:uppercase; margin-bottom:10px; position:relative; z-index:1; }
+  .kn-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 18px; position: relative; z-index: 1; }
+  .kn-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 520px; }
+  .kn-table th { font-family:'Orbitron',sans-serif; font-size:7px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-muted); padding:5px 10px; text-align:left; border-bottom:1px solid var(--border); }
+  .kn-table td { padding:7px 10px; color:var(--text-primary); border-bottom:1px solid var(--border); vertical-align:top; }
+  .kn-table tr:last-child td { border-bottom:none; }
+  .kn-table tr:hover td { background:rgba(255,255,255,.013); }
+  .kn-ind { font-family:'Orbitron',sans-serif; font-weight:700; font-size:11px; }
+  .kn-val { font-family:'Orbitron',sans-serif; font-weight:700; font-size:12px; color:var(--text-bright); }
+  .kn-chg.up { color:var(--bull); font-weight:700; }
+  .kn-chg.down { color:var(--bear); font-weight:700; }
+  .kn-chg.flat { color:var(--neutral); font-weight:700; }
+  .kn-why { color:var(--text-dim); font-size:11.5px; }
+
+  /* SECTOR VIBE CHECK */
+  .sv-label { font-family:'Orbitron',sans-serif; font-size:7.5px; letter-spacing:2.5px; color:var(--text-dim); text-transform:uppercase; margin-bottom:10px; position:relative; z-index:1; }
+  .sv-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:20px; position:relative; z-index:1; }
+  .sv-row { display:flex; align-items:flex-start; gap:7px; padding:8px 10px; background:var(--bg-card); border-radius:2px; border:1px solid var(--border); font-size:11px; transition:background .15s; }
+  .sv-row:hover { background:var(--bg-card-hover); }
+  .sv-name { font-family:'Orbitron',sans-serif; font-size:8.5px; font-weight:700; color:var(--text-bright); display:block; margin-bottom:2px; }
+  .sv-vibe.bull { color:var(--bull); font-size:9.5px; font-weight:700; }
+  .sv-vibe.bear { color:var(--bear); font-size:9.5px; font-weight:700; }
+  .sv-vibe.neutral { color:var(--neutral); font-size:9.5px; font-weight:700; }
+  .sv-why { color:var(--text-dim); font-size:9.5px; display:block; margin-top:1px; }
+
+  /* SOURCES */
+  .sources-box { border-top:1px solid var(--border); padding-top:14px; position:relative; z-index:1; }
+  .sources-label { font-family:'Orbitron',sans-serif; font-size:7px; letter-spacing:2px; color:var(--text-muted); text-transform:uppercase; margin-bottom:8px; }
+  .source-row { font-size:10.5px; color:var(--text-muted); line-height:1.6; display:flex; align-items:baseline; gap:6px; margin-bottom:3px; }
+  .src-num { font-family:'Orbitron',sans-serif; font-size:7.5px; color:var(--glow); flex-shrink:0; min-width:18px; }
+  .src-link a { color:rgba(var(--glow-rgb),.55); text-decoration:none; }
+  .src-link a:hover { color:var(--glow); text-decoration:underline; }
+
+  /* ── PLAYS GRID ── */
+  .plays-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:28px; }
+
+  .play-card { background:var(--bg-card); border-radius:3px; padding:15px 15px 13px; position:relative; transition:background .2s,transform .2s; animation:slide-up .4s ease-out; overflow:hidden; min-height:44px; }
+  @media screen { .play-card:hover { background:var(--bg-card-hover); transform:translateY(-2px); } }
+  @media screen { .play-card:hover .ticker { text-shadow:2px 0 rgba(255,61,61,.75),-2px 0 rgba(0,255,65,.75),0 0 12px currentColor; } }
+  .play-card::before { content:''; position:absolute; top:0; left:0; width:4px; height:100%; border-radius:3px 0 0 3px; }
+  .play-card::after { content:''; position:absolute; inset:0; background:repeating-linear-gradient(-45deg,transparent,transparent 8px,rgba(255,255,255,.006) 8px,rgba(255,255,255,.006) 9px); pointer-events:none; opacity:0; transition:opacity .2s; }
+  @media screen { .play-card:hover::after { opacity:1; } }
+
+  .play-card.bull::before { background:linear-gradient(180deg,var(--bull),rgba(0,255,65,.25)); box-shadow:0 0 8px var(--bull); }
+  .play-card.bear::before { background:linear-gradient(180deg,var(--bear),rgba(255,61,61,.25)); box-shadow:0 0 8px var(--bear); }
+  .play-card.neutral::before { background:linear-gradient(180deg,var(--neutral),rgba(255,145,0,.25)); box-shadow:0 0 8px var(--neutral); }
+  .play-card.bull { border:1px solid rgba(0,255,65,.1); }
+  .play-card.bear { border:1px solid rgba(255,61,61,.1); }
+  .play-card.neutral { border:1px solid rgba(255,145,0,.1); }
+
+  .play-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:9px; }
+  .ticker { font-family:'Orbitron',sans-serif; font-size:21px; font-weight:900; letter-spacing:1px; transition:text-shadow .2s; }
+  .ticker.bull { color:var(--bull); text-shadow:0 0 10px rgba(0,255,65,.38); }
+  .ticker.bear { color:var(--bear); text-shadow:0 0 10px rgba(255,61,61,.38); }
+  .ticker.neutral { color:var(--neutral); text-shadow:0 0 10px rgba(255,145,0,.38); }
+
+  .badge { font-family:'Orbitron',sans-serif; font-size:7px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:3px 9px; border-radius:2px; white-space:nowrap; }
+  .badge.high { background:rgba(0,255,65,.08); color:var(--bull); border:1px solid rgba(0,255,65,.35); }
+  .badge.medium { background:rgba(255,145,0,.08); color:var(--neutral); border:1px solid rgba(255,145,0,.3); }
+  .badge.asym { background:rgba(0,255,65,.12); color:var(--bull); border:1px solid rgba(0,255,65,.48); }
+  .badge.lc { background:rgba(0,255,65,.08); color:var(--bull); border:1px solid rgba(0,255,65,.3); }
+  .badge.csp { background:rgba(255,145,0,.08); color:var(--neutral); border:1px solid rgba(255,145,0,.3); }
+
+  .entry-exit { font-size:12.5px; color:var(--text-primary); margin-bottom:4px; line-height:1.5; }
+  .entry-exit strong { color:var(--text-bright); font-size:13px; }
+  .play-thesis { font-size:11.5px; color:var(--text-dim); line-height:1.55; margin-bottom:5px; }
+  .thesis-breaker { font-size:10.5px; color:var(--cherry); line-height:1.4; }
+  .thesis-breaker::before { content:'⚠ '; }
+  .play-strategy { font-size:8px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1.5px; margin-top:9px; padding-top:9px; border-top:1px solid var(--border); display:flex; align-items:center; gap:6px; }
+  .play-strategy::before { content:'//'; color:var(--text-muted); }
+
+  /* ── OPTIONS BOX ── */
+  .opts-box { background:var(--bg-panel); border:1px solid rgba(0,255,65,.1); border-radius:3px; padding:18px 18px 18px 22px; margin-bottom:28px; position:relative; overflow:hidden; }
+  .opts-box::before { content:''; position:absolute; top:0; left:0; width:4px; height:100%; background:linear-gradient(180deg,var(--bull),rgba(0,255,65,.2)); box-shadow:0 0 10px rgba(0,255,65,.4); }
+  .opt-block { margin-bottom:18px; }
+  .opt-block:last-child { margin-bottom:0; }
+  .opt-head { font-family:'Orbitron',sans-serif; font-size:8px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(0,255,65,.75); margin-bottom:9px; padding-bottom:6px; border-bottom:1px solid rgba(0,255,65,.1); display:flex; align-items:center; gap:7px; }
+  .opt-head::before { content:'◆'; font-size:7px; }
+  .opt-body { font-size:12px; line-height:1.7; color:var(--text-primary); }
+  .opt-ticker { font-family:'Orbitron',sans-serif; font-weight:700; font-size:13px; color:var(--bull); }
+  .opt-premium { color:var(--bull); font-weight:700; }
+  .opt-warn { color:var(--cherry); font-size:10.5px; display:block; margin-top:3px; }
+  .opt-warn::before { content:'⚠ '; }
+
+  /* ── LILITH SAYS ── */
+  .lilith-box { display:flex; gap:0; background:rgba(255,23,68,.025); border:1px solid rgba(255,23,68,.14); border-radius:3px; margin-bottom:24px; animation:slide-up .5s ease-out; overflow:hidden; position:relative; }
+  .lilith-box::before { content:''; position:absolute; top:0; left:0; width:4px; height:100%; background:linear-gradient(180deg,var(--cherry),rgba(255,23,68,.2)); box-shadow:0 0 12px rgba(255,23,68,.5); }
+  .lilith-img { width:150px; min-width:150px; overflow:hidden; position:relative; flex-shrink:0; }
+  .lilith-img img { width:100%; height:100%; object-fit:cover; object-position:center top; display:block; filter:saturate(1.2) contrast(1.05); }
+  .lilith-img::after { content:''; position:absolute; inset:0; background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.08) 3px,rgba(0,0,0,.08) 4px); pointer-events:none; }
+  .lilith-content { padding:17px 17px 17px 21px; display:flex; flex-direction:column; gap:7px; justify-content:center; }
+  .lilith-name { font-family:'Orbitron',sans-serif; font-size:8.5px; font-weight:700; color:var(--cherry); letter-spacing:2px; text-transform:uppercase; animation:cherry-glow 3s infinite; }
+  .lilith-name::before { content:'[ '; color:var(--text-muted); }
+  .lilith-name::after { content:' ]'; color:var(--text-muted); }
+  .lilith-text { font-size:13px; line-height:1.7; color:var(--text-primary); }
+  .lilith-text em { color:var(--cherry); font-style:normal; font-weight:700; }
+
+  /* ── FOOTER ── */
+  .footer-note { font-size:9.5px; color:var(--text-muted); padding:10px 13px; background:rgba(179,136,255,.04); border:1px solid rgba(179,136,255,.12); border-radius:2px; margin-bottom:16px; line-height:1.55; }
+  .footer-note strong { color:rgba(179,136,255,.7); }
+  .disclaimer { font-size:9px; color:var(--text-muted); line-height:1.6; padding:10px 13px; background:rgba(255,255,255,.015); border-radius:2px; margin-bottom:18px; }
+  .footer { text-align:center; padding-top:18px; border-top:1px solid rgba(255,145,0,.12); }
+  .footer-line { font-family:'Orbitron',sans-serif; font-size:7.5px; letter-spacing:2.5px; text-transform:uppercase; color:var(--text-muted); margin-bottom:4px; }
+  .footer-cherry { margin-top:12px; font-size:18px; opacity:.3; letter-spacing:8px; }
+
+  /* ══════════════════════════════════════════
+     MOBILE RESPONSIVE — Phone browsers
+     iPhone SE: 375px · iPhone 15: 390px · Android: 360–412px
+  ══════════════════════════════════════════ */
+
+  @media (max-width: 768px) {
+    .container { padding: 14px 14px 40px; }
+
+    /* Badge */
+    .public-badge { font-size: 7px; padding: 4px 12px; margin-bottom: 16px; }
+    .public-badge-text { font-size: 7px; letter-spacing: 1.5px; }
+
+    /* Header */
+    .header { flex-direction: column; gap: 12px; padding-bottom: 16px; margin-bottom: 20px; }
+    .header::after { display: none; }
+    .header-right { text-align: left; }
+    .lilith-avatar { width: 56px; height: 56px; }
+    .system-name { font-size: 8px; letter-spacing: 2px; }
+    .report-title { font-size: 19px; }
+    .timestamp { font-size: 9px; }
+    .lilith-callsign { font-size: 8px; }
+    .market-num { font-size: 28px; }
+    .market-lbl { font-size: 7px; }
+
+    /* Section tags */
+    .section-tag { font-size: 8.5px; letter-spacing: 1.5px; }
+    .section-tag .jp { display: none; }
+
+    /* Macro story */
+    .macro-box { padding: 16px 14px 14px 18px; }
+    .macro-headline { font-size: 13px; line-height: 1.3; padding: 11px 12px; }
+    .macro-para { font-size: 13px; line-height: 1.75; margin-bottom: 12px; }
+    .sv-grid { grid-template-columns: repeat(2, 1fr); gap: 5px; }
+    .sv-name { font-size: 8px; }
+    .sv-why { font-size: 9px; }
+    .source-row { font-size: 9.5px; }
+
+    /* Key numbers — horizontal scroll */
+    .kn-scroll { margin-bottom: 14px; }
+
+    /* Plays */
+    .plays-grid { grid-template-columns: 1fr; gap: 8px; }
+    .ticker { font-size: 19px; }
+    .play-card { padding: 13px 13px 11px; }
+    .entry-exit { font-size: 12.5px; }
+    .play-thesis { font-size: 11px; }
+    .thesis-breaker { font-size: 10px; }
+    .badge { font-size: 6.5px; padding: 3px 7px; }
+
+    /* Options */
+    .opts-box { padding: 14px 14px 14px 18px; }
+    .opt-head { font-size: 7.5px; }
+    .opt-body { font-size: 11.5px; line-height: 1.65; }
+
+    /* Lilith — fixed layout so text doesn't overlap image */
+    .lilith-box { flex-direction: column; }
+    .lilith-img { width: 100%; min-width: unset; max-height: 200px; height: 200px; }
+    .lilith-img img { object-position: center top; }
+    .lilith-content { padding: 16px; }
+    .lilith-name { font-size: 8px; }
+    .lilith-text { font-size: 12.5px; }
+
+    /* Footer */
+    .footer-note { font-size: 9px; }
+    .disclaimer { font-size: 8.5px; }
+    .footer-line { font-size: 7px; }
+  }
+
+  @media (max-width: 480px) {
+    .container { padding: 12px 12px 36px; }
+    .sv-grid { grid-template-columns: 1fr; }
+    .macro-headline { font-size: 12px; }
+    .report-title { font-size: 17px; }
+    .ticker { font-size: 17px; }
+    .plays-grid { gap: 7px; }
+    .market-num { font-size: 26px; }
+    .kn-table th, .kn-table td { padding: 5px 7px; font-size: 9.5px; }
+    .kn-val { font-size: 11px; }
+  }
+
+  /* ══════════════════════════════════════════
+     PRINT CSS — Cmd+P → Save as PDF
+  ══════════════════════════════════════════ */
+  @media print {
+    @page { size: A4; margin: 16mm 14mm; }
+    body { background: #fff !important; color: #1a1a2e !important; font-size: 10pt; }
+    body::before, body::after, #matrix-rain, #bg-video, .crt-sweep { display: none !important; }
+    * { animation: none !important; transition: none !important; }
+    .container { max-width: 100%; padding: 0; }
+    .public-badge { border: 1px solid #ff1744 !important; color: #ff1744 !important; background: rgba(255,23,68,.06) !important; }
+    .public-badge-dot, .public-badge-text { color: #cc1133 !important; background: #cc1133 !important; }
+    .header { border-bottom: 2px solid #e09010 !important; }
+    .header::after { display: none; }
+    .lilith-wrap::after { display: none; }
+    .report-title, .system-name, .timestamp { color: #1a1a2e !important; text-shadow: none !important; }
+    .system-name { color: #cc7400 !important; }
+    .macro-box { background: #fafafa !important; border: 1px solid #e0a020 !important; }
+    .macro-box::before { background: #e0a020 !important; box-shadow: none !important; }
+    .macro-box::after { display: none; }
+    .macro-headline { background: rgba(255,145,0,.08) !important; border-color: #e0a020 !important; color: #8a5a00 !important; text-shadow: none !important; }
+    .macro-para { color: #2a2a3e !important; }
+    .s-bull { color: #1a6a2a !important; } .s-bear { color: #8a1a1a !important; } .s-neutral { color: #8a5a00 !important; } .s-hi { color: #1a1a2e !important; }
+    .kn-table th { background: #f5f5f5 !important; color: #555 !important; }
+    .kn-table td { color: #2a2a3e !important; border-color: #eee !important; }
+    .kn-val { color: #1a1a2e !important; }
+    .kn-chg.up { color: #1a6a2a !important; } .kn-chg.down { color: #8a1a1a !important; } .kn-chg.flat { color: #8a5a00 !important; }
+    .kn-why { color: #555 !important; }
+    .sv-row { background: #f9f9f9 !important; border: 1px solid #eee !important; }
+    .sv-name { color: #1a1a2e !important; }
+    .sv-vibe.bull { color: #1a6a2a !important; } .sv-vibe.bear { color: #8a1a1a !important; } .sv-vibe.neutral { color: #8a5a00 !important; }
+    .sv-why { color: #666 !important; }
+    .src-link a { color: #3366cc !important; }
+    .play-card { background: #fafafa !important; border: 1px solid #ddd !important; break-inside: avoid; }
+    .play-card::before { box-shadow: none !important; }
+    .play-card::after { display: none; }
+    .ticker.bull { color: #1a6a2a !important; text-shadow: none !important; }
+    .ticker.neutral { color: #8a5a00 !important; text-shadow: none !important; }
+    .badge.high, .badge.lc, .badge.asym { color: #1a6a2a !important; background: rgba(0,100,0,.08) !important; border-color: #1a6a2a !important; }
+    .badge.medium, .badge.csp { color: #8a5a00 !important; background: rgba(200,130,0,.08) !important; }
+    .entry-exit { color: #2a2a3e !important; } .entry-exit strong { color: #1a1a2e !important; }
+    .play-thesis { color: #4a4a5e !important; } .thesis-breaker { color: #8a1a1a !important; }
+    .opts-box { background: #f8fff8 !important; border: 1px solid #aaddaa !important; }
+    .opts-box::before { background: #1a8a2a !important; box-shadow: none !important; }
+    .opt-head { color: #1a6a2a !important; border-bottom-color: #aaddaa !important; }
+    .opt-ticker { color: #1a6a2a !important; } .opt-premium { color: #1a6a2a !important; } .opt-warn { color: #8a1a1a !important; }
+    .opt-body { color: #2a2a3e !important; }
+    .lilith-box { background: rgba(255,23,68,.03) !important; border-color: #ffaaaa !important; break-inside: avoid; }
+    .lilith-box::before { background: #cc2233 !important; box-shadow: none !important; }
+    .lilith-name { color: #cc2233 !important; }
+    .lilith-text { color: #2a2a3e !important; } .lilith-text em { color: #cc2233 !important; }
+    .footer-note { color: #555 !important; border-color: #ddd !important; background: #f9f9f9 !important; }
+    .disclaimer { color: #888 !important; background: #f5f5f5 !important; }
+    .footer-line { color: #aaa !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CRT / BG LAYERS -->
+<div class="crt-sweep"></div>
+<canvas id="matrix-rain"></canvas>
+<video id="bg-video" autoplay loop muted playsinline>
+  <source src="lilith-bg-loop.mp4" type="video/mp4">
+</video>
+
+<div class="container">
+
+  <!-- PUBLIC BADGE -->
+  <div class="public-badge">
+    <span class="public-badge-dot"></span>
+    <span class="public-badge-text">🍒 Market Alpha — Public Edition</span>
+    <span class="public-badge-sep">·</span>
+    <span class="public-badge-safe">No Portfolio Data · Safe to Share</span>
+  </div>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-left">
+      <div class="lilith-wrap">
+        <div class="lilith-avatar"><img src="lilith-avatar.png" alt="Lilith"></div>
+      </div>
+      <div>
+        <div class="system-name">Perplexing Trades</div>
+        <div class="report-title">Market Alpha Report</div>
+        <div class="timestamp">apr.07.2026 // session #001 — inaugural</div>
+        <div class="lilith-callsign">LILITH.EXE // MARKET ALPHA EDITION 🍒</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="market-num flat">+0.04%</div>
+      <div class="market-lbl">S&P 500 · Session Close</div>
+      <div class="market-status">MARKETS CLOSED · AFTER HOURS</div>
+    </div>
+  </header>
+
+  <!-- THE MACRO STORY -->
+  <div class="section-tag macro">🌍 What's Going On In The World? <span class="jp">世界の状況</span></div>
+  <div class="macro-box">
+    <div class="macro-label">// Pyramid Principle // LLM Council Consensus // Cited Sources //</div>
+
+    <div class="macro-headline">
+      The AI arms race is still running at full speed — the chips are flying off shelves faster than they can be made — and the Fed is holding the line while the world holds its breath over China.
+    </div>
+
+    <div class="macro-narrative">
+      <p class="macro-para">
+        Here's the thing nobody's talking about enough: <span class="s-hi">NVIDIA just reported $215.9 billion in revenue for fiscal 2026 — a 65% increase year-over-year</span> <span class="cite">[1]</span>. That's not a hot streak. That's a structural shift. Their Data Center division alone generated $193.7 billion — 90% of everything they make. The machines need chips, and the chip companies literally cannot keep up with demand. That's the engine humming underneath every market move you're seeing right now.
+      </p>
+      <p class="macro-para">
+        Meanwhile, the Fed is playing the role of DJ at a party where nobody wants the music to stop. At its March 2026 meeting, the Federal Reserve held its benchmark rate at <span class="s-neutral">3.5–3.75%</span> <span class="cite">[2]</span> — exactly what the market expected. Inflation is still running sticky and the Middle East conflict keeps uncertainty elevated. One cut is penciled in for sometime this year. For AI-heavy investments, this is actually fine — cheaper borrowing isn't needed when the fundamental demand story is this strong.
+      </p>
+      <p class="macro-para">
+        The wildcard that could rewrite everything: <span class="s-bear">export restrictions are blocking both NVDA and AMD from selling their most powerful data center chips to China</span> <span class="cite">[3]</span>. NVDA has already removed China from their Q1 FY2027 guidance. But here's the key insight — Western hyperscalers (Amazon, Microsoft, Google, Meta) are in a full-scale AI capex war, and their combined appetite is eating the China shortfall for breakfast. The restriction is priced in. What's NOT fully priced in is how relentless the Western buildout will continue to be.
+      </p>
+      <p class="macro-para">
+        AMD is telling a quieter version of the same story <span class="cite">[4]</span>: $16.6 billion in Data Center revenue for full-year 2025, up 32% year-over-year. Their MI300/MI325 GPU adoption is accelerating. GOOG closed up +2.11% today — the market is slowly waking up to the fact that Google has been quietly building one of the deepest AI moats in the world with Gemini. Broadcom (AVGO) sits quietly in the background making custom AI chips for hyperscalers — one of the most underappreciated setups in the space.
+      </p>
+      <p class="macro-para">
+        <span class="s-hi">The bottom line: the AI theme is not a narrative — it's a multi-year fundamental shift in where money is being spent globally.</span> The macro environment is neither a headwind nor a tailwind — but the AI buildout doesn't need macro help. The plays below flow directly from this story<span class="cursor"></span>
+      </p>
+    </div>
+
+    <!-- KEY NUMBERS -->
+    <div class="kn-label">▸ Key Numbers That Matter</div>
+    <div class="kn-scroll">
+      <table class="kn-table">
+        <tr><th>Indicator</th><th>Value</th><th>Move</th><th>What It Means</th></tr>
+        <tr><td class="kn-ind">SPY</td><td class="kn-val">$659.22</td><td class="kn-chg flat">+0.04%</td><td class="kn-why">Market closed flat — uncertainty priced in, no panic</td></tr>
+        <tr><td class="kn-ind">NVDA FY2026 Rev</td><td class="kn-val">$215.9B</td><td class="kn-chg up">+65% YoY</td><td class="kn-why">AI chip demand overwhelming supply — structural shift <span class="cite">[1]</span></td></tr>
+        <tr><td class="kn-ind">GOOG</td><td class="kn-val">$303.93</td><td class="kn-chg up">+2.11%</td><td class="kn-why">Best performer today — Gemini AI momentum rewarded</td></tr>
+        <tr><td class="kn-ind">Fed Funds Rate</td><td class="kn-val">3.50–3.75%</td><td class="kn-chg flat">Held</td><td class="kn-why">One cut expected all year — higher for longer <span class="cite">[2]</span></td></tr>
+        <tr><td class="kn-ind">AMD Data Center</td><td class="kn-val">$16.6B</td><td class="kn-chg up">+32% YoY</td><td class="kn-why">Record — AI GPU adoption accelerating <span class="cite">[4]</span></td></tr>
+      </table>
+    </div>
+
+    <!-- SECTOR VIBE CHECK -->
+    <div class="sv-label">▸ Sector Vibe Check</div>
+    <div class="sv-grid">
+      <div class="sv-row"><span>🟢</span><div><span class="sv-name">AI / Chips</span><span class="sv-vibe bull">Bullish</span><span class="sv-why">demand overwhelms supply</span></div></div>
+      <div class="sv-row"><span>🟢</span><div><span class="sv-name">Software / AI</span><span class="sv-vibe bull">Bullish</span><span class="sv-why">Gemini, Copilot gaining traction</span></div></div>
+      <div class="sv-row"><span>🟢</span><div><span class="sv-name">Memory (HBM)</span><span class="sv-vibe bull">Bullish</span><span class="sv-why">AI servers need massive bandwidth</span></div></div>
+      <div class="sv-row"><span>🟢</span><div><span class="sv-name">Defense AI</span><span class="sv-vibe bull">Bullish</span><span class="sv-why">government AI contracts expanding</span></div></div>
+      <div class="sv-row"><span>🟡</span><div><span class="sv-name">Energy / Power</span><span class="sv-vibe neutral">Building</span><span class="sv-why">data center power demand growing</span></div></div>
+      <div class="sv-row"><span>🔴</span><div><span class="sv-name">Crypto Mining</span><span class="sv-vibe bear">Bearish</span><span class="sv-why">thin margins, BTC volatility</span></div></div>
+    </div>
+
+    <!-- SOURCES -->
+    <div class="sources-box">
+      <div class="sources-label">▸ Sources</div>
+      <div class="source-row"><span class="src-num">[1]</span><span class="src-link">NVDA FY2026 Revenue — <a href="https://perplexity.ai/finance/NVDA" target="_blank">perplexity.ai/finance/NVDA</a> · MEXC Research</span></div>
+      <div class="source-row"><span class="src-num">[2]</span><span class="src-link">Federal Reserve FOMC Statement, March 18 2026 — <a href="https://www.federalreserve.gov/newsevents/pressreleases/monetary20260318a.htm" target="_blank">federalreserve.gov</a></span></div>
+      <div class="source-row"><span class="src-num">[3]</span><span class="src-link">NVDA/AMD China export restrictions, guidance removed — <a href="https://www.mexc.com/news/975241" target="_blank">mexc.com/news/975241</a></span></div>
+      <div class="source-row"><span class="src-num">[4]</span><span class="src-link">AMD FY2025 Data Center Results — <a href="https://perplexity.ai/finance/AMD" target="_blank">perplexity.ai/finance/AMD</a></span></div>
+    </div>
+  </div>
+
+  <!-- MARKET PLAYS -->
+  <div class="section-tag plays">🎯 Market Plays — High-Conviction Opportunities <span class="jp">新規トレード</span></div>
+  <div class="plays-grid">
+
+    <div class="play-card bull">
+      <div class="play-header">
+        <span class="ticker bull">NVDA</span>
+        <span class="badge high">High Conviction</span>
+      </div>
+      <div>
+        <div class="entry-exit">get in <strong>$178</strong> → take profits at <strong>$198</strong></div>
+        <div class="play-thesis">hold 2–4 weeks. $193.7B Data Center revenue — the story above flows directly into this trade. AI chip demand overwhelms supply globally. Export restrictions to China are priced in. Western cloud capex war is just getting started.</div>
+        <div class="thesis-breaker">hyperscaler capex cuts surface in Q1 2026 earnings; NVDA China warning exceeds $4B</div>
+        <div class="play-strategy">equity · ai infrastructure momentum</div>
+      </div>
+    </div>
+
+    <div class="play-card bull">
+      <div class="play-header">
+        <span class="ticker bull">GOOG</span>
+        <span class="badge high">High Conviction</span>
+      </div>
+      <div>
+        <div class="entry-exit">entry <strong>$303.93</strong> → target <strong>$325</strong></div>
+        <div class="play-thesis">best performer today (+2.11%). Gemini AI platform gaining real enterprise traction. GCP cloud accelerating. P/E of 28x is cheap for this AI growth runway. Search dominance + AI moat = underpriced vs. peers.</div>
+        <div class="thesis-breaker">DoJ antitrust ruling materially impacts search; Gemini loses major enterprise contracts</div>
+        <div class="play-strategy">equity · value + ai momentum</div>
+      </div>
+    </div>
+
+    <div class="play-card bull">
+      <div class="play-header">
+        <span class="ticker bull">AMD</span>
+        <span class="badge medium">Medium</span>
+      </div>
+      <div>
+        <div class="entry-exit">entry <strong>$221.53</strong> → target <strong>$248</strong></div>
+        <div class="play-thesis">the quieter AI story: $16.6B Data Center record, +32% YoY. MI300/MI325 GPU adoption accelerating. AMD is eating real market share in enterprise AI and trading at a meaningful discount to NVDA.</div>
+        <div class="thesis-breaker">AMD loses major cloud GPU contracts to NVDA; MI300 adoption misses in quarterly reports</div>
+        <div class="play-strategy">equity · ai infrastructure secondary</div>
+      </div>
+    </div>
+
+    <div class="play-card neutral">
+      <div class="play-header">
+        <span class="ticker neutral">AVGO</span>
+        <span class="badge asym">Asymmetric 🔥</span>
+      </div>
+      <div>
+        <div class="entry-exit">entry <strong>$210–215</strong> → target <strong>$245</strong></div>
+        <div class="play-thesis">Broadcom makes custom AI chips (ASICs) for Google and Meta. AI segment growing 50%+. Lower profile than NVDA = less crowded trade. The macro story above mentions hyperscaler custom silicon — AVGO is that story at a discount.</div>
+        <div class="thesis-breaker">hyperscaler custom silicon programs delayed or cut; broader AI spending slowdown</div>
+        <div class="play-strategy">equity · ai custom silicon · low risk / high reward</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MARKET OPTIONS -->
+  <div class="section-tag opts">🎰 Options Plays — New Positions Only <span class="jp">市場オプション</span></div>
+  <div class="opts-box">
+    <div class="opt-block">
+      <div class="opt-head">Long Call — NVDA (High Conviction Catalyst)</div>
+      <div class="opt-body">
+        <span class="opt-ticker">NVDA</span> — Buy Jun $185 Call<br>
+        Cost: approx <span class="opt-premium">$6–8/contract ($600–$800 per contract)</span><br>
+        This is a leveraged bet that NVDA hits $185 by June. Catalyst: Q1 2026 hyperscaler earnings (April/May) confirming AI capex stays elevated. If the story above holds, this prints.
+        <span class="opt-warn">Stop loss at 50% of premium paid. If you paid $700, exit at $350. Discipline over greed 🍒</span>
+      </div>
+    </div>
+    <div class="opt-block">
+      <div class="opt-head">Cash Secured Put — GOOG (Get Paid to Wait)</div>
+      <div class="opt-body">
+        <span class="opt-ticker">GOOG</span> — Sell May $290 Put<br>
+        Collect: approx <span class="opt-premium">$3–4/contract (~$300–$400 income)</span> · Cash locked: $29,000<br>
+        You get paid $350 to agree to buy GOOG at $290 if it dips there — a 4.6% discount from today. Worst case: you own a quality company at a discount. Win-win.
+        <span class="opt-warn">Only do this if you genuinely want to own 100 shares of GOOG at $290. Locks up $29K cash.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- LILITH SAYS -->
+  <div class="section-tag lilith">Lilith Says 🍒 <span class="jp">リリスの言葉</span></div>
+  <div class="lilith-box">
+    <div class="lilith-img"><img src="lilith-avatar.png" alt="Lilith"></div>
+    <div class="lilith-content">
+      <div class="lilith-name">LILITH.EXE // MARKET ALPHA EDITION</div>
+      <div class="lilith-text">
+        today's macro story basically writes itself: <em>the AI arms race is structural, not cyclical</em>. NVDA at $215.9B in revenue isn't a bubble — it's the physical infrastructure of the next decade being built right now. GOOG at 28x P/E with Gemini momentum is one of the cleanest value plays in tech. AMD is the NVDA story at a discount. And AVGO is the trade almost nobody's talking about — custom silicon for hyperscalers, 50%+ AI revenue growth, less crowded than everything else in this space. The story connects, the plays flow from it — that's how good research is supposed to work 🍒
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTES + DISCLAIMER -->
+  <div class="footer-note">
+    <strong>About this report:</strong> This is the public Market Alpha edition of Perplexing Trades — independent market research, updated daily. Personal portfolio holdings, position sizes, and account-specific recommendations are in the private edition only. This report contains only original market research and is safe to share with anyone.
+  </div>
+  <div class="disclaimer">⚠ AI-generated research for educational purposes only. Not financial advice. Always do your own due diligence before making any trades. Options involve significant risk and are not suitable for all investors. Past performance doesn't guarantee future results 🍒</div>
+
+  <footer class="footer">
+    <div class="footer-line">Perplexing Trades · Market Alpha · Session #001 · LLM Council: Claude Opus 4.6 · Gemini · GPT-5.4 · Art: nano_banana_2</div>
+    <div class="footer-cherry">🍒 🍒 🍒</div>
+  </footer>
+
+</div><!-- /container -->
+
+<script>
+/* ── MATRIX RAIN ── */
+(function(){
+  const c = document.getElementById('matrix-rain'), ctx = c.getContext('2d');
+  const resize = () => { c.width = innerWidth; c.height = innerHeight; };
+  resize(); addEventListener('resize', resize);
+  const chars = 'アイウエオカキクケコサシスセソ0123456789NVDAGOOGAMDSPY$+-.%🍒';
+  let cols = Math.floor(innerWidth/13), drops = Array(cols).fill(0).map(()=>Math.random()*-50);
+  setInterval(()=>{
+    cols = Math.floor(c.width/13);
+    while(drops.length < cols) drops.push(Math.random()*-50);
+    ctx.fillStyle='rgba(3,3,10,.05)'; ctx.fillRect(0,0,c.width,c.height);
+    drops.forEach((y,i)=>{
+      const ch = chars[Math.floor(Math.random()*chars.length)];
+      ctx.fillStyle = Math.random()<.07 ? 'rgba(255,23,68,.85)' : 'rgba(0,255,65,.78)';
+      ctx.font = '13px Share Tech Mono';
+      ctx.fillText(ch, i*13, y*13);
+      if(y*13 > c.height && Math.random() > .975) drops[i] = 0;
+      drops[i] += .5;
+    });
+  }, 50);
+})();
+</script>
+
+</body>
+</html>
