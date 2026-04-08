@@ -270,6 +270,9 @@
   ══════════════════════════════════════════ */
 
   @media (max-width: 768px) {
+    /* Hide all video/canvas layers on mobile — fixes overlay + audio issues */
+    #bg-video, #elec-video, #matrix-rain, .crt-sweep { display: none !important; }
+
     .container { padding: 14px 14px 40px; }
 
     /* Badge */
@@ -829,6 +832,11 @@
 <video id="bg-video" autoplay loop muted playsinline>
   <source src="lilith-bg-loop.mp4" type="video/mp4">
 </video>
+<script>
+  // Belt-and-suspenders mute: HTML attribute + JS property
+  (function(){ var v = document.getElementById('bg-video'); if(v){v.muted=true;v.volume=0;} })();
+  (function(){ var v = document.getElementById('elec-video'); if(v){v.muted=true;v.volume=0;} })();
+</script>
 <video id="elec-video" autoplay loop muted playsinline>
   <source src="neon-pulse.mp4" type="video/mp4">
 </video>
@@ -1234,6 +1242,9 @@ document.addEventListener('click', function(e) {
 (function() {
   const vid = document.getElementById('elec-video');
   if (!vid) return;
+  // Force muted via property (HTML attribute alone unreliable on iOS Safari)
+  vid.muted = true;
+  vid.volume = 0;
   vid.play().catch(() => {});
   function randomPulse() {
     const duration = 600 + Math.random() * 1200;
