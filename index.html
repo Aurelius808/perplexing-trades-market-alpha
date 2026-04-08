@@ -1074,15 +1074,28 @@ setTimeout(typeBoot, 280);
     trackArtist.textContent = t.artist;
   }
 
-  function play() {
+  function play(silent = false) {
     audio.play().then(() => {
       isPlaying = true;
       playBtn.textContent = '⏸';
       disc.classList.add('spinning');
-    }).catch(() => {});
+    }).catch(() => {
+      // Autoplay blocked — start on first user interaction anywhere on page
+      const resume = () => {
+        audio.play().then(() => {
+          isPlaying = true;
+          playBtn.textContent = '⏸';
+          disc.classList.add('spinning');
+        }).catch(() => {});
+        document.removeEventListener('touchstart', resume);
+        document.removeEventListener('click',      resume);
+      };
+      document.addEventListener('touchstart', resume, { once: true, passive: true });
+      document.addEventListener('click',      resume, { once: true });
+    });
   }
 
-  function pause() {
+  function pause(silent = false) {
     audio.pause();
     isPlaying = false;
     playBtn.textContent = '▶';
@@ -1139,6 +1152,43 @@ setTimeout(typeBoot, 280);
     } catch(e) {}
   }
 
+  // ── Play sound (press ▶) — two ascending pings, energetic ────────────
+  function playPlaySound() {
+    try {
+      const ctx = getAudioCtx();
+      const now = ctx.currentTime;
+      // Two rising notes: C5→G5, then G5→C6 — "launching" feel
+      [[523, 784], [784, 1047]].forEach(([start, end], i) => {
+        const osc = ctx.createOscillator(), gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.type = 'sine';
+        const t = now + i * 0.07;
+        osc.frequency.setValueAtTime(start, t);
+        osc.frequency.exponentialRampToValueAtTime(end, t + 0.09);
+        gain.gain.setValueAtTime(0.15, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+        osc.start(t); osc.stop(t + 0.22);
+      });
+    } catch(e) {}
+  }
+
+  // ── Pause sound (press ⏸) — single descending note, softer ──────────
+  function playPauseSound() {
+    try {
+      const ctx = getAudioCtx();
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator(), gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine';
+      // G5 falling to C4 — mellow "winding down"
+      osc.frequency.setValueAtTime(784, now);
+      osc.frequency.exponentialRampToValueAtTime(261, now + 0.18);
+      gain.gain.setValueAtTime(0.13, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
+      osc.start(now); osc.stop(now + 0.24);
+    } catch(e) {}
+  }
+
   // ── Tactile button feedback ─────────────────────────────────────────
   function flashPress(btn) {
     btn.classList.add('pressed');
@@ -1162,7 +1212,10 @@ setTimeout(typeBoot, 280);
   }
 
   // ── Button controls ─────────────────────────────────────────────────
-  addTactile(playBtn, () => isPlaying ? pause() : play(), null);
+  addTactile(playBtn, () => {
+    if (isPlaying) { playPauseSound(); pause(); }
+    else           { playPlaySound();  play();  }
+  }, null);
   addTactile(nextBtn, () => { playPing(true);  nextTrack(); }, true);
   addTactile(prevBtn, () => { playPing(false); prevTrack(); }, false);
 
@@ -1193,14 +1246,25 @@ setTimeout(typeBoot, 280);
   // Auto-advance to next track
   audio.addEventListener('ended', nextTrack);
 
-  // Called by boot screen dismiss — unlocks browser audio + starts playback
+  // Called by boot screen dismiss — starts audio as soon as browser allows
   window.unlockAndPlayMusic = function() {
     if (!audioUnlocked) {
       audioUnlocked = true;
       loadTrack(0);
-      play();
+      play(true); // silent=true: no play sound on autostart, just begin music
     }
   };
+
+  // Also attempt autoplay the moment the page is ready — works when the
+  // page was opened via a link click (counts as a user gesture in most browsers).
+  // Falls back to first-interaction listener inside play() if blocked.
+  if (document.readyState === 'complete') {
+    setTimeout(() => { if (!audioUnlocked) window.unlockAndPlayMusic(); }, 300);
+  } else {
+    window.addEventListener('load', () => {
+      setTimeout(() => { if (!audioUnlocked) window.unlockAndPlayMusic(); }, 300);
+    });
+  }
 
   // Load first track info (paused — no autoplay)
   loadTrack(0);
