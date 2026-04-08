@@ -1155,13 +1155,15 @@ bootScr.addEventListener('click', () => {
 // Kick off after fonts/DOM are ready
 setTimeout(typeBoot, 280);
 
-<script>
+
 // ── Glitch transition to methodology page ──────────────────────────
-document.getElementById('hood-btn').addEventListener('click', function(e) {
+// (Uses document-level delegation so element lookup is deferred)
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('#hood-btn');
+  if (!btn) return;
   e.preventDefault();
-  const target = this.href;
   document.body.classList.add('glitch-out');
-  setTimeout(() => { window.location.href = target; }, 550);
+  setTimeout(() => { window.location.href = btn.href; }, 550);
 });
 
 // ── Random electricity pulse overlay ──────────────────────────────
@@ -1169,19 +1171,15 @@ document.getElementById('hood-btn').addEventListener('click', function(e) {
   const vid = document.getElementById('elec-video');
   if (!vid) return;
   vid.play().catch(() => {});
-
   function randomPulse() {
-    const duration = 600 + Math.random() * 1200; // 0.6–1.8s visible
-    const gap      = 4000 + Math.random() * 12000; // 4–16s between pulses
+    const duration = 600 + Math.random() * 1200;
+    const gap      = 4000 + Math.random() * 12000;
     vid.classList.add('pulse');
     setTimeout(() => vid.classList.remove('pulse'), duration);
     setTimeout(randomPulse, gap + duration);
   }
-
-  // First pulse after a random delay
   setTimeout(randomPulse, 3000 + Math.random() * 8000);
 })();
-</script>
 
 /* ── MATRIX RAIN ── */
 (function(){
