@@ -7,6 +7,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;500;600;700;800;900&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
+<script>
+/* Restore light mode before first paint — prevents flash */
+if(localStorage.getItem('ptLightMode')==='1'){document.documentElement.classList.add('light-mode');}
+</script>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 
@@ -350,6 +354,264 @@ body::after {
   .page-title { font-size:18px; }
   .wire-divider { height:28px; }
 }
+
+
+/* ════════════════════════════════════════════════════════════════════
+   LIGHT PRINT MODE  ·  Perplexing Trades v2.3
+   Toggle via html.light-mode class  ·  Safe-to-share, printable
+   ════════════════════════════════════════════════════════════════════ */
+
+
+/* ── CSS Variable overrides (most elements use var(--x)) ────────── */
+html.light-mode,
+html.light-mode:root {
+  --bg:          #ffffff;
+  --bg-panel:    #f8f9fa;
+  --bg-card:     #fafafa;
+  --bg-card-hover: #f0f4ff;
+  --text-bright: #1a1a2e;
+  --text-primary:#333333;
+  --text-dim:    #666666;
+  --text-muted:  #999999;
+  --border:      rgba(0,0,0,.1);
+  --glow:        #1a1a2e;
+  --glow-rgb:    26, 26, 46;
+  --cherry:      #b71c1c;
+  --cherry-rgb:  183, 28, 28;
+  --bear:        #b71c1c;
+  --bull:        #1a7a4a;
+  --bull-rgb:    26, 122, 74;
+  --neutral:     #795500;
+}
+
+/* ── Toggle button ───────────────────────────────────────────────── */
+#mode-toggle {
+  position: fixed;
+  top: 14px; right: 16px;
+  z-index: 99999;
+  cursor: pointer;
+  padding: 8px 18px;
+  font-family: 'Orbitron', 'Share Tech Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  border-radius: 3px;
+  background: rgba(0,0,0,.75);
+  color: #f5c842;
+  border: 1.5px solid #f5c842;
+  animation: toggle-pulse 2.2s ease-in-out infinite;
+  user-select: none;
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+  transition: background .2s, color .2s;
+}
+#mode-toggle:hover { background: rgba(245,200,66,.15); }
+@keyframes toggle-pulse {
+  0%,100% { box-shadow: 0 0 6px rgba(245,200,66,.3); }
+  50%      { box-shadow: 0 0 20px rgba(245,200,66,.7), 0 0 8px 2px rgba(245,200,66,.15); }
+}
+
+/* ── Light mode: button changes ──────────────────────────────────── */
+html.light-mode #mode-toggle {
+  background: #1a1a2e; color: #fff; border-color: #1a1a2e;
+  animation: none; box-shadow: 0 2px 6px rgba(0,0,0,.15);
+}
+html.light-mode #mode-toggle:hover { background: #2e2e50; }
+
+/* ── Base reset ──────────────────────────────────────────────────── */
+html.light-mode, html.light-mode body {
+  background: #ffffff !important; color: #1a1a2e !important;
+}
+html.light-mode * { text-shadow: none !important; animation: none !important; }
+html.light-mode #mode-toggle { transition: background .2s, color .2s !important; }
+
+/* ── Hide atmospheric/decorative elements ────────────────────────── */
+html.light-mode #bg-video,
+html.light-mode #elec-video,
+html.light-mode #matrix-rain,
+html.light-mode .wire-border-img,
+html.light-mode #music-player,
+html.light-mode .music-player,
+html.light-mode .crt-sweep,
+html.light-mode .wire-divider,
+html.light-mode #boot-screen { display: none !important; }
+
+/* ── Header ──────────────────────────────────────────────────────── */
+html.light-mode .header {
+  background: #ffffff !important;
+  border-bottom: 2px solid #1a1a2e !important;
+  box-shadow: none !important;
+  padding: 14px 20px !important;
+}
+html.light-mode .report-title, html.light-mode .system-name { color: #1a1a2e !important; }
+html.light-mode .timestamp   { color: #666 !important; }
+html.light-mode .market-num  { color: #1a1a2e !important; }
+html.light-mode .market-lbl, html.light-mode .market-status { color: #555 !important; }
+html.light-mode .public-badge,
+html.light-mode [class*="public-badge"] {
+  background: #f0f0f0 !important; border-color: #ccc !important;
+  color: #555 !important; box-shadow: none !important;
+}
+
+/* ── Hood banner ─────────────────────────────────────────────────── */
+html.light-mode .hood-banner {
+  background: #f8f9fa !important; border: 2px solid #1a1a2e !important;
+  box-shadow: none !important; animation: none !important;
+}
+html.light-mode .hood-main  { color: #1a1a2e !important; }
+html.light-mode .hood-sub   { color: #666 !important; }
+html.light-mode .hood-arrow, html.light-mode .hood-icon { color: #1a1a2e !important; }
+
+/* ── Container ───────────────────────────────────────────────────── */
+html.light-mode .container {
+  background: transparent !important;
+  max-width: 900px !important; margin: 0 auto !important;
+}
+
+/* ── Section tags ────────────────────────────────────────────────── */
+html.light-mode .section-tag {
+  color: #555 !important; border-bottom: 1px solid #ddd !important;
+}
+html.light-mode .jp { color: #888 !important; }
+
+/* ── Macro box ───────────────────────────────────────────────────── */
+html.light-mode .macro-box {
+  background: #fafafa !important; border: 1px solid #e0e0e0 !important;
+  border-left: 4px solid #1a1a2e !important; border-radius: 4px !important;
+  box-shadow: none !important;
+}
+html.light-mode .macro-label   { color: #888 !important; border-color: #ddd !important; font-size: 8px !important; }
+html.light-mode .macro-headline { color: #1a1a2e !important; }
+html.light-mode .macro-para    { color: #333 !important; line-height: 1.7 !important; }
+html.light-mode .cursor        { display: none !important; }
+
+/* Semantic inline colors */
+html.light-mode .s-bull { color: #1a7a4a !important; font-weight: 600; }
+html.light-mode .s-bear { color: #b71c1c !important; font-weight: 600; }
+html.light-mode .s-hi   { color: #1565c0 !important; font-weight: 600; }
+html.light-mode .cite   { color: #999 !important; font-size: .82em; }
+
+/* ── Key Numbers table ───────────────────────────────────────────── */
+html.light-mode .kn-scroll { overflow: visible !important; }
+html.light-mode .kn-table  { background: #fff !important; border: 1px solid #ddd !important; border-radius: 4px !important; box-shadow: none !important; }
+html.light-mode .kn-label  { color: #888 !important; border-color: #ddd !important; }
+html.light-mode .kn-table th { background: #1a1a2e !important; color: #fff !important; }
+html.light-mode .kn-table tr:nth-child(even) { background: #f8f8f8 !important; }
+html.light-mode .kn-table tr:hover { background: #f0f4ff !important; }
+html.light-mode .kn-ind  { color: #1a1a2e !important; font-weight: 600; }
+html.light-mode .kn-val  { color: #1a1a2e !important; font-weight: 700; }
+html.light-mode .kn-why  { color: #555 !important; }
+html.light-mode .kn-chg.up   { color: #1a7a4a !important; font-weight: 700; }
+html.light-mode .kn-chg.down { color: #b71c1c !important; font-weight: 700; }
+
+/* ── Sector vibe check ───────────────────────────────────────────── */
+html.light-mode .sv-grid  { background: #fafafa !important; border: 1px solid #e0e0e0 !important; border-radius: 4px !important; box-shadow: none !important; }
+html.light-mode .sv-label { color: #888 !important; border-color: #ddd !important; }
+html.light-mode .sv-row   { border-bottom: 1px solid #f0f0f0 !important; }
+html.light-mode .sv-name  { color: #1a1a2e !important; font-weight: 600; }
+html.light-mode .sv-why   { color: #555 !important; }
+html.light-mode .sv-vibe.bull    { color: #1a7a4a !important; background: rgba(26,122,74,.09) !important; border: 1px solid rgba(26,122,74,.2) !important; }
+html.light-mode .sv-vibe.neutral { color: #795500 !important; background: rgba(121,85,0,.07) !important; border: 1px solid rgba(121,85,0,.2) !important; }
+html.light-mode .sv-vibe.bear    { color: #b71c1c !important; background: rgba(183,28,28,.07) !important; border: 1px solid rgba(183,28,28,.2) !important; }
+
+/* ── Sources ─────────────────────────────────────────────────────── */
+html.light-mode .sources-box   { background: #fafafa !important; border: 1px solid #e0e0e0 !important; border-radius: 4px !important; }
+html.light-mode .sources-label { color: #555 !important; border-color: #ddd !important; }
+html.light-mode .source-row    { border-bottom: 1px solid #f0f0f0 !important; }
+html.light-mode .src-num       { color: #999 !important; }
+html.light-mode .src-link, html.light-mode .src-link a { color: #1565c0 !important; }
+
+/* ── Play cards ──────────────────────────────────────────────────── */
+html.light-mode .play-card {
+  background: #fafafa !important; border: 1px solid #ddd !important;
+  box-shadow: none !important; border-radius: 4px !important;
+}
+html.light-mode .play-card.bull { border-left: 4px solid #1a7a4a !important; }
+html.light-mode .play-card.bear { border-left: 4px solid #b71c1c !important; }
+html.light-mode .play-header    { border-bottom: 1px solid #eee !important; background: transparent !important; }
+html.light-mode .ticker.bull    { color: #1a7a4a !important; }
+html.light-mode .ticker.bear    { color: #b71c1c !important; }
+html.light-mode .badge          { box-shadow: none !important; }
+html.light-mode .badge.high       { background: #fff8e1 !important; color: #795500 !important; border-color: #f5c842 !important; }
+html.light-mode .badge.asym       { background: #e3f2fd !important; color: #1565c0 !important; border-color: #90caf9 !important; }
+html.light-mode .badge.bear-badge { background: #ffebee !important; color: #b71c1c !important; border-color: #ef9a9a !important; }
+html.light-mode .entry-exit     { color: #1a1a2e !important; }
+html.light-mode .play-thesis    { color: #333 !important; line-height: 1.6 !important; }
+html.light-mode .thesis-breaker { color: #888 !important; background: #f5f5f5 !important; border-color: #ddd !important; }
+html.light-mode .play-strategy  { color: #666 !important; }
+html.light-mode .tag            { background: rgba(0,0,0,.06) !important; color: #333 !important; }
+
+/* ── Options box ─────────────────────────────────────────────────── */
+html.light-mode .opts-box  { background: #fafafa !important; border: 1px solid #e0e0e0 !important; border-radius: 4px !important; box-shadow: none !important; }
+html.light-mode .opt-block { border-bottom: 1px solid #eee !important; }
+html.light-mode .opt-head  { color: #1a1a2e !important; border-color: #ddd !important; background: transparent !important; }
+html.light-mode .opt-body  { color: #333 !important; }
+html.light-mode .opt-ticker  { background: #e8ecf0 !important; color: #1a1a2e !important; border: 1px solid #ccc !important; }
+html.light-mode .opt-premium { color: #1565c0 !important; font-weight: 600; }
+html.light-mode .opt-warn    { color: #795500 !important; background: #fff8e1 !important; border-left-color: #f5c842 !important; }
+
+/* ── Lilith Says — image hidden, text kept ───────────────────────── */
+html.light-mode .lilith-wrap    { background: #fafafa !important; border: 1px solid #e0e0e0 !important; border-radius: 4px !important; }
+html.light-mode .lilith-box     { background: transparent !important; border: none !important; flex-direction: column !important; }
+html.light-mode .lilith-img, html.light-mode .lilith-callsign { display: none !important; }
+html.light-mode .lilith-content { padding: 20px 0 !important; width: 100% !important; max-width: 100% !important; }
+html.light-mode .lilith-name    { color: #999 !important; font-size: 8px !important; }
+html.light-mode .lilith-text    { color: #333 !important; font-style: italic !important; line-height: 1.7 !important; }
+
+/* ── Footer ──────────────────────────────────────────────────────── */
+html.light-mode .footer-note  { background: #fafafa !important; border: 1px solid #e0e0e0 !important; color: #666 !important; }
+html.light-mode .disclaimer   { color: #888 !important; }
+html.light-mode .footer       { background: #fafafa !important; border-top: 1px solid #e0e0e0 !important; }
+html.light-mode .footer-line  { color: #999 !important; }
+html.light-mode .footer-cherry { display: none !important; }
+
+/* ════ METHODOLOGY PAGE ═══════════════════════════════════════════ */
+html.light-mode .page-header  { background: #fff !important; border-bottom: 2px solid #1a1a2e !important; }
+html.light-mode .page-eyebrow { color: #888 !important; }
+html.light-mode .page-title   { color: #1a1a2e !important; }
+html.light-mode .page-desc    { color: #555 !important; }
+html.light-mode .section      { background: #fafafa !important; border: 1px solid #e0e0e0 !important; border-radius: 4px !important; box-shadow: none !important; }
+html.light-mode .sh           { color: #1a1a2e !important; border-color: #ddd !important; }
+html.light-mode .sh::before, html.light-mode .sh::after { background: #ddd !important; }
+html.light-mode .body-text    { color: #333 !important; line-height: 1.7 !important; }
+html.light-mode .model-card   { background: #f8f9fa !important; border: 1px solid #e0e0e0 !important; box-shadow: none !important; }
+html.light-mode .model-card.claude { border-left: 4px solid #7c4daa !important; }
+html.light-mode .model-card.gemini { border-left: 4px solid #1a73e8 !important; }
+html.light-mode .model-card.gpt    { border-left: 4px solid #1a7a4a !important; }
+html.light-mode .model-name   { color: #1a1a2e !important; }
+html.light-mode .model-role   { color: #666 !important; }
+html.light-mode .model-says   { color: #333 !important; background: #f0f0f0 !important; border-left: 3px solid #ccc !important; }
+html.light-mode .consensus-box { background: #fff8e1 !important; border: 1px solid #f5c842 !important; color: #1a1a2e !important; box-shadow: none !important; }
+html.light-mode .vs-grid      { background: #fafafa !important; border: 1px solid #e0e0e0 !important; }
+html.light-mode .vs-label     { color: #888 !important; background: #f0f0f0 !important; }
+html.light-mode .vs-item      { color: #333 !important; border-bottom: 1px solid #eee !important; }
+html.light-mode .vs-col.perplexing { background: rgba(26,122,74,.04) !important; }
+html.light-mode .source-entry { background: #fafafa !important; border: 1px solid #e0e0e0 !important; }
+html.light-mode .src-badge    { background: #e8ecf0 !important; color: #333 !important; }
+html.light-mode .src-pub      { color: #888 !important; }
+html.light-mode .src-title a  { color: #1565c0 !important; }
+html.light-mode .disclaimer-box { background: #fff8e1 !important; border: 1px solid #f5c842 !important; color: #555 !important; }
+html.light-mode .back-btn     { background: #1a1a2e !important; color: #fff !important; border-color: #1a1a2e !important; box-shadow: none !important; }
+html.light-mode .back-sub     { color: #888 !important; }
+html.light-mode .page-footer  { background: #fafafa !important; border-top: 1px solid #e0e0e0 !important; color: #888 !important; }
+
+/* ════ @media print — always clean, regardless of toggle ══════════ */
+@media print {
+  #mode-toggle, #bg-video, #elec-video, #matrix-rain, .wire-border-img,
+  #music-player, .music-player, #boot-screen, .crt-sweep, .wire-divider,
+  .lilith-img, .lilith-callsign, .footer-cherry, .hood-icon { display: none !important; }
+  html, body { background: #ffffff !important; color: #1a1a2e !important; }
+  * { text-shadow: none !important; box-shadow: none !important; animation: none !important; }
+  .container  { max-width: 100% !important; padding: 0 12px !important; }
+  .play-card, .opts-box, .sv-grid, .sources-box, .macro-box { page-break-inside: avoid; }
+  .s-bull, .sv-vibe.bull, .kn-chg.up { color: #1a7a4a !important; }
+  .s-bear, .sv-vibe.bear, .kn-chg.down { color: #b71c1c !important; }
+  .s-hi { color: #1565c0 !important; }
+  a { color: #1565c0 !important; }
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+
 </style>
 </head>
 <body>
@@ -537,6 +799,23 @@ function glitchBack(e) {
   document.body.classList.add('glitch-out-active');
   setTimeout(() => { window.location.href = target; }, 500);
 }
+
+/* ── Light / Party Mode toggle ─────────────────────────────────── */
+function toggleLightMode() {
+  const html = document.documentElement;
+  const btn  = document.getElementById('mode-toggle');
+  const on   = html.classList.toggle('light-mode');
+  localStorage.setItem('ptLightMode', on ? '1' : '0');
+  btn.innerHTML = on ? '������ Party Mode' : '������ Light Print Mode';
+  btn.title     = on ? 'Switch back to dark mode' : 'Switch to Light Print Mode';
+}
+// Restore preference immediately
+(function() {
+  if (localStorage.getItem('ptLightMode') === '1') {
+    document.documentElement.classList.add('light-mode');
+  }
+})();
+
 </script>
 </body>
 </html>
