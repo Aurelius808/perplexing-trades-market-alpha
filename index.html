@@ -574,15 +574,34 @@
     border-radius: 3px;
     cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    transition: all .2s;
     font-family: inherit;
     padding: 0;
+    /* Tactile: fast press, smooth release */
+    transition: transform 0.12s ease, background 0.12s ease,
+                border-color 0.12s ease, box-shadow 0.12s ease;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none; -webkit-user-select: none;
+    will-change: transform;
   }
 
   .ctrl-btn:hover {
     background: rgba(255,23,68,.1);
     border-color: rgba(255,23,68,.3);
     color: #ff1744;
+  }
+
+  /* ── TACTILE PRESS STATE ── */
+  .ctrl-btn:active,
+  .ctrl-btn.pressed {
+    transform: scale(0.80);
+    background: rgba(255,23,68,.22);
+    border-color: rgba(255,23,68,.55);
+    color: #ff1744;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,.55),
+                0 0 10px rgba(255,23,68,.18);
+    /* Snap down instantly, release slowly */
+    transition: transform 0.04s ease, background 0.04s ease,
+                border-color 0.04s ease, box-shadow 0.04s ease;
   }
 
   .play-btn {
@@ -594,6 +613,13 @@
   .play-btn:hover {
     background: rgba(255,23,68,.15);
     box-shadow: 0 0 10px rgba(255,23,68,.22);
+  }
+
+  .play-btn:active,
+  .play-btn.pressed {
+    transform: scale(0.82);
+    box-shadow: inset 0 3px 8px rgba(0,0,0,.6),
+                0 0 14px rgba(255,23,68,.28);
   }
 
   /* Volume */
@@ -1079,10 +1105,66 @@ setTimeout(typeBoot, 280);
     if (isPlaying) play();
   }
 
-  // Button controls
-  playBtn.addEventListener('click', () => isPlaying ? pause() : play());
-  nextBtn.addEventListener('click', nextTrack);
-  prevBtn.addEventListener('click', prevTrack);
+  // ── Web Audio Ping ──────────────────────────────────────────────────
+  // Synthesised directionally: ascending = next, descending = prev
+  let _audioCtx = null;
+  function getAudioCtx() {
+    if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (_audioCtx.state === 'suspended') _audioCtx.resume();
+    return _audioCtx;
+  }
+
+  function playPing(forward = true) {
+    try {
+      const ctx = getAudioCtx();
+      const now = ctx.currentTime;
+
+      // Two oscillators in a quick chord — feels rich, not harsh
+      [[forward ? 1047 : 880, forward ? 1319 : 659],  // root + fifth
+       [forward ? 1319 : 659, forward ? 1047 : 880]]  // resolve
+        .forEach(([start, end], i) => {
+          const osc  = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.type = 'sine';
+          const t = now + i * 0.05;
+          osc.frequency.setValueAtTime(start, t);
+          osc.frequency.exponentialRampToValueAtTime(end, t + 0.09);
+          gain.gain.setValueAtTime(0.14, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+          osc.start(t);
+          osc.stop(t + 0.22);
+        });
+    } catch(e) {}
+  }
+
+  // ── Tactile button feedback ─────────────────────────────────────────
+  function flashPress(btn) {
+    btn.classList.add('pressed');
+    // Release after 120ms so it feels physical
+    setTimeout(() => btn.classList.remove('pressed'), 120);
+  }
+
+  // Touch events fire before click on mobile — use touchstart for instant feel
+  function addTactile(btn, action, pingForward) {
+    // Keyboard & mouse
+    btn.addEventListener('click', () => {
+      flashPress(btn);
+      action();
+    });
+    // Touch: visual snap happens on touchstart (feels instant)
+    btn.addEventListener('touchstart', (e) => {
+      e.preventDefault(); // stop ghost click
+      flashPress(btn);
+      action();
+    }, { passive: false });
+  }
+
+  // ── Button controls ─────────────────────────────────────────────────
+  addTactile(playBtn, () => isPlaying ? pause() : play(), null);
+  addTactile(nextBtn, () => { playPing(true);  nextTrack(); }, true);
+  addTactile(prevBtn, () => { playPing(false); prevTrack(); }, false);
 
   muteBtn.addEventListener('click', () => {
     audio.muted = !audio.muted;
