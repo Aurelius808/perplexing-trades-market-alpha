@@ -659,7 +659,6 @@
   /* [Research modal moved to methodology.html] */
     .vs-grid { grid-template-columns: 1fr; }
     .modal-body { padding: 18px 16px 18px 20px; }
-    #research-modal-backdrop { padding: 12px 8px 60px; }
     .modal-title { font-size: 9px; }
   }
 
@@ -1205,40 +1204,8 @@ document.addEventListener('click', function(e) {
 </script>
 
 
-<!-- Trigger link — injected into footer area via JS -->
-<script>
-(function() {
-  const backdrop = document.getElementById('research-modal-backdrop');
-  const closeBtn = document.getElementById('modal-close-btn');
 
-  function openModal() {
-    backdrop.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeModal() {
-    backdrop.classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  // Close on backdrop click (outside modal)
-  backdrop.addEventListener('click', (e) => {
-    if (e.target === backdrop) closeModal();
-  });
-
-  // Close button
-  closeBtn.addEventListener('click', closeModal);
-
-  // Close on Escape
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && backdrop.classList.contains('open')) closeModal();
-  });
-
-  // Expose open function globally for the trigger link
-  window.openResearchModal = openModal;
-})();
-</script>
-
+<!-- ══ MUSIC PLAYER
 <!-- ══ MUSIC PLAYER — Fixed Bottom Bar ══════════════════════════════ -->
 <div id="music-player" class="music-player">
   <div class="player-inner">
