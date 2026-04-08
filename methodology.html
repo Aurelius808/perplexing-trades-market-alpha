@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Under the Hood — Perplexing Trades Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;500;600;700;800;900&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --glow:#00ff41; --glow-rgb:0,255,65;
+  --cherry:#ff1744; --cherry-rgb:255,23,68;
+  --neutral:#ff9100; --bear:#ff3d3d;
+  --bg:#03030a; --bg-panel:#0b0b16; --bg-card:#0f0f1a;
+  --text-bright:#f5f5ff; --text-primary:#c8c8d8;
+  --text-dim:#606075; --text-muted:#353548;
+  --border:rgba(255,255,255,.05);
+}
+
+body {
+  background:var(--bg);
+  color:var(--text-primary);
+  font-family:'Share Tech Mono',monospace;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── GLITCH IN/OUT ANIMATIONS ─────────────────────────────────── */
+@keyframes glitch-in {
+  0%  { opacity:0; filter:brightness(3) hue-rotate(90deg) saturate(5); transform:skewX(-8deg) scaleY(1.05); }
+  15% { filter:brightness(2) hue-rotate(0deg); transform:skewX(4deg); clip-path:inset(20% 0 60% 0); }
+  30% { filter:brightness(1.5) hue-rotate(180deg); transform:skewX(-2deg); clip-path:inset(50% 0 10% 0); }
+  50% { filter:brightness(1.2); transform:skewX(1deg); clip-path:none; opacity:1; }
+  70% { filter:brightness(1.05) hue-rotate(10deg); transform:skewX(0); }
+  100% { filter:none; transform:none; opacity:1; }
+}
+
+@keyframes glitch-out {
+  0%  { opacity:1; filter:none; transform:none; }
+  20% { filter:brightness(2) hue-rotate(90deg); transform:skewX(6deg); }
+  40% { clip-path:inset(30% 0 50% 0); filter:brightness(3) saturate(4); transform:skewX(-4deg) translateX(10px); }
+  60% { clip-path:inset(60% 0 10% 0); filter:hue-rotate(180deg) brightness(2); transform:skewX(3deg) translateX(-8px); }
+  80% { filter:brightness(0); transform:scaleX(1.1); }
+  100% { opacity:0; filter:brightness(0); transform:scaleX(1.1); }
+}
+
+body.glitch-in-active  { animation:glitch-in  0.7s ease-out forwards; }
+body.glitch-out-active { animation:glitch-out 0.5s ease-in  forwards; }
+
+/* ── CRT LAYERS ──────────────────────────────────────────────── */
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.14) 3px,rgba(0,0,0,.14) 4px);
+  pointer-events:none; z-index:9990;
+}
+
+body::after {
+  content:'';
+  position:fixed; inset:0;
+  background:radial-gradient(ellipse at center,transparent 52%,rgba(0,0,0,.7) 100%);
+  pointer-events:none; z-index:9991;
+}
+
+/* Neon pulse video background */
+#neon-bg {
+  position:fixed; inset:0;
+  width:100%; height:100%;
+  object-fit:cover;
+  z-index:0;
+  opacity:.06;
+  pointer-events:none;
+}
+
+/* ── ANIMATIONS ──────────────────────────────────────────────── */
+@keyframes pulse    { 0%,100%{opacity:.6} 50%{opacity:1} }
+@keyframes glow-green { 0%,100%{text-shadow:0 0 8px var(--glow),0 0 16px var(--glow)} 50%{text-shadow:0 0 16px var(--glow),0 0 32px var(--glow),0 0 50px rgba(var(--glow-rgb),.5)} }
+@keyframes cherry-glow { 0%,100%{text-shadow:0 0 8px var(--cherry),0 0 16px var(--cherry)} 50%{text-shadow:0 0 18px var(--cherry),0 0 36px var(--cherry),0 0 60px rgba(var(--cherry-rgb),.4)} }
+@keyframes slide-up { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+@keyframes flicker  { 0%,100%{opacity:1} 93%{opacity:1} 93.3%{opacity:.7} 93.6%{opacity:1} 97%{opacity:.88} 97.4%{opacity:1} }
+
+/* Back button glow pulse */
+@keyframes back-glow {
+  0%,100% { box-shadow:0 0 20px rgba(255,23,68,.4), 0 0 40px rgba(255,23,68,.15), inset 0 0 20px rgba(255,23,68,.05); }
+  50%     { box-shadow:0 0 40px rgba(255,23,68,.7), 0 0 80px rgba(255,23,68,.35), 0 0 120px rgba(255,23,68,.15), inset 0 0 30px rgba(255,23,68,.1); }
+}
+
+@keyframes back-flicker {
+  0%,100%{opacity:1} 85%{opacity:1} 86%{opacity:.6} 87%{opacity:1} 95%{opacity:.85} 96%{opacity:1}
+}
+
+/* ── LAYOUT ──────────────────────────────────────────────────── */
+.container {
+  max-width:900px;
+  margin:0 auto;
+  padding:40px 22px 80px;
+  position:relative; z-index:10;
+  animation:flicker 12s infinite, slide-up .5s ease-out;
+}
+
+/* ── GIANT BACK BUTTON ──────────────────────────────────────── */
+.back-section {
+  display:flex; align-items:center;
+  margin-bottom:36px;
+  padding-bottom:28px;
+  border-bottom:1px solid rgba(255,23,68,.2);
+  position:relative;
+}
+
+.back-btn {
+  display:inline-flex; align-items:center; gap:14px;
+  font-family:'Orbitron',sans-serif;
+  font-size:14px; font-weight:900;
+  letter-spacing:3px; text-transform:uppercase;
+  color:var(--cherry);
+  background:rgba(255,23,68,.06);
+  border:2px solid rgba(255,23,68,.45);
+  border-radius:4px;
+  padding:16px 28px;
+  cursor:pointer;
+  text-decoration:none;
+  animation:back-glow 2.5s ease-in-out infinite, back-flicker 8s infinite;
+  transition:transform .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.back-btn:hover { transform:scale(1.03); }
+.back-btn:active { transform:scale(0.95); }
+
+.back-arrow {
+  font-size:22px;
+  animation:pulse 1.5s infinite;
+}
+
+.back-sub {
+  font-size:9px; letter-spacing:2px;
+  color:var(--text-dim); text-transform:uppercase;
+  margin-top:3px; display:block;
+}
+
+/* ── PAGE HEADER ─────────────────────────────────────────────── */
+.page-header { margin-bottom:36px; }
+
+.page-eyebrow {
+  font-family:'Orbitron',sans-serif;
+  font-size:9px; font-weight:700;
+  letter-spacing:3px; text-transform:uppercase;
+  color:var(--glow); margin-bottom:8px;
+  animation:glow-green 4s infinite;
+}
+
+.page-title {
+  font-family:'Orbitron',sans-serif;
+  font-size:clamp(18px,4vw,30px); font-weight:900;
+  color:var(--text-bright); line-height:1.2;
+  letter-spacing:-0.5px;
+}
+
+.page-title span { color:var(--glow); }
+
+.page-desc {
+  font-size:13px; color:var(--text-dim);
+  line-height:1.7; margin-top:12px;
+}
+
+/* ── WIRE BORDER DIVIDERS ────────────────────────────────────── */
+.wire-divider {
+  width:100%;
+  height:40px;
+  background-image:url('wire-border.png');
+  background-size:cover;
+  background-position:center;
+  opacity:.5;
+  margin:28px 0;
+  border-radius:2px;
+  filter:brightness(1.2) hue-rotate(0deg);
+}
+
+.wire-divider.red { filter:brightness(1.1) hue-rotate(100deg) saturate(1.5); }
+
+/* ── SECTION HEADERS ─────────────────────────────────────────── */
+.section { margin-bottom:36px; }
+
+.sh {
+  font-family:'Orbitron',sans-serif;
+  font-size:9.5px; font-weight:700;
+  letter-spacing:2.5px; text-transform:uppercase;
+  color:var(--glow); margin-bottom:14px;
+  display:flex; align-items:center; gap:10px;
+}
+
+.sh::before { content:'▸'; font-size:11px; }
+.sh::after  { content:''; flex:1; height:1px; background:linear-gradient(to right,rgba(var(--glow-rgb),.3),transparent); }
+
+/* ── BODY TEXT ───────────────────────────────────────────────── */
+.body-text {
+  font-size:13px; line-height:1.82;
+  color:var(--text-primary);
+}
+
+.body-text p { margin-bottom:14px; }
+.body-text p:last-child { margin-bottom:0; }
+.body-text strong { color:var(--text-bright); }
+.body-text em { color:var(--glow); font-style:normal; }
+
+/* ── MODEL CARDS ─────────────────────────────────────────────── */
+.model-grid {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:12px; margin-top:14px;
+}
+
+.model-card {
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:4px; padding:18px;
+  position:relative; overflow:hidden;
+  transition:border-color .2s, transform .2s;
+}
+
+.model-card:hover {
+  border-color:rgba(var(--glow-rgb),.3);
+  transform:translateY(-2px);
+}
+
+.model-card::before {
+  content:''; position:absolute; top:0; left:0;
+  width:3px; height:100%;
+  background:var(--model-color);
+  box-shadow:0 0 10px var(--model-color);
+}
+
+.model-card.claude { --model-color:#7c9cff; }
+.model-card.gemini { --model-color:#4285f4; }
+.model-card.gpt    { --model-color:#10a37f; }
+
+.model-icon {
+  font-size:22px; margin-bottom:8px; display:block;
+}
+
+.model-name {
+  font-family:'Orbitron',sans-serif;
+  font-size:10px; font-weight:700;
+  letter-spacing:1.5px; text-transform:uppercase;
+  color:var(--model-color); margin-bottom:3px;
+}
+
+.model-role {
+  font-size:8.5px; color:var(--text-muted);
+  letter-spacing:1px; text-transform:uppercase;
+  margin-bottom:12px;
+  border-bottom:1px solid rgba(255,255,255,.04);
+  padding-bottom:8px;
+}
+
+.model-says { font-size:12px; color:var(--text-dim); line-height:1.65; }
+
+/* Consensus/dissent block */
+.consensus-box {
+  background:rgba(var(--glow-rgb),.04);
+  border:1px solid rgba(var(--glow-rgb),.15);
+  border-left:3px solid var(--glow);
+  border-radius:3px; padding:14px 16px;
+  margin-top:14px; font-size:12.5px;
+  color:var(--text-primary); line-height:1.7;
+}
+
+.consensus-box strong { color:var(--glow); }
+
+/* ── VS GOOGLE ───────────────────────────────────────────────── */
+.vs-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:12px; margin-top:14px;
+}
+
+.vs-col {
+  border-radius:3px; padding:16px;
+  background:rgba(255,255,255,.025);
+}
+
+.vs-col.google    { border:1px solid rgba(255,61,61,.2); }
+.vs-col.perplexing{ border:1px solid rgba(0,255,65,.2); }
+
+.vs-label {
+  font-family:'Orbitron',sans-serif;
+  font-size:8px; font-weight:700;
+  letter-spacing:2px; text-transform:uppercase;
+  margin-bottom:12px;
+}
+
+.vs-col.google .vs-label    { color:var(--bear); }
+.vs-col.perplexing .vs-label{ color:var(--glow); }
+
+.vs-item {
+  font-size:11.5px; color:var(--text-dim);
+  line-height:1.65; margin-bottom:7px;
+  padding-left:16px; position:relative;
+}
+
+.vs-item::before { position:absolute; left:0; top:0; }
+.vs-col.google .vs-item::before    { content:'✗'; color:var(--bear); }
+.vs-col.perplexing .vs-item::before{ content:'✓'; color:var(--glow); }
+
+/* ── SOURCES ─────────────────────────────────────────────────── */
+.source-entry {
+  display:flex; align-items:flex-start; gap:10px;
+  padding:10px 0;
+  border-bottom:1px solid var(--border);
+  font-size:12px;
+}
+
+.source-entry:last-child { border-bottom:none; }
+
+.src-badge {
+  font-family:'Orbitron',sans-serif; font-size:8px;
+  color:var(--glow); background:rgba(var(--glow-rgb),.08);
+  border:1px solid rgba(var(--glow-rgb),.2);
+  padding:3px 8px; border-radius:2px; flex-shrink:0; margin-top:1px;
+}
+
+.src-title { color:var(--text-primary); flex:1; line-height:1.45; }
+.src-pub   { color:var(--text-dim); font-size:10px; display:block; margin-top:2px; }
+.src-link  {
+  color:rgba(var(--glow-rgb),.55); text-decoration:none;
+  font-size:10px; white-space:nowrap; flex-shrink:0; margin-top:1px;
+}
+.src-link:hover { color:var(--glow); text-decoration:underline; }
+
+/* ── FOOTER ──────────────────────────────────────────────────── */
+.page-footer {
+  text-align:center; padding-top:24px;
+  border-top:1px solid rgba(var(--glow-rgb),.12);
+  font-size:9px; color:var(--text-muted); letter-spacing:2px; text-transform:uppercase;
+}
+
+.disclaimer-box {
+  font-size:10px; color:var(--text-muted); line-height:1.6;
+  padding:12px 14px; background:rgba(255,255,255,.015);
+  border-radius:2px; margin-bottom:20px;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────────── */
+@media (max-width:640px) {
+  .container { padding:24px 14px 60px; }
+  .model-grid { grid-template-columns:1fr; }
+  .vs-grid    { grid-template-columns:1fr; }
+  .back-btn   { font-size:11px; padding:13px 18px; letter-spacing:2px; }
+  .page-title { font-size:18px; }
+  .wire-divider { height:28px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Neon pulse video background -->
+<video id="neon-bg" autoplay loop muted playsinline>
+  <source src="neon-pulse.mp4" type="video/mp4">
+</video>
+
+<div class="container" id="main">
+
+  <!-- ── GIANT BACK BUTTON ──────────────────────────────────── -->
+  <div class="back-section">
+    <a href="index.html" class="back-btn" id="back-btn" onclick="glitchBack(event)">
+      <span class="back-arrow">◀</span>
+      <div>
+        BACK TO MARKET ALPHA
+        <span class="back-sub">← Return to the report</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- ── PAGE HEADER ─────────────────────────────────────────── -->
+  <div class="page-header">
+    <div class="page-eyebrow">// Under the Hood //</div>
+    <div class="page-title">How This Research<br>Was <span>Synthesized</span></div>
+    <p class="page-desc">
+      A full breakdown of the three frontier AI models that built this report, the real-time data layer powering them, why this outperforms standard financial media, and every source cited in today's session.
+    </p>
+  </div>
+
+  <div class="wire-divider"></div>
+
+  <!-- ── WHAT IS THIS ─────────────────────────────────────────── -->
+  <div class="section">
+    <div class="sh">What is this report?</div>
+    <div class="body-text">
+      <p>This is a structured investment research brief generated by a <strong>council of three frontier AI models</strong> — Anthropic's Claude Opus 4.6, Google's Gemini, and OpenAI's GPT-5.4 — working in parallel across live market data, verified news sources, and financial databases. They analyze, disagree, and synthesize. The result is a researched, cited, structured report that used to require a team of analysts several hours to produce.</p>
+      <p>The models are grounded in <strong>real-time verified data</strong> via Perplexity's search infrastructure — not their training memory. Every number you see in the report was current at the time of generation and is traceable to a source you can click and verify.</p>
+    </div>
+  </div>
+
+  <div class="wire-divider red"></div>
+
+  <!-- ── THE THREE MODELS ─────────────────────────────────────── -->
+  <div class="section">
+    <div class="sh">The LLM Council — Session #001 · Apr 07, 2026</div>
+    <div class="body-text" style="margin-bottom:14px">
+      <p>Three models analyzed the same market data independently. Their outputs were cross-referenced, disagreements were surfaced, and the final report synthesizes their consensus — while preserving the divergence points so you understand where the uncertainty lives.</p>
+    </div>
+
+    <div class="model-grid">
+      <div class="model-card claude">
+        <span class="model-icon">🤖</span>
+        <div class="model-name">Claude Opus 4.6</div>
+        <div class="model-role">Narrative Architect</div>
+        <div class="model-says">Responsible for the causal chain in the Macro Story — connected the Iran ceasefire → Strait of Hormuz reopening → oil crash → inflation expectations → Fed timeline → tech multiple expansion. Identified AVGO as an asymmetric underweighted opportunity. Flagged the gold anomaly (up 3.4% on a ceasefire — unusual) as a meaningful signal that not all market participants believed the deal would hold.</div>
+      </div>
+      <div class="model-card gemini">
+        <span class="model-icon">✦</span>
+        <div class="model-name">Gemini</div>
+        <div class="model-role">Data Validator</div>
+        <div class="model-says">Cross-referenced NVDA's $215.9B fiscal 2026 revenue figure against multiple analyst reports and SEC data before accepting it. Verified the Strait of Hormuz oil share figure (20% of global supply) against EIA data. Pushed back on the ceasefire narrative: flagged that Iran had not officially confirmed in writing at time of session, and that gold rising on a ceasefire is a divergence not seen in prior similar events — requiring explicit mention as a risk.</div>
+      </div>
+      <div class="model-card gpt">
+        <span class="model-icon">◈</span>
+        <div class="model-name">GPT-5.4</div>
+        <div class="model-role">Risk Analyst</div>
+        <div class="model-says">Stress-tested every play with a "ceasefire collapses by Friday" scenario and translated that into concrete thesis breakers. Argued DAL was the highest-conviction trade in the session — oil sensitivity is direct and measurable, earnings tomorrow makes the catalyst immediate. More cautious on PLTR near-term: requires $200+ to deliver meaningful options return and consolidation phase could extend. Added the two-week caveat prominently throughout.</div>
+      </div>
+    </div>
+
+    <div class="consensus-box">
+      <strong>Where they agreed:</strong> NVDA and GOOG as high-conviction AI infrastructure plays. DAL as the most direct ceasefire beneficiary. MU as an AI memory megatrend with or without the oil shock. The causal chain from oil → Fed → tech is structurally sound.<br><br>
+      <strong>Where they disagreed:</strong> GPT-5.4 was most skeptical on ceasefire durability; Claude was most bullish on AVGO as a sleeper pick; Gemini pushed for stricter citation requirements and flagged the gold anomaly others initially dismissed. <em>These tensions are features, not bugs — they prevent groupthink and surface the real risks in the narrative.</em>
+    </div>
+  </div>
+
+  <div class="wire-divider"></div>
+
+  <!-- ── THE PERPLEXITY LAYER ─────────────────────────────────── -->
+  <div class="section">
+    <div class="sh">The Perplexity Real-Time Data Layer</div>
+    <div class="body-text">
+      <p>AI models have a training cutoff. Ask them about this morning's market close without a real-time data layer, and they'll hallucinate or decline. What makes this research current is <strong>Perplexity's live search and verification infrastructure</strong>, which acts as a trusted bridge between the models and the world as it exists right now.</p>
+      <p>Rather than the models inferring recent data from training memory, Perplexity retrieves and validates actual current figures — live prices, Fed statements, breaking news, earnings releases — and delivers them to the models as structured, verified context. Think of it as giving three brilliant analysts simultaneous access to a Bloomberg terminal instead of asking them to recall things from memory.</p>
+      <p><em>This is why every key claim in the Macro Story carries a numbered citation</em>. That number is a contract: there is a verifiable source at that URL that substantiates the claim. If a specific number appears without a citation, it shouldn't be in the report — and the models are instructed to call that out.</p>
+    </div>
+  </div>
+
+  <div class="wire-divider red"></div>
+
+  <!-- ── VS GOOGLE ─────────────────────────────────────────────── -->
+  <div class="section">
+    <div class="sh">Why this beats searching Google yourself</div>
+    <div class="vs-grid">
+      <div class="vs-col google">
+        <div class="vs-label">Searching Google</div>
+        <div class="vs-item">10 blue links — you still read, evaluate, and synthesize each one</div>
+        <div class="vs-item">No narrative connection — dots stay unconnected</div>
+        <div class="vs-item">Articles ranked for clicks, not accuracy or depth</div>
+        <div class="vs-item">Written for a general audience, not investors</div>
+        <div class="vs-item">No thesis — facts without a conclusion</div>
+        <div class="vs-item">You don't know what you don't know to search</div>
+        <div class="vs-item">One perspective — whoever wrote that article</div>
+        <div class="vs-item">30–60 minutes for a partial picture</div>
+      </div>
+      <div class="vs-col perplexing">
+        <div class="vs-label">This Report</div>
+        <div class="vs-item">Three models read dozens of sources simultaneously</div>
+        <div class="vs-item">Synthesized into a single causal narrative</div>
+        <div class="vs-item">Every claim cited — verify any number in one click</div>
+        <div class="vs-item">Written specifically for traders and investors</div>
+        <div class="vs-item">Clear thesis: macro → sector → plays with entry/exit</div>
+        <div class="vs-item">Models surface what you should watch but aren't</div>
+        <div class="vs-item">Three different analytical lenses — disagreements visible</div>
+        <div class="vs-item">Delivered automatically, multiple times a day</div>
+      </div>
+    </div>
+    <div class="body-text" style="margin-top:16px">
+      <p>The most important difference: a good Google search tells you <em>what happened</em>. This report tells you <em>what it means, why it matters, and what to do about it</em> — with the reasoning visible so you can agree or disagree with confidence. The goal isn't to replace your judgment. It's to make sure you're starting from the best possible information.</p>
+    </div>
+  </div>
+
+  <div class="wire-divider"></div>
+
+  <!-- ── SESSION SOURCES ─────────────────────────────────────── -->
+  <div class="section">
+    <div class="sh">Session #001 Sources — Apr 07, 2026</div>
+    <div class="body-text" style="margin-bottom:14px">
+      <p>Every claim in the Macro Story is tied to one of these sources. The [N] markers in the report correspond to the numbers below.</p>
+    </div>
+
+    <div class="source-entry">
+      <span class="src-badge">[1]</span>
+      <div><span class="src-title">S&amp;P 500 swings from losses to tiny gain ahead of Trump's Iran deadline</span><span class="src-pub">Los Angeles Times · Apr 7, 2026</span></div>
+      <a class="src-link" href="https://www.latimes.com/business/story/2026-04-07/stocks-swing-from-losses-to-tiny-gain-ahead-of-trumps-deadline-for-iran" target="_blank" rel="noopener">↗ Read</a>
+    </div>
+    <div class="source-entry">
+      <span class="src-badge">[2]</span>
+      <div><span class="src-title">Oil price shock: Strait of Hormuz disruption ripples through global markets</span><span class="src-pub">CNN Business · Mar 9, 2026</span></div>
+      <a class="src-link" href="https://www.cnn.com/2026/03/09/economy/oil-price-shock" target="_blank" rel="noopener">↗ Read</a>
+    </div>
+    <div class="source-entry">
+      <span class="src-badge">[3]</span>
+      <div><span class="src-title">Stock market live: Trump announces US-Iran ceasefire, oil crashes, futures surge</span><span class="src-pub">CNBC · Apr 7, 2026</span></div>
+      <a class="src-link" href="https://www.cnbc.com/2026/04/07/stock-market-today-live-updates.html" target="_blank" rel="noopener">↗ Read</a>
+    </div>
+    <div class="source-entry">
+      <span class="src-badge">[4]</span>
+      <div><span class="src-title">Goldman Sachs resets oil price forecast, pushes Fed cut timeline to September</span><span class="src-pub">TheStreet · Mar 23, 2026</span></div>
+      <a class="src-link" href="https://www.thestreet.com/investing/goldman-sachs-reset-oil-price-forecast-for-the-rest-of-2026" target="_blank" rel="noopener">↗ Read</a>
+    </div>
+    <div class="source-entry">
+      <span class="src-badge">[5]</span>
+      <div><span class="src-title">NVDA FY2026 Revenue — $215.9B total, Data Center $193.7B (+65% YoY)</span><span class="src-pub">Perplexity Finance · NVDA</span></div>
+      <a class="src-link" href="https://perplexity.ai/finance/NVDA" target="_blank" rel="noopener">↗ View</a>
+    </div>
+    <div class="source-entry">
+      <span class="src-badge">[6]</span>
+      <div><span class="src-title">AMD FY2025 Annual Results — Data Center $16.6B (+32% YoY, record)</span><span class="src-pub">Perplexity Finance · AMD</span></div>
+      <a class="src-link" href="https://perplexity.ai/finance/AMD" target="_blank" rel="noopener">↗ View</a>
+    </div>
+  </div>
+
+  <div class="disclaimer-box">
+    ⚠ This report is AI-generated market research for educational and informational purposes only. It does not constitute financial advice, a solicitation, or a recommendation to buy or sell any security. All investments involve risk. Always conduct your own due diligence and consult a qualified financial advisor before making investment decisions.
+  </div>
+
+  <div class="page-footer">
+    Perplexing Trades · LLM Council: Claude Opus 4.6 · Gemini · GPT-5.4 · Powered by Perplexity
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// Glitch-in on page load
+document.body.classList.add('glitch-in-active');
+setTimeout(() => document.body.classList.remove('glitch-in-active'), 700);
+
+// Glitch-out on back button
+function glitchBack(e) {
+  e.preventDefault();
+  const target = e.currentTarget.href;
+  document.body.classList.add('glitch-out-active');
+  setTimeout(() => { window.location.href = target; }, 500);
+}
+</script>
+</body>
+</html>

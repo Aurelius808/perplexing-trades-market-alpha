@@ -656,216 +656,160 @@
   }
 
 
-  /* ══ HOW WE RESEARCH MODAL ══════════════════════════════════════════ */
-  .research-trigger {
-    display: inline-flex; align-items: center; gap: 7px;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px; color: var(--text-dim);
-    cursor: pointer; text-decoration: none;
-    letter-spacing: .5px;
-    border-bottom: 1px dashed rgba(255,255,255,.15);
-    padding-bottom: 1px;
-    transition: color .2s, border-color .2s;
-    background: none; border-top: none; border-left: none; border-right: none;
-  }
-
-  .research-trigger:hover { color: var(--glow); border-bottom-color: var(--glow); }
-  .research-trigger::before { content: '//'; color: var(--text-muted); margin-right: 2px; }
-  .research-trigger::after  { content: '→'; }
-
-  /* Backdrop */
-  #research-modal-backdrop {
-    display: none;
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,.88);
-    z-index: 99000;
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    animation: backdrop-in .2s ease;
-  }
-
-  #research-modal-backdrop.open { display: flex; align-items: flex-start; justify-content: center; overflow-y: auto; padding: 24px 16px 60px; }
-
-  @keyframes backdrop-in { from { opacity: 0; } to { opacity: 1; } }
-
-  /* Modal panel */
-  #research-modal {
-    background: #07070f;
-    border: 1px solid rgba(255,145,0,.22);
-    border-radius: 4px;
-    width: 100%; max-width: 780px;
-    position: relative;
-    animation: modal-slide-in .25s ease;
-    overflow: hidden;
-  }
-
-  @keyframes modal-slide-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-  /* Left accent bar */
-  #research-modal::before {
-    content: '';
-    position: absolute; top: 0; left: 0;
-    width: 4px; height: 100%;
-    background: linear-gradient(180deg, var(--cherry), var(--glow));
-    box-shadow: 0 0 14px var(--glow);
-  }
-
-  .modal-header {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 18px 20px 16px 26px;
-    border-bottom: 1px solid rgba(255,255,255,.06);
-  }
-
-  .modal-title {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 11px; font-weight: 700;
-    letter-spacing: 2.5px; text-transform: uppercase;
-    color: var(--glow);
-  }
-
-  .modal-close {
-    background: none; border: 1px solid rgba(255,255,255,.1);
-    color: var(--text-dim); font-size: 16px;
-    width: 30px; height: 30px; border-radius: 3px;
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-    transition: all .15s; font-family: inherit;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  .modal-close:hover { border-color: var(--cherry); color: var(--cherry); }
-
-  .modal-body { padding: 24px 24px 24px 28px; }
-
-  /* Section headers */
-  .modal-section {
-    margin-bottom: 28px;
-  }
-
-  .modal-section:last-child { margin-bottom: 0; }
-
-  .modal-sh {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 9px; font-weight: 700;
-    letter-spacing: 2.5px; text-transform: uppercase;
-    color: var(--glow); margin-bottom: 12px;
-    display: flex; align-items: center; gap: 8px;
-  }
-
-  .modal-sh::after {
-    content: ''; flex: 1; height: 1px;
-    background: linear-gradient(to right, rgba(255,145,0,.3), transparent);
-  }
-
-  .modal-text {
-    font-size: 13px; line-height: 1.8;
-    color: var(--text-primary);
-  }
-
-  .modal-text p { margin-bottom: 12px; }
-  .modal-text p:last-child { margin-bottom: 0; }
-  .modal-text strong { color: var(--text-bright); }
-  .modal-text em { color: var(--glow); font-style: normal; }
-
-  /* Model cards */
-  .model-grid {
-    display: grid; grid-template-columns: repeat(3,1fr);
-    gap: 10px; margin-top: 12px;
-  }
-
-  .model-card {
-    background: rgba(255,255,255,.03);
-    border: 1px solid rgba(255,255,255,.07);
-    border-radius: 3px; padding: 14px;
-    transition: border-color .2s;
-  }
-
-  .model-card:hover { border-color: rgba(var(--glow-rgb),.25); }
-
-  .model-name {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 9px; font-weight: 700;
-    letter-spacing: 1.5px; text-transform: uppercase;
-    margin-bottom: 4px;
-  }
-
-  .model-card:nth-child(1) .model-name { color: #7c9cff; }
-  .model-card:nth-child(2) .model-name { color: #4285f4; }
-  .model-card:nth-child(3) .model-name { color: #10a37f; }
-
-  .model-role {
-    font-size: 9px; color: var(--text-muted);
-    letter-spacing: 1px; text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-
-  .model-says { font-size: 11.5px; color: var(--text-dim); line-height: 1.6; }
-
-  /* Vs Google comparison */
-  .vs-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 10px; margin-top: 12px;
-  }
-
-  .vs-col {
-    background: rgba(255,255,255,.025);
-    border-radius: 3px; padding: 14px;
-  }
-
-  .vs-col.google { border: 1px solid rgba(255,61,61,.15); }
-  .vs-col.perplexing { border: 1px solid rgba(0,255,65,.15); }
-
-  .vs-label {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 8px; font-weight: 700;
-    letter-spacing: 2px; text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-
-  .vs-col.google .vs-label { color: var(--bear); }
-  .vs-col.perplexing .vs-label { color: var(--bull); }
-
-  .vs-item {
-    font-size: 11px; color: var(--text-dim);
-    line-height: 1.65; margin-bottom: 6px;
-    padding-left: 14px; position: relative;
-  }
-
-  .vs-item::before { position: absolute; left: 0; }
-  .vs-col.google .vs-item::before { content: '✗'; color: var(--bear); font-size: 10px; }
-  .vs-col.perplexing .vs-item::before { content: '✓'; color: var(--bull); font-size: 10px; }
-
-  /* Sources list */
-  .source-list { margin-top: 10px; }
-
-  .source-entry {
-    display: flex; align-items: baseline; gap: 10px;
-    padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,.04);
-    font-size: 11.5px;
-  }
-
-  .source-entry:last-child { border-bottom: none; }
-
-  .source-num-badge {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 8px; color: var(--glow);
-    background: rgba(255,145,0,.08);
-    border: 1px solid rgba(255,145,0,.2);
-    padding: 2px 7px; border-radius: 2px;
-    flex-shrink: 0;
-  }
-
-  .source-title { color: var(--text-primary); flex: 1; line-height: 1.45; }
-  .source-pub { color: var(--text-dim); font-size: 10px; display: block; margin-top: 1px; }
-  .source-link { color: rgba(var(--glow-rgb),.55); text-decoration: none; font-size: 10px; white-space: nowrap; }
-  .source-link:hover { color: var(--glow); text-decoration: underline; }
-
-  /* Mobile */
-  @media (max-width: 600px) {
-    .model-grid { grid-template-columns: 1fr; }
+  /* [Research modal moved to methodology.html] */
     .vs-grid { grid-template-columns: 1fr; }
     .modal-body { padding: 18px 16px 18px 20px; }
     #research-modal-backdrop { padding: 12px 8px 60px; }
     .modal-title { font-size: 9px; }
+  }
+
+
+  /* ══ NEON PULSE VIDEO OVERLAY ══════════════════════════════════════ */
+  #elec-video {
+    position: fixed; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    z-index: 2;
+    opacity: 0;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    transition: opacity 1s ease;
+  }
+
+  /* Random electricity flicker — triggered by JS */
+  #elec-video.pulse { opacity: .12; }
+
+  /* ══ WIRE BORDERS — section dividers ═══════════════════════════════ */
+  .wire-border-img {
+    width: 100%;
+    height: 36px;
+    object-fit: cover;
+    object-position: center;
+    opacity: .45;
+    display: block;
+    margin: 28px 0;
+    border-radius: 2px;
+    filter: brightness(1.1);
+  }
+
+  .wire-border-img.red {
+    filter: brightness(1.1) hue-rotate(100deg) saturate(1.5);
+  }
+
+  /* ══ GLITCH PAGE TRANSITION ═════════════════════════════════════════ */
+  @keyframes page-glitch-out {
+    0%  { opacity:1; filter:none; transform:none; }
+    15% { filter:brightness(2) hue-rotate(90deg) saturate(4); transform:skewX(5deg); }
+    30% { clip-path:inset(20% 0 60% 0); filter:brightness(3); transform:skewX(-4deg) translateX(8px); }
+    50% { clip-path:inset(55% 0 10% 0); filter:hue-rotate(180deg) brightness(2); transform:skewX(3deg) translateX(-6px); }
+    70% { filter:brightness(0); transform:scaleX(1.08); clip-path:none; }
+    100%{ opacity:0; filter:brightness(0); transform:scaleX(1.08); }
+  }
+
+  body.glitch-out { animation: page-glitch-out 0.55s ease-in forwards; }
+
+  /* ══ NEON HOOD BANNER ═══════════════════════════════════════════════ */
+  .hood-banner {
+    position: relative;
+    margin-bottom: 28px;
+    z-index: 10;
+  }
+
+  .hood-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    width: 100%;
+    padding: 18px 24px;
+    background: rgba(255,23,68,.06);
+    border: 2px solid rgba(255,23,68,.55);
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Orbitron', sans-serif;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform .15s;
+  }
+
+  .hood-btn:hover { transform: scale(1.01); }
+  .hood-btn:active { transform: scale(0.98); }
+
+  /* Pulsing neon glow on the button */
+  @keyframes hood-pulse {
+    0%,100% {
+      box-shadow: 0 0 20px rgba(255,23,68,.35),
+                  0 0 40px rgba(255,23,68,.12),
+                  inset 0 0 24px rgba(255,23,68,.05);
+      border-color: rgba(255,23,68,.55);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(255,23,68,.65),
+                  0 0 80px rgba(255,23,68,.3),
+                  0 0 120px rgba(255,23,68,.12),
+                  inset 0 0 40px rgba(255,23,68,.1);
+      border-color: rgba(255,23,68,.9);
+    }
+  }
+
+  .hood-btn { animation: hood-pulse 2s ease-in-out infinite; }
+
+  /* Scanning line sweeping the button */
+  .hood-btn::before {
+    content: '';
+    position: absolute; left: -100%; top: 0;
+    width: 50%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,23,68,.08), transparent);
+    animation: hood-scan 2.5s linear infinite;
+  }
+
+  @keyframes hood-scan {
+    from { left: -60%; }
+    to   { left: 160%; }
+  }
+
+  .hood-icon {
+    font-size: 22px;
+    animation: pulse 1.2s infinite;
+    flex-shrink: 0;
+  }
+
+  .hood-text-wrap { text-align: left; }
+
+  .hood-main {
+    font-size: clamp(11px, 2.5vw, 14px);
+    font-weight: 900;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--cherry);
+    display: block;
+    text-shadow: 0 0 12px rgba(255,23,68,.6), 0 0 24px rgba(255,23,68,.3);
+  }
+
+  .hood-sub {
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    display: block;
+    margin-top: 3px;
+  }
+
+  .hood-arrow {
+    font-size: 20px;
+    color: var(--cherry);
+    flex-shrink: 0;
+    animation: pulse 1.2s infinite;
+    text-shadow: 0 0 10px rgba(255,23,68,.5);
+  }
+
+  @media (max-width: 480px) {
+    .hood-btn { padding: 14px 16px; gap: 12px; }
+    .hood-main { font-size: 10px; letter-spacing: 1.5px; }
+    .hood-arrow { font-size: 16px; }
+    .wire-border-img { height: 24px; margin: 20px 0; }
   }
 
 </style>
@@ -896,6 +840,21 @@
     <span class="public-badge-sep">·</span>
     <span class="public-badge-safe">No Portfolio Data · Safe to Share</span>
   </div>
+
+  <!-- ══ UNDER THE HOOD BANNER ══ -->
+  <div class="hood-banner">
+    <a href="methodology.html" class="hood-btn" id="hood-btn">
+      <span class="hood-icon">⚡</span>
+      <div class="hood-text-wrap">
+        <span class="hood-main">Click here to see under the hood of this analysis</span>
+        <span class="hood-sub">LLM Council breakdown · Source citations · Why this beats Google</span>
+      </div>
+      <span class="hood-arrow">→</span>
+    </a>
+  </div>
+
+  <!-- Wire border -->
+  <img class="wire-border-img" src="wire-border.png" alt="" aria-hidden="true">
 
   <!-- HEADER -->
   <header class="header">
@@ -982,6 +941,8 @@
   </div>
 
   <!-- MARKET PLAYS -->
+  <img class="wire-border-img" src="wire-border.png" alt="" aria-hidden="true">
+
   <div class="section-tag plays">🎯 Market Plays — High-Conviction Opportunities <span class="jp">新規トレード</span></div>
   <div class="plays-grid">
 
@@ -1044,6 +1005,8 @@
   </div>
 
   <!-- MARKET OPTIONS -->
+  <img class="wire-border-img red" src="wire-border.png" alt="" aria-hidden="true">
+
   <div class="section-tag opts">🎰 Options Plays — New Positions Only <span class="jp">市場オプション</span></div>
   <div class="opts-box">
     <div class="opt-block">
@@ -1066,6 +1029,8 @@
   </div>
 
   <!-- LILITH SAYS -->
+  <img class="wire-border-img" src="wire-border.png" alt="" aria-hidden="true">
+
   <div class="section-tag lilith">Lilith Says 🍒 <span class="jp">リリスの言葉</span></div>
   <div class="lilith-box">
     <div class="lilith-img"><img src="lilith-avatar.png" alt="Lilith"></div>
@@ -1085,12 +1050,7 @@
   <div class="disclaimer">⚠ AI-generated research for educational purposes only. Not financial advice. Always do your own due diligence before making any trades. Options involve significant risk and are not suitable for all investors. Past performance doesn't guarantee future results 🍒</div>
 
   <footer class="footer">
-    <div style="text-align:center; margin-bottom:14px;">
-    <button class="research-trigger" onclick="window.openResearchModal()" type="button">
-      How this research was synthesized
-    </button>
-  </div>
-  <div class="footer-line">Perplexing Trades · Market Alpha · Session #001 · LLM Council: Claude Opus 4.6 · Gemini · GPT-5.4 · Art: nano_banana_2</div>
+    <div class="footer-line">Perplexing Trades · Market Alpha · Session #001 · LLM Council: Claude Opus 4.6 · Gemini · GPT-5.4 · Art: nano_banana_2</div>
     <div class="footer-cherry">🍒 🍒 🍒</div>
   </footer>
 
@@ -1195,6 +1155,34 @@ bootScr.addEventListener('click', () => {
 // Kick off after fonts/DOM are ready
 setTimeout(typeBoot, 280);
 
+<script>
+// ── Glitch transition to methodology page ──────────────────────────
+document.getElementById('hood-btn').addEventListener('click', function(e) {
+  e.preventDefault();
+  const target = this.href;
+  document.body.classList.add('glitch-out');
+  setTimeout(() => { window.location.href = target; }, 550);
+});
+
+// ── Random electricity pulse overlay ──────────────────────────────
+(function() {
+  const vid = document.getElementById('elec-video');
+  if (!vid) return;
+  vid.play().catch(() => {});
+
+  function randomPulse() {
+    const duration = 600 + Math.random() * 1200; // 0.6–1.8s visible
+    const gap      = 4000 + Math.random() * 12000; // 4–16s between pulses
+    vid.classList.add('pulse');
+    setTimeout(() => vid.classList.remove('pulse'), duration);
+    setTimeout(randomPulse, gap + duration);
+  }
+
+  // First pulse after a random delay
+  setTimeout(randomPulse, 3000 + Math.random() * 8000);
+})();
+</script>
+
 /* ── MATRIX RAIN ── */
 (function(){
   const c = document.getElementById('matrix-rain'), ctx = c.getContext('2d');
@@ -1218,161 +1206,6 @@ setTimeout(typeBoot, 280);
 })();
 </script>
 
-
-<!-- ══ HOW THIS RESEARCH WAS SYNTHESIZED — MODAL ════════════════════ -->
-<div id="research-modal-backdrop" role="dialog" aria-modal="true" aria-label="How this research was synthesized">
-  <div id="research-modal">
-
-    <div class="modal-header">
-      <span class="modal-title">How this research was synthesized</span>
-      <button class="modal-close" id="modal-close-btn" aria-label="Close">✕</button>
-    </div>
-
-    <div class="modal-body">
-
-      <!-- WHAT IS THIS -->
-      <div class="modal-section">
-        <div class="modal-sh">What is this report?</div>
-        <div class="modal-text">
-          <p>This is a daily market research report generated by a <strong>council of three frontier AI models</strong> — Claude Opus 4.6, Gemini, and GPT-5.4 — working in parallel and checked against <strong>live, verified market data</strong> via Perplexity's real-time search infrastructure. Every number has a source. Every claim is cross-referenced.</p>
-          <p>The result is a structured investment research brief — the kind that used to take a team of analysts several hours to produce — delivered automatically, multiple times a day, with inline citations you can verify yourself.</p>
-        </div>
-      </div>
-
-      <!-- THE THREE MODELS -->
-      <div class="modal-section">
-        <div class="modal-sh">The LLM Council — Session #001 Analysis</div>
-        <div class="modal-text" style="margin-bottom:12px">
-          Three models analyzed the same market data independently, then their findings were synthesized into a consensus view. Here is what each model contributed to this session:
-        </div>
-        <div class="model-grid">
-          <div class="model-card">
-            <div class="model-name">Claude Opus 4.6</div>
-            <div class="model-role">Narrative Architect</div>
-            <div class="model-says">Led the macro story construction — connected the Iran ceasefire to Fed policy implications and AI chip demand in a causal chain. Identified AVGO as an asymmetric opportunity that other models initially underweighted. Raised the gold anomaly (up 3.4% on a ceasefire) as a reason for caution.</div>
-          </div>
-          <div class="model-card">
-            <div class="model-name">Gemini</div>
-            <div class="model-role">Data Validator</div>
-            <div class="model-says">Cross-referenced NVDA's $215.9B revenue figure against multiple analyst reports and verified the Strait of Hormuz oil supply figures. Flagged the divergence between oil crashing and gold rising as an unusual signal not seen in prior ceasefire events — suggesting some market participants still don't believe the deal holds.</div>
-          </div>
-          <div class="model-card">
-            <div class="model-name">GPT-5.4</div>
-            <div class="model-role">Risk Analyst</div>
-            <div class="model-says">Applied structured skepticism — modeled the "ceasefire collapses by Friday" scenario and translated it into specific thesis breakers for each play. Argued DAL is the highest-conviction trade given oil price sensitivity, and was more cautious on PLTR near-term given it needs $200+ to deliver meaningful options return.</div>
-          </div>
-        </div>
-        <div class="modal-text" style="margin-top:14px">
-          <p><em>Where they agreed:</em> NVDA and GOOG as high-conviction AI infrastructure plays. DAL as the most direct ceasefire beneficiary. MU as an AI memory megatrend with or without the oil shock. The macro story connects directly to the plays.</p>
-          <p><em>Where they disagreed:</em> GPT-5.4 was more skeptical on the ceasefire durability; Claude was more bullish on AVGO as a sleeper pick; Gemini pushed for stricter citation requirements on the gold anomaly claim. These tensions are healthy — they prevent groupthink and surface the real risks.</p>
-        </div>
-      </div>
-
-      <!-- THE PERPLEXITY LAYER -->
-      <div class="modal-section">
-        <div class="modal-sh">The Perplexity Data Layer</div>
-        <div class="modal-text">
-          <p>AI models have a training cutoff — they don't inherently know what happened this morning. What makes this research current is <strong>Perplexity's real-time search and verification layer</strong>, which acts as a trusted bridge between the models and live information.</p>
-          <p>Rather than the models hallucinating recent data from memory, Perplexity retrieves and validates actual current figures — live market prices, breaking news, earnings releases, Fed statements — and delivers them to the models as verified, structured context. Think of it as giving a brilliant analyst access to a Bloomberg terminal instead of asking them to recall things from memory. The research you're reading is grounded in data that was verified at the time of generation, not inferred from training weights.</p>
-          <p>This is why every key claim in the Macro Story section carries a numbered citation. If a number appears without a citation, it shouldn't be in the report.</p>
-        </div>
-      </div>
-
-      <!-- WHY BETTER THAN GOOGLE -->
-      <div class="modal-section">
-        <div class="modal-sh">Why this beats searching Google yourself</div>
-        <div class="vs-grid">
-          <div class="vs-col google">
-            <div class="vs-label">Searching Google</div>
-            <div class="vs-item">10 blue links — you still have to read and evaluate each one</div>
-            <div class="vs-item">No synthesis — you connect the dots yourself</div>
-            <div class="vs-item">Ranking optimized for clicks, not accuracy</div>
-            <div class="vs-item">Articles written for a general audience, not traders</div>
-            <div class="vs-item">No thesis — just facts scattered across sources</div>
-            <div class="vs-item">You don't know what you don't know to search for</div>
-            <div class="vs-item">Takes 30–60 minutes to get a clear picture</div>
-          </div>
-          <div class="vs-col perplexing">
-            <div class="vs-label">This Report</div>
-            <div class="vs-item">Three models read dozens of sources in parallel</div>
-            <div class="vs-item">Synthesised into a single coherent narrative with causation</div>
-            <div class="vs-item">Every claim is cited — verify any number in one click</div>
-            <div class="vs-item">Written specifically for traders and investors</div>
-            <div class="vs-item">Clear thesis: macro → sector → specific plays with entry/exit</div>
-            <div class="vs-item">Models identify what you should be searching for but aren't</div>
-            <div class="vs-item">Delivered automatically, multiple times a day</div>
-          </div>
-        </div>
-        <div class="modal-text" style="margin-top:14px">
-          <p>The most important difference: a good Google search tells you <em>what happened</em>. This report tells you <em>what it means for the specific things you're watching</em> — and backs that interpretation with the reasoning and sources so you can agree or disagree with confidence.</p>
-        </div>
-      </div>
-
-      <!-- SOURCES -->
-      <div class="modal-section">
-        <div class="modal-sh">Session #001 Sources — Apr 07, 2026</div>
-        <div class="source-list">
-          <div class="source-entry">
-            <span class="source-num-badge">[1]</span>
-            <div>
-              <span class="source-title">S&amp;P 500 swings from losses to tiny gain ahead of Trump's Iran deadline</span>
-              <span class="source-pub">Los Angeles Times · Apr 7, 2026</span>
-            </div>
-            <a class="source-link" href="https://www.latimes.com/business/story/2026-04-07/stocks-swing-from-losses-to-tiny-gain-ahead-of-trumps-deadline-for-iran" target="_blank" rel="noopener">↗ Read</a>
-          </div>
-          <div class="source-entry">
-            <span class="source-num-badge">[2]</span>
-            <div>
-              <span class="source-title">Oil price shock: Strait of Hormuz disruption ripples through global markets</span>
-              <span class="source-pub">CNN Business · Mar 9, 2026</span>
-            </div>
-            <a class="source-link" href="https://www.cnn.com/2026/03/09/economy/oil-price-shock" target="_blank" rel="noopener">↗ Read</a>
-          </div>
-          <div class="source-entry">
-            <span class="source-num-badge">[3]</span>
-            <div>
-              <span class="source-title">Stock market live: Trump announces US-Iran ceasefire, oil crashes, futures surge</span>
-              <span class="source-pub">CNBC · Apr 7, 2026</span>
-            </div>
-            <a class="source-link" href="https://www.cnbc.com/2026/04/07/stock-market-today-live-updates.html" target="_blank" rel="noopener">↗ Read</a>
-          </div>
-          <div class="source-entry">
-            <span class="source-num-badge">[4]</span>
-            <div>
-              <span class="source-title">Goldman Sachs resets oil price forecast, pushes Fed cut to September</span>
-              <span class="source-pub">TheStreet · Mar 23, 2026</span>
-            </div>
-            <a class="source-link" href="https://www.thestreet.com/investing/goldman-sachs-reset-oil-price-forecast-for-the-rest-of-2026" target="_blank" rel="noopener">↗ Read</a>
-          </div>
-          <div class="source-entry">
-            <span class="source-num-badge">[5]</span>
-            <div>
-              <span class="source-title">NVDA FY2026 Revenue — $215.9B, Data Center $193.7B (+65% YoY)</span>
-              <span class="source-pub">Perplexity Finance · NVDA</span>
-            </div>
-            <a class="source-link" href="https://perplexity.ai/finance/NVDA" target="_blank" rel="noopener">↗ View</a>
-          </div>
-          <div class="source-entry">
-            <span class="source-num-badge">[6]</span>
-            <div>
-              <span class="source-title">AMD FY2025 Annual Results — Data Center $16.6B (+32% YoY, record)</span>
-              <span class="source-pub">Perplexity Finance · AMD</span>
-            </div>
-            <a class="source-link" href="https://perplexity.ai/finance/AMD" target="_blank" rel="noopener">↗ View</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- DISCLAIMER -->
-      <div class="modal-section">
-        <div class="modal-text" style="font-size:10.5px; color:var(--text-muted); line-height:1.6; padding:10px 12px; background:rgba(255,255,255,.02); border-radius:2px;">
-          ⚠ This report is AI-generated market research for educational and informational purposes only. It does not constitute financial advice, a solicitation, or a recommendation to buy or sell any security. All investments involve risk. Always conduct your own due diligence and consult a qualified financial advisor before making investment decisions.
-        </div>
-      </div>
-
-    </div><!-- /modal-body -->
-  </div><!-- /modal -->
-</div><!-- /backdrop -->
 
 <!-- Trigger link — injected into footer area via JS -->
 <script>
@@ -1414,7 +1247,8 @@ setTimeout(typeBoot, 280);
     <!-- Spinning Disc -->
     <div class="disc-container">
       <div class="disc" id="disc">
-        <div class="disc-label">🍒</div>
+        <img id="disc-img" src="vinyl-record.png" alt="vinyl"
+          style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
       </div>
     </div>
 
