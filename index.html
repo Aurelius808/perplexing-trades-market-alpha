@@ -117,6 +117,29 @@
   /* ══════════════════════════════════════════════════════
      MACRO STORY — THE CENTERPIECE
   ══════════════════════════════════════════════════════ */
+  /* ── FRESHNESS BADGE ── */
+  .freshness-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 16px;
+    background: rgba(0,255,65,.06);
+    border: 1px solid rgba(0,255,65,.3);
+    border-radius: 6px;
+    margin-bottom: 16px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--glow);
+    text-transform: uppercase;
+  }
+  .freshness-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--glow);
+    box-shadow: 0 0 8px var(--glow);
+    animation: pulse 1.5s infinite;
+  }
+  html.light-mode .freshness-badge { background: rgba(34,139,34,.06) !important; border-color: rgba(34,139,34,.3) !important; color: #228b22 !important; }
+  html.light-mode .freshness-dot { background: #228b22 !important; box-shadow: 0 0 8px #228b22 !important; }
+
   .macro-box {
     background: var(--bg-panel);
     border: 1px solid rgba(var(--glow-rgb), .15);
@@ -1143,11 +1166,12 @@ html.light-mode .page-footer  { background: #fafafa !important; border-top: 1px 
 
   <!-- THE MACRO STORY -->
   <div class="section-tag macro">🌍 What's Going On In The World? <span class="jp">世界の状況</span></div>
+  <div class="freshness-badge" id="freshness-badge"><span class="freshness-dot"></span><span>Research fresh @ Apr 17, 2026 · 11:29 AM PT</span></div>
   <div class="macro-box">
     <div class="macro-label">// MIDDAY PULSE // APR 17 // OIL -12.6% + S&amp;P 7,122 + NVDA HOLDS $200 // UPDATED 11:29 AM PT //
 
     <div class="macro-headline">
-      UPDATED 11:29 AM PT — S&amp;P 500 hits 7,121.88 (+1.14%) for its 7th consecutive all-time high. Oil recovers from $78.97 to $82.73 but still down -12.63%. NVDA holds above $200. MSFT hit $431 at the open then faded to $420. NFLX -9.93% finds a floor. Tesla +3.00% as the oil crash fuels the EV thesis.
+      S&amp;P 500 hits 7,121.88 (+1.14%) for its 7th consecutive all-time high. Oil recovers from $78.97 to $82.73 but still down -12.63%. NVDA holds above $200. MSFT hit $431 at the open then faded to $420. NFLX -9.93% finds a floor. Tesla +3.00% as the oil crash fuels the EV thesis.
                                         </div>
 
     <div class="macro-narrative">
