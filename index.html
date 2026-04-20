@@ -114,6 +114,159 @@
   .section-tag.opts { color: var(--bull); }
   .section-tag.lilith { color: var(--cherry); }
 
+
+  /* ══════════════════════════════════════════════════════
+     LILITH VOICE PLAYER
+  ══════════════════════════════════════════════════════ */
+  .lilith-voice-player {
+    position: relative;
+    background: linear-gradient(135deg, rgba(0,0,0,.95) 0%, rgba(20,0,40,.95) 100%);
+    border: 1px solid rgba(0,255,65,.25);
+    border-radius: 8px;
+    padding: 0;
+    margin-bottom: 28px;
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(0,255,65,.08), inset 0 0 60px rgba(0,0,0,.5);
+  }
+  .lvp-bg {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: url('lilith-voice-avatar.png') center/cover no-repeat;
+    opacity: 0.15;
+    filter: blur(2px);
+    z-index: 0;
+  }
+  .lvp-content {
+    position: relative; z-index: 1;
+    display: flex; align-items: center; gap: 20px;
+    padding: 20px 24px;
+  }
+  .lvp-avatar {
+    width: 120px; height: 120px; border-radius: 50%;
+    border: 2px solid var(--glow);
+    box-shadow: 0 0 20px rgba(0,255,65,.3);
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  .lvp-avatar.playing {
+    animation: avatar-glow 1.5s ease-in-out infinite;
+  }
+  @keyframes avatar-glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(0,255,65,.3); }
+    50% { box-shadow: 0 0 40px rgba(0,255,65,.6), 0 0 80px rgba(0,255,65,.2); }
+  }
+  .lvp-info {
+    flex: 1; min-width: 0;
+  }
+  .lvp-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--glow);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .lvp-session {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: rgba(0,255,65,.5);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .lvp-waveform {
+    display: flex; align-items: center; gap: 2px;
+    height: 40px; margin-bottom: 12px;
+  }
+  .lvp-bar {
+    width: 3px;
+    background: var(--glow);
+    border-radius: 2px;
+    opacity: 0.3;
+    transition: height 0.1s ease;
+  }
+  .lvp-bar.active {
+    opacity: 1;
+    animation: bar-dance 0.4s ease-in-out infinite alternate;
+  }
+  @keyframes bar-dance {
+    from { transform: scaleY(0.3); }
+    to { transform: scaleY(1); }
+  }
+  .lvp-controls {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .lvp-btn {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    border: 2px solid var(--glow);
+    background: rgba(0,255,65,.08);
+    color: var(--glow);
+    font-size: 20px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .2s;
+  }
+  .lvp-btn:hover {
+    background: rgba(0,255,65,.2);
+    box-shadow: 0 0 20px rgba(0,255,65,.3);
+  }
+  .lvp-btn.play-main {
+    width: 56px; height: 56px;
+    font-size: 24px;
+    border-width: 3px;
+  }
+  .lvp-progress {
+    flex: 1; height: 4px;
+    background: rgba(0,255,65,.15);
+    border-radius: 2px;
+    cursor: pointer;
+    position: relative;
+  }
+  .lvp-progress-fill {
+    height: 100%;
+    background: var(--glow);
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.3s linear;
+  }
+  .lvp-time {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 9px;
+    color: rgba(0,255,65,.5);
+    min-width: 40px;
+    text-align: right;
+  }
+  .lvp-status {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: rgba(0,255,65,.4);
+    margin-top: 8px;
+    text-transform: uppercase;
+  }
+  .lvp-status.live { color: var(--glow); }
+  /* Light mode */
+  html.light-mode .lilith-voice-player {
+    background: linear-gradient(135deg, #f8f8f8 0%, #f0f0ff 100%) !important;
+    border-color: rgba(34,139,34,.3) !important;
+    box-shadow: 0 2px 12px rgba(0,0,0,.08) !important;
+  }
+  html.light-mode .lvp-bg { opacity: 0.06 !important; }
+  html.light-mode .lvp-title, html.light-mode .lvp-session { color: #228b22 !important; }
+  html.light-mode .lvp-btn { border-color: #228b22 !important; color: #228b22 !important; background: rgba(34,139,34,.05) !important; }
+  html.light-mode .lvp-btn:hover { background: rgba(34,139,34,.15) !important; }
+  html.light-mode .lvp-bar { background: #228b22 !important; }
+  html.light-mode .lvp-progress { background: rgba(34,139,34,.15) !important; }
+  html.light-mode .lvp-progress-fill { background: #228b22 !important; }
+  html.light-mode .lvp-avatar { border-color: #228b22 !important; box-shadow: 0 0 10px rgba(34,139,34,.2) !important; }
+  /* Mobile */
+  @media (max-width: 600px) {
+    .lvp-content { flex-direction: column; text-align: center; padding: 16px; }
+    .lvp-avatar { width: 80px; height: 80px; }
+    .lvp-waveform { justify-content: center; }
+    .lvp-controls { justify-content: center; }
+  }
+
   /* ══════════════════════════════════════════════════════
      MACRO STORY — THE CENTERPIECE
   ══════════════════════════════════════════════════════ */
@@ -1167,6 +1320,30 @@ html.light-mode .page-footer  { background: #fafafa !important; border-top: 1px 
   <!-- THE MACRO STORY -->
   <div class="section-tag macro">🌍 What's Going On In The World? <span class="jp">世界の状況</span></div>
   <div class="freshness-badge" id="freshness-badge"><span class="freshness-dot"></span><span>Research fresh @ Apr 18, 2026 &middot; 9:04 AM PT (Weekend Scan)</span></div>
+
+  <!-- LILITH VOICE PLAYER -->
+  <div class="lilith-voice-player" id="lilith-voice-player">
+    <div class="lvp-bg"></div>
+    <div class="lvp-content">
+      <img class="lvp-avatar" id="lvp-avatar" src="lilith-voice-avatar.png" alt="Lilith Devai">
+      <div class="lvp-info">
+        <div class="lvp-title">LILITH DEVAI — VOICE SUMMARY</div>
+        <div class="lvp-session">WEEKEND MODE ALPHA // APR 18, 2026 // SESSION #010</div>
+        <div class="lvp-waveform" id="lvp-waveform"></div>
+        <div class="lvp-controls">
+          <button class="lvp-btn" id="lvp-restart" title="Restart">⏮</button>
+          <button class="lvp-btn play-main" id="lvp-play" title="Play/Pause">▶</button>
+          <div class="lvp-progress" id="lvp-progress">
+            <div class="lvp-progress-fill" id="lvp-progress-fill"></div>
+          </div>
+          <span class="lvp-time" id="lvp-time">0:00</span>
+        </div>
+        <div class="lvp-status" id="lvp-status">READY — TAP PLAY TO HEAR LILITH'S MARKET SUMMARY</div>
+      </div>
+    </div>
+    <audio id="lilith-audio" preload="auto" src="music/lilith-summary.mp3"></audio>
+  </div>
+
   <div class="macro-box">
     <div class="macro-label">// WEEKEND SCAN // APR 18 // THE WEEK THAT CHANGED EVERYTHING + NEXT WEEK PREVIEW //
 
@@ -1904,5 +2081,187 @@ function toggleLightMode() {
 
 </script>
 
+<script>
+
+  // ── LILITH VOICE PLAYER + MUSIC DUCKING ──
+  (function() {
+    const audio = document.getElementById('lilith-audio');
+    const playBtn = document.getElementById('lvp-play');
+    const restartBtn = document.getElementById('lvp-restart');
+    const progressBar = document.getElementById('lvp-progress');
+    const progressFill = document.getElementById('lvp-progress-fill');
+    const timeDisplay = document.getElementById('lvp-time');
+    const statusEl = document.getElementById('lvp-status');
+    const avatar = document.getElementById('lvp-avatar');
+    const waveform = document.getElementById('lvp-waveform');
+
+    if (!audio || !playBtn) return;
+
+    // Build waveform bars
+    for (let i = 0; i < 40; i++) {
+      const bar = document.createElement('div');
+      bar.className = 'lvp-bar';
+      bar.style.height = (Math.random() * 30 + 10) + 'px';
+      bar.style.animationDelay = (Math.random() * 0.5) + 's';
+      waveform.appendChild(bar);
+    }
+
+    const bars = waveform.querySelectorAll('.lvp-bar');
+
+    // Find the background music player audio
+    function getMusicAudio() {
+      // Look for the music player audio element
+      const musicContainer = document.getElementById('music-player');
+      if (musicContainer) {
+        return musicContainer.querySelector('audio');
+      }
+      // Fallback: find any audio that isn't lilith
+      const allAudios = document.querySelectorAll('audio');
+      for (const a of allAudios) {
+        if (a.id !== 'lilith-audio') return a;
+      }
+      return null;
+    }
+
+    let musicOriginalVolume = 1;
+    let duckingActive = false;
+
+    function duckMusic() {
+      const musicAudio = getMusicAudio();
+      if (musicAudio && !duckingActive) {
+        musicOriginalVolume = musicAudio.volume || 1;
+        duckingActive = true;
+        // Fade music down to 15% over 500ms
+        let vol = musicOriginalVolume;
+        const target = musicOriginalVolume * 0.15;
+        const step = (vol - target) / 20;
+        const fadeDown = setInterval(() => {
+          vol -= step;
+          if (vol <= target) { vol = target; clearInterval(fadeDown); }
+          musicAudio.volume = Math.max(0, vol);
+        }, 25);
+      }
+    }
+
+    function unduckMusic() {
+      const musicAudio = getMusicAudio();
+      if (musicAudio && duckingActive) {
+        duckingActive = false;
+        // Fade music back up over 800ms
+        let vol = musicAudio.volume;
+        const target = musicOriginalVolume;
+        const step = (target - vol) / 32;
+        const fadeUp = setInterval(() => {
+          vol += step;
+          if (vol >= target) { vol = target; clearInterval(fadeUp); }
+          musicAudio.volume = Math.min(1, vol);
+        }, 25);
+      }
+    }
+
+    // Set Lilith volume higher than music
+    audio.volume = 1.0;
+
+    function formatTime(s) {
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60);
+      return m + ':' + (sec < 10 ? '0' : '') + sec;
+    }
+
+    function activateBars() {
+      bars.forEach(b => b.classList.add('active'));
+    }
+    function deactivateBars() {
+      bars.forEach(b => b.classList.remove('active'));
+    }
+
+    playBtn.addEventListener('click', function() {
+      if (audio.paused) {
+        audio.play();
+        playBtn.textContent = '⏸';
+        statusEl.textContent = 'PLAYING — LILITH IS SPEAKING';
+        statusEl.classList.add('live');
+        avatar.classList.add('playing');
+        activateBars();
+        duckMusic();
+      } else {
+        audio.pause();
+        playBtn.textContent = '▶';
+        statusEl.textContent = 'PAUSED';
+        statusEl.classList.remove('live');
+        avatar.classList.remove('playing');
+        deactivateBars();
+        unduckMusic();
+      }
+    });
+
+    restartBtn.addEventListener('click', function() {
+      audio.currentTime = 0;
+      if (audio.paused) {
+        audio.play();
+        playBtn.textContent = '⏸';
+        statusEl.textContent = 'PLAYING — LILITH IS SPEAKING';
+        statusEl.classList.add('live');
+        avatar.classList.add('playing');
+        activateBars();
+        duckMusic();
+      }
+    });
+
+    audio.addEventListener('timeupdate', function() {
+      if (audio.duration) {
+        const pct = (audio.currentTime / audio.duration) * 100;
+        progressFill.style.width = pct + '%';
+        timeDisplay.textContent = formatTime(audio.currentTime);
+      }
+    });
+
+    progressBar.addEventListener('click', function(e) {
+      if (audio.duration) {
+        const rect = progressBar.getBoundingClientRect();
+        const pct = (e.clientX - rect.left) / rect.width;
+        audio.currentTime = pct * audio.duration;
+      }
+    });
+
+    audio.addEventListener('ended', function() {
+      playBtn.textContent = '▶';
+      statusEl.textContent = 'FINISHED — TAP PLAY TO REPLAY';
+      statusEl.classList.remove('live');
+      avatar.classList.remove('playing');
+      deactivateBars();
+      progressFill.style.width = '100%';
+      unduckMusic();
+    });
+
+    // Auto-play after boot screen (if boot exists)
+    const bootScreen = document.getElementById('boot-screen');
+    if (bootScreen) {
+      const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(m) {
+          if (m.type === 'attributes' && bootScreen.style.display === 'none') {
+            // Boot finished, auto-play Lilith after 1.5s
+            setTimeout(function() {
+              audio.play().then(function() {
+                playBtn.textContent = '⏸';
+                statusEl.textContent = 'PLAYING — LILITH IS SPEAKING';
+                statusEl.classList.add('live');
+                avatar.classList.add('playing');
+                activateBars();
+                duckMusic();
+              }).catch(function() {
+                // Autoplay blocked, user needs to tap
+                statusEl.textContent = 'TAP PLAY TO HEAR LILITH';
+              });
+            }, 1500);
+            observer.disconnect();
+          }
+        });
+      });
+      observer.observe(bootScreen, { attributes: true, attributeFilter: ['style'] });
+    }
+  })();
+
+</script>
 </body>
 </html>
