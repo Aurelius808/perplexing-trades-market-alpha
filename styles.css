@@ -301,9 +301,14 @@ table.kn-table {
 .play.bull .play-dir { color: var(--bull); border-color: rgba(0,217,126,0.4); }
 .play.bear .play-dir { color: var(--bear); border-color: rgba(255,59,71,0.4); }
 .play-name { font-family: var(--mono); font-size: var(--text-sm); color: var(--ink-mute); letter-spacing: 0.08em; text-transform: uppercase; margin-top: -10px; }
-.play-levels { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 14px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: var(--text-sm); }
+.play-levels { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; padding: 14px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: var(--text-sm); }
 .play-levels .lbl { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 4px; }
-.play-levels .val { color: var(--ink); font-feature-settings: 'tnum'; }
+.play-levels .val { color: var(--ink); font-feature-settings: 'tnum'; line-height: 1.35; }
+.play-levels .val.tp-s { color: var(--bull); }
+.play-levels .val.tp-l { color: var(--amber); }
+.play-levels .val.stop { color: var(--bear); }
+.play-levels .val.entry { color: var(--ink); }
+.play-levels .sub { display: block; font-size: 10px; color: var(--ink-mute); margin-top: 2px; letter-spacing: 0.02em; text-transform: none; }
 .play-body { font-family: var(--serif); font-size: var(--text-md); color: var(--ink); line-height: 1.55; font-weight: 300; }
 .play-caption { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--amber); margin-bottom: 6px; }
 .play-caption.bear-c { color: var(--bear); }
@@ -499,7 +504,7 @@ table.kn-table {
   .play-sym { font-size: 28px; }
   .hero h1 { font-size: 36px; }
   .port-val { font-size: 28px; }
-  .play-levels { grid-template-columns: 1fr; gap: 8px; }
+  .play-levels { grid-template-columns: 1fr; gap: 10px; }
   body { padding-bottom: 160px; }
 }
 body { padding-bottom: 88px; }
