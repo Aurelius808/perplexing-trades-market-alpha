@@ -1,821 +1,325 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Under the Hood — Perplexing Trades Research</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;500;600;700;800;900&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
-<script>
-/* Restore light mode before first paint — prevents flash */
-if(localStorage.getItem('ptLightMode')==='1'){document.documentElement.classList.add('light-mode');}
-</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+<title>Methodology — Perplexing Trades</title>
+<meta name="description" content="How the LLM council, freshness mandate, and real-time Perplexity layer produce each twice-daily dispatch." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230A0B0D'/%3E%3Cpath d='M8 10h6a4 4 0 110 8H8V10zm0 10h6a4 4 0 110 8H8v-8z' fill='%23FF9500'/%3E%3C/svg%3E" />
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-
-:root {
-  --glow:#00ff41; --glow-rgb:0,255,65;
-  --cherry:#ff1744; --cherry-rgb:255,23,68;
-  --neutral:#ff9100; --bear:#ff3d3d;
-  --bg:#03030a; --bg-panel:#0b0b16; --bg-card:#0f0f1a;
-  --text-bright:#f5f5ff; --text-primary:#c8c8d8;
-  --text-dim:#606075; --text-muted:#353548;
-  --border:rgba(255,255,255,.05);
-}
-
-body {
-  background:var(--bg);
-  color:var(--text-primary);
-  font-family:'Share Tech Mono',monospace;
-  min-height:100vh;
-  overflow-x:hidden;
-}
-
-/* ── GLITCH IN/OUT ANIMATIONS ─────────────────────────────────── */
-@keyframes glitch-in {
-  0%  { opacity:0; filter:brightness(3) hue-rotate(90deg) saturate(5); transform:skewX(-8deg) scaleY(1.05); }
-  15% { filter:brightness(2) hue-rotate(0deg); transform:skewX(4deg); clip-path:inset(20% 0 60% 0); }
-  30% { filter:brightness(1.5) hue-rotate(180deg); transform:skewX(-2deg); clip-path:inset(50% 0 10% 0); }
-  50% { filter:brightness(1.2); transform:skewX(1deg); clip-path:none; opacity:1; }
-  70% { filter:brightness(1.05) hue-rotate(10deg); transform:skewX(0); }
-  100% { filter:none; transform:none; opacity:1; }
-}
-
-@keyframes glitch-out {
-  0%  { opacity:1; filter:none; transform:none; }
-  20% { filter:brightness(2) hue-rotate(90deg); transform:skewX(6deg); }
-  40% { clip-path:inset(30% 0 50% 0); filter:brightness(3) saturate(4); transform:skewX(-4deg) translateX(10px); }
-  60% { clip-path:inset(60% 0 10% 0); filter:hue-rotate(180deg) brightness(2); transform:skewX(3deg) translateX(-8px); }
-  80% { filter:brightness(0); transform:scaleX(1.1); }
-  100% { opacity:0; filter:brightness(0); transform:scaleX(1.1); }
-}
-
-body.glitch-in-active  { animation:glitch-in  0.7s ease-out forwards; }
-body.glitch-out-active { animation:glitch-out 0.5s ease-in  forwards; }
-
-/* ── CRT LAYERS ──────────────────────────────────────────────── */
-body::before {
-  content:'';
-  position:fixed; inset:0;
-  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.14) 3px,rgba(0,0,0,.14) 4px);
-  pointer-events:none; z-index:9990;
-}
-
-body::after {
-  content:'';
-  position:fixed; inset:0;
-  background:radial-gradient(ellipse at center,transparent 52%,rgba(0,0,0,.7) 100%);
-  pointer-events:none; z-index:9991;
-}
-
-/* Neon pulse video background */
-#neon-bg {
-  position:fixed; inset:0;
-  width:100%; height:100%;
-  object-fit:cover;
-  z-index:0;
-  opacity:.06;
-  pointer-events:none;
-}
-
-/* ── ANIMATIONS ──────────────────────────────────────────────── */
-@keyframes pulse    { 0%,100%{opacity:.6} 50%{opacity:1} }
-@keyframes glow-green { 0%,100%{text-shadow:0 0 8px var(--glow),0 0 16px var(--glow)} 50%{text-shadow:0 0 16px var(--glow),0 0 32px var(--glow),0 0 50px rgba(var(--glow-rgb),.5)} }
-@keyframes cherry-glow { 0%,100%{text-shadow:0 0 8px var(--cherry),0 0 16px var(--cherry)} 50%{text-shadow:0 0 18px var(--cherry),0 0 36px var(--cherry),0 0 60px rgba(var(--cherry-rgb),.4)} }
-@keyframes slide-up { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
-@keyframes flicker  { 0%,100%{opacity:1} 93%{opacity:1} 93.3%{opacity:.7} 93.6%{opacity:1} 97%{opacity:.88} 97.4%{opacity:1} }
-
-/* Back button glow pulse */
-@keyframes back-glow {
-  0%,100% { box-shadow:0 0 20px rgba(255,23,68,.4), 0 0 40px rgba(255,23,68,.15), inset 0 0 20px rgba(255,23,68,.05); }
-  50%     { box-shadow:0 0 40px rgba(255,23,68,.7), 0 0 80px rgba(255,23,68,.35), 0 0 120px rgba(255,23,68,.15), inset 0 0 30px rgba(255,23,68,.1); }
-}
-
-@keyframes back-flicker {
-  0%,100%{opacity:1} 85%{opacity:1} 86%{opacity:.6} 87%{opacity:1} 95%{opacity:.85} 96%{opacity:1}
-}
-
-/* ── LAYOUT ──────────────────────────────────────────────────── */
-.container {
-  max-width:900px;
-  margin:0 auto;
-  padding:40px 22px 80px;
-  position:relative; z-index:10;
-  animation:flicker 12s infinite, slide-up .5s ease-out;
-}
-
-/* ── GIANT BACK BUTTON ──────────────────────────────────────── */
-.back-section {
-  display:flex; align-items:center;
-  margin-bottom:36px;
-  padding-bottom:28px;
-  border-bottom:1px solid rgba(255,23,68,.2);
-  position:relative;
-}
-
-.back-btn {
-  display:inline-flex; align-items:center; gap:14px;
-  font-family:'Orbitron',sans-serif;
-  font-size:14px; font-weight:900;
-  letter-spacing:3px; text-transform:uppercase;
-  color:var(--cherry);
-  background:rgba(255,23,68,.06);
-  border:2px solid rgba(255,23,68,.45);
-  border-radius:4px;
-  padding:16px 28px;
-  cursor:pointer;
-  text-decoration:none;
-  animation:back-glow 2.5s ease-in-out infinite, back-flicker 8s infinite;
-  transition:transform .15s;
-  -webkit-tap-highlight-color:transparent;
-}
-
-.back-btn:hover { transform:scale(1.03); }
-.back-btn:active { transform:scale(0.95); }
-
-.back-arrow {
-  font-size:22px;
-  animation:pulse 1.5s infinite;
-}
-
-.back-sub {
-  font-size:9px; letter-spacing:2px;
-  color:var(--text-dim); text-transform:uppercase;
-  margin-top:3px; display:block;
-}
-
-/* ── PAGE HEADER ─────────────────────────────────────────────── */
-.page-header { margin-bottom:36px; }
-
-.page-eyebrow {
-  font-family:'Orbitron',sans-serif;
-  font-size:9px; font-weight:700;
-  letter-spacing:3px; text-transform:uppercase;
-  color:var(--glow); margin-bottom:8px;
-  animation:glow-green 4s infinite;
-}
-
-.page-title {
-  font-family:'Orbitron',sans-serif;
-  font-size:clamp(18px,4vw,30px); font-weight:900;
-  color:var(--text-bright); line-height:1.2;
-  letter-spacing:-0.5px;
-}
-
-.page-title span { color:var(--glow); }
-
-.page-desc {
-  font-size:13px; color:var(--text-dim);
-  line-height:1.7; margin-top:12px;
-}
-
-/* ── WIRE BORDER DIVIDERS ────────────────────────────────────── */
-.wire-divider {
-  width:100%;
-  height:40px;
-  background-image:url('wire-border.png');
-  background-size:cover;
-  background-position:center;
-  opacity:.5;
-  margin:28px 0;
-  border-radius:2px;
-  filter:brightness(1.2) hue-rotate(0deg);
-}
-
-.wire-divider.red { filter:brightness(1.1) hue-rotate(100deg) saturate(1.5); }
-
-/* ── SECTION HEADERS ─────────────────────────────────────────── */
-.section { margin-bottom:36px; }
-
-.sh {
-  font-family:'Orbitron',sans-serif;
-  font-size:9.5px; font-weight:700;
-  letter-spacing:2.5px; text-transform:uppercase;
-  color:var(--glow); margin-bottom:14px;
-  display:flex; align-items:center; gap:10px;
-}
-
-.sh::before { content:'▸'; font-size:11px; }
-.sh::after  { content:''; flex:1; height:1px; background:linear-gradient(to right,rgba(var(--glow-rgb),.3),transparent); }
-
-/* ── BODY TEXT ───────────────────────────────────────────────── */
-.body-text {
-  font-size:13px; line-height:1.82;
-  color:var(--text-primary);
-}
-
-.body-text p { margin-bottom:14px; }
-.body-text p:last-child { margin-bottom:0; }
-.body-text strong { color:var(--text-bright); }
-.body-text em { color:var(--glow); font-style:normal; }
-
-/* ── MODEL CARDS ─────────────────────────────────────────────── */
-.model-grid {
-  display:grid; grid-template-columns:repeat(3,1fr);
-  gap:12px; margin-top:14px;
-}
-
-.model-card {
-  background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:4px; padding:18px;
-  position:relative; overflow:hidden;
-  transition:border-color .2s, transform .2s;
-}
-
-.model-card:hover {
-  border-color:rgba(var(--glow-rgb),.3);
-  transform:translateY(-2px);
-}
-
-.model-card::before {
-  content:''; position:absolute; top:0; left:0;
-  width:3px; height:100%;
-  background:var(--model-color);
-  box-shadow:0 0 10px var(--model-color);
-}
-
-.model-card.claude { --model-color:#7c9cff; }
-.model-card.gemini { --model-color:#4285f4; }
-.model-card.gpt    { --model-color:#10a37f; }
-
-.model-icon {
-  font-size:22px; margin-bottom:8px; display:block;
-}
-
-.model-name {
-  font-family:'Orbitron',sans-serif;
-  font-size:10px; font-weight:700;
-  letter-spacing:1.5px; text-transform:uppercase;
-  color:var(--model-color); margin-bottom:3px;
-}
-
-.model-role {
-  font-size:8.5px; color:var(--text-muted);
-  letter-spacing:1px; text-transform:uppercase;
-  margin-bottom:12px;
-  border-bottom:1px solid rgba(255,255,255,.04);
-  padding-bottom:8px;
-}
-
-.model-says { font-size:12px; color:var(--text-dim); line-height:1.65; }
-
-/* Consensus/dissent block */
-.consensus-box {
-  background:rgba(var(--glow-rgb),.04);
-  border:1px solid rgba(var(--glow-rgb),.15);
-  border-left:3px solid var(--glow);
-  border-radius:3px; padding:14px 16px;
-  margin-top:14px; font-size:12.5px;
-  color:var(--text-primary); line-height:1.7;
-}
-
-.consensus-box strong { color:var(--glow); }
-
-/* ── VS GOOGLE ───────────────────────────────────────────────── */
-.vs-grid {
-  display:grid; grid-template-columns:1fr 1fr;
-  gap:12px; margin-top:14px;
-}
-
-.vs-col {
-  border-radius:3px; padding:16px;
-  background:rgba(255,255,255,.025);
-}
-
-.vs-col.google    { border:1px solid rgba(255,61,61,.2); }
-.vs-col.perplexing{ border:1px solid rgba(0,255,65,.2); }
-
-.vs-label {
-  font-family:'Orbitron',sans-serif;
-  font-size:8px; font-weight:700;
-  letter-spacing:2px; text-transform:uppercase;
-  margin-bottom:12px;
-}
-
-.vs-col.google .vs-label    { color:var(--bear); }
-.vs-col.perplexing .vs-label{ color:var(--glow); }
-
-.vs-item {
-  font-size:11.5px; color:var(--text-dim);
-  line-height:1.65; margin-bottom:7px;
-  padding-left:16px; position:relative;
-}
-
-.vs-item::before { position:absolute; left:0; top:0; }
-.vs-col.google .vs-item::before    { content:'✗'; color:var(--bear); }
-.vs-col.perplexing .vs-item::before{ content:'✓'; color:var(--glow); }
-
-/* ── SOURCES ─────────────────────────────────────────────────── */
-.source-entry {
-  display:flex; align-items:flex-start; gap:10px;
-  padding:10px 0;
-  border-bottom:1px solid var(--border);
-  font-size:12px;
-}
-
-.source-entry:last-child { border-bottom:none; }
-
-.src-badge {
-  font-family:'Orbitron',sans-serif; font-size:8px;
-  color:var(--glow); background:rgba(var(--glow-rgb),.08);
-  border:1px solid rgba(var(--glow-rgb),.2);
-  padding:3px 8px; border-radius:2px; flex-shrink:0; margin-top:1px;
-}
-
-.src-title { color:var(--text-primary); flex:1; line-height:1.45; }
-.src-pub   { color:var(--text-dim); font-size:10px; display:block; margin-top:2px; }
-.src-link  {
-  color:rgba(var(--glow-rgb),.55); text-decoration:none;
-  font-size:10px; white-space:nowrap; flex-shrink:0; margin-top:1px;
-}
-.src-link:hover { color:var(--glow); text-decoration:underline; }
-
-/* ── FOOTER ──────────────────────────────────────────────────── */
-.page-footer {
-  text-align:center; padding-top:24px;
-  border-top:1px solid rgba(var(--glow-rgb),.12);
-  font-size:9px; color:var(--text-muted); letter-spacing:2px; text-transform:uppercase;
-}
-
-.disclaimer-box {
-  font-size:10px; color:var(--text-muted); line-height:1.6;
-  padding:12px 14px; background:rgba(255,255,255,.015);
-  border-radius:2px; margin-bottom:20px;
-}
-
-/* ── RESPONSIVE ──────────────────────────────────────────────── */
-@media (max-width:640px) {
-  .container { padding:24px 14px 60px; }
-  .model-grid { grid-template-columns:1fr; }
-  .vs-grid    { grid-template-columns:1fr; }
-  .back-btn   { font-size:11px; padding:13px 18px; letter-spacing:2px; }
-  .page-title { font-size:18px; }
-  .wire-divider { height:28px; }
-}
-
-
-/* ════════════════════════════════════════════════════════════════════
-   LIGHT PRINT MODE  ·  Perplexing Trades v2.3
-   Toggle via html.light-mode class  ·  Safe-to-share, printable
-   ════════════════════════════════════════════════════════════════════ */
-
-
-/* ── CSS Variable overrides (most elements use var(--x)) ────────── */
-html.light-mode,
-html.light-mode:root {
-  --bg:          #ffffff;
-  --bg-panel:    #f8f9fa;
-  --bg-card:     #fafafa;
-  --bg-card-hover: #f0f4ff;
-  --text-bright: #1a1a2e;
-  --text-primary:#333333;
-  --text-dim:    #666666;
-  --text-muted:  #999999;
-  --border:      rgba(0,0,0,.1);
-  --glow:        #1a1a2e;
-  --glow-rgb:    26, 26, 46;
-  --cherry:      #b71c1c;
-  --cherry-rgb:  183, 28, 28;
-  --bear:        #b71c1c;
-  --bull:        #1a7a4a;
-  --bull-rgb:    26, 122, 74;
-  --neutral:     #795500;
-}
-
-/* ── Toggle button ───────────────────────────────────────────────── */
-#mode-toggle {
-  position: fixed;
-  top: 14px; right: 16px;
-  z-index: 99999;
-  cursor: pointer;
-  padding: 8px 18px;
-  font-family: 'Orbitron', 'Share Tech Mono', monospace;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 1.8px;
-  text-transform: uppercase;
-  border-radius: 3px;
-  background: rgba(0,0,0,.75);
-  color: #f5c842;
-  border: 1.5px solid #f5c842;
-  animation: toggle-pulse 2.2s ease-in-out infinite;
-  user-select: none;
-  white-space: nowrap;
-  backdrop-filter: blur(4px);
-  transition: background .2s, color .2s;
-}
-#mode-toggle:hover { background: rgba(245,200,66,.15); }
-@keyframes toggle-pulse {
-  0%,100% { box-shadow: 0 0 6px rgba(245,200,66,.3); }
-  50%      { box-shadow: 0 0 20px rgba(245,200,66,.7), 0 0 8px 2px rgba(245,200,66,.15); }
-}
-
-/* ── Light mode: button changes ──────────────────────────────────── */
-html.light-mode #mode-toggle {
-  background: #1a1a2e; color: #fff; border-color: #1a1a2e;
-  animation: none; box-shadow: 0 2px 6px rgba(0,0,0,.15);
-}
-html.light-mode #mode-toggle:hover { background: #2e2e50; }
-
-/* ── Base reset ──────────────────────────────────────────────────── */
-html.light-mode, html.light-mode body {
-  background: #ffffff !important; color: #1a1a2e !important;
-}
-html.light-mode * { text-shadow: none !important; animation: none !important; }
-html.light-mode #mode-toggle { transition: background .2s, color .2s !important; }
-
-/* ── Hide atmospheric/decorative elements ────────────────────────── */
-html.light-mode #bg-video,
-html.light-mode #elec-video,
-html.light-mode #matrix-rain,
-html.light-mode .wire-border-img,
-html.light-mode #music-player,
-html.light-mode .music-player,
-html.light-mode .crt-sweep,
-html.light-mode .wire-divider,
-html.light-mode #boot-screen { display: none !important; }
-
-/* ── Header ──────────────────────────────────────────────────────── */
-html.light-mode .header {
-  background: #ffffff !important;
-  border-bottom: 2px solid #1a1a2e !important;
-  box-shadow: none !important;
-  padding: 14px 20px !important;
-}
-html.light-mode .report-title, html.light-mode .system-name { color: #1a1a2e !important; }
-html.light-mode .timestamp   { color: #666 !important; }
-html.light-mode .market-num  { color: #1a1a2e !important; }
-html.light-mode .market-lbl, html.light-mode .market-status { color: #555 !important; }
-html.light-mode .public-badge,
-html.light-mode [class*="public-badge"] {
-  background: #f0f0f0 !important; border-color: #ccc !important;
-  color: #555 !important; box-shadow: none !important;
-}
-
-/* ── Hood banner ─────────────────────────────────────────────────── */
-html.light-mode .hood-banner {
-  background: #f8f9fa !important; border: 2px solid #1a1a2e !important;
-  box-shadow: none !important; animation: none !important;
-}
-html.light-mode .hood-main  { color: #1a1a2e !important; }
-html.light-mode .hood-sub   { color: #666 !important; }
-html.light-mode .hood-arrow, html.light-mode .hood-icon { color: #1a1a2e !important; }
-
-/* ── Container ───────────────────────────────────────────────────── */
-html.light-mode .container {
-  background: transparent !important;
-  max-width: 900px !important; margin: 0 auto !important;
-}
-
-/* ── Section tags ────────────────────────────────────────────────── */
-html.light-mode .section-tag {
-  color: #555 !important; border-bottom: 1px solid #ddd !important;
-}
-html.light-mode .jp { color: #888 !important; }
-
-/* ── Macro box ───────────────────────────────────────────────────── */
-html.light-mode .macro-box {
-  background: #fafafa !important; border: 1px solid #e0e0e0 !important;
-  border-left: 4px solid #1a1a2e !important; border-radius: 4px !important;
-  box-shadow: none !important;
-}
-html.light-mode .macro-label   { color: #888 !important; border-color: #ddd !important; font-size: 8px !important; }
-html.light-mode .macro-headline { color: #1a1a2e !important; }
-html.light-mode .macro-para    { color: #333 !important; line-height: 1.7 !important; }
-html.light-mode .cursor        { display: none !important; }
-
-/* Semantic inline colors */
-html.light-mode .s-bull { color: #1a7a4a !important; font-weight: 600; }
-html.light-mode .s-bear { color: #b71c1c !important; font-weight: 600; }
-html.light-mode .s-hi   { color: #1565c0 !important; font-weight: 600; }
-html.light-mode .cite   { color: #999 !important; font-size: .82em; }
-
-/* ── Key Numbers table ───────────────────────────────────────────── */
-html.light-mode .kn-scroll { overflow: visible !important; }
-html.light-mode .kn-table  { background: #fff !important; border: 1px solid #ddd !important; border-radius: 4px !important; box-shadow: none !important; }
-html.light-mode .kn-label  { color: #888 !important; border-color: #ddd !important; }
-html.light-mode .kn-table th { background: #1a1a2e !important; color: #fff !important; }
-html.light-mode .kn-table tr:nth-child(even) { background: #f8f8f8 !important; }
-html.light-mode .kn-table tr:hover { background: #f0f4ff !important; }
-html.light-mode .kn-ind  { color: #1a1a2e !important; font-weight: 600; }
-html.light-mode .kn-val  { color: #1a1a2e !important; font-weight: 700; }
-html.light-mode .kn-why  { color: #555 !important; }
-html.light-mode .kn-chg.up   { color: #1a7a4a !important; font-weight: 700; }
-html.light-mode .kn-chg.down { color: #b71c1c !important; font-weight: 700; }
-
-/* ── Sector vibe check ───────────────────────────────────────────── */
-html.light-mode .sv-grid  { background: #fafafa !important; border: 1px solid #e0e0e0 !important; border-radius: 4px !important; box-shadow: none !important; }
-html.light-mode .sv-label { color: #888 !important; border-color: #ddd !important; }
-html.light-mode .sv-row   { border-bottom: 1px solid #f0f0f0 !important; }
-html.light-mode .sv-name  { color: #1a1a2e !important; font-weight: 600; }
-html.light-mode .sv-why   { color: #555 !important; }
-html.light-mode .sv-vibe.bull    { color: #1a7a4a !important; background: rgba(26,122,74,.09) !important; border: 1px solid rgba(26,122,74,.2) !important; }
-html.light-mode .sv-vibe.neutral { color: #795500 !important; background: rgba(121,85,0,.07) !important; border: 1px solid rgba(121,85,0,.2) !important; }
-html.light-mode .sv-vibe.bear    { color: #b71c1c !important; background: rgba(183,28,28,.07) !important; border: 1px solid rgba(183,28,28,.2) !important; }
-
-/* ── Sources ─────────────────────────────────────────────────────── */
-html.light-mode .sources-box   { background: #fafafa !important; border: 1px solid #e0e0e0 !important; border-radius: 4px !important; }
-html.light-mode .sources-label { color: #555 !important; border-color: #ddd !important; }
-html.light-mode .source-row    { border-bottom: 1px solid #f0f0f0 !important; }
-html.light-mode .src-num       { color: #999 !important; }
-html.light-mode .src-link, html.light-mode .src-link a { color: #1565c0 !important; }
-
-/* ── Play cards ──────────────────────────────────────────────────── */
-html.light-mode .play-card {
-  background: #fafafa !important; border: 1px solid #ddd !important;
-  box-shadow: none !important; border-radius: 4px !important;
-}
-html.light-mode .play-card.bull { border-left: 4px solid #1a7a4a !important; }
-html.light-mode .play-card.bear { border-left: 4px solid #b71c1c !important; }
-html.light-mode .play-header    { border-bottom: 1px solid #eee !important; background: transparent !important; }
-html.light-mode .ticker.bull    { color: #1a7a4a !important; }
-html.light-mode .ticker.bear    { color: #b71c1c !important; }
-html.light-mode .badge          { box-shadow: none !important; }
-html.light-mode .badge.high       { background: #fff8e1 !important; color: #795500 !important; border-color: #f5c842 !important; }
-html.light-mode .badge.asym       { background: #e3f2fd !important; color: #1565c0 !important; border-color: #90caf9 !important; }
-html.light-mode .badge.bear-badge { background: #ffebee !important; color: #b71c1c !important; border-color: #ef9a9a !important; }
-html.light-mode .entry-exit     { color: #1a1a2e !important; }
-html.light-mode .play-thesis    { color: #333 !important; line-height: 1.6 !important; }
-html.light-mode .thesis-breaker { color: #888 !important; background: #f5f5f5 !important; border-color: #ddd !important; }
-html.light-mode .play-strategy  { color: #666 !important; }
-html.light-mode .tag            { background: rgba(0,0,0,.06) !important; color: #333 !important; }
-
-/* ── Options box ─────────────────────────────────────────────────── */
-html.light-mode .opts-box  { background: #fafafa !important; border: 1px solid #e0e0e0 !important; border-radius: 4px !important; box-shadow: none !important; }
-html.light-mode .opt-block { border-bottom: 1px solid #eee !important; }
-html.light-mode .opt-head  { color: #1a1a2e !important; border-color: #ddd !important; background: transparent !important; }
-html.light-mode .opt-body  { color: #333 !important; }
-html.light-mode .opt-ticker  { background: #e8ecf0 !important; color: #1a1a2e !important; border: 1px solid #ccc !important; }
-html.light-mode .opt-premium { color: #1565c0 !important; font-weight: 600; }
-html.light-mode .opt-warn    { color: #795500 !important; background: #fff8e1 !important; border-left-color: #f5c842 !important; }
-
-/* ── Lilith Says — image hidden, text kept ───────────────────────── */
-html.light-mode .lilith-wrap    { background: #fafafa !important; border: 1px solid #e0e0e0 !important; border-radius: 4px !important; }
-html.light-mode .lilith-box     { background: transparent !important; border: none !important; flex-direction: column !important; }
-html.light-mode .lilith-img, html.light-mode .lilith-callsign { display: none !important; }
-html.light-mode .lilith-content { padding: 20px 0 !important; width: 100% !important; max-width: 100% !important; }
-html.light-mode .lilith-name    { color: #999 !important; font-size: 8px !important; }
-html.light-mode .lilith-text    { color: #333 !important; font-style: italic !important; line-height: 1.7 !important; }
-
-/* ── Footer ──────────────────────────────────────────────────────── */
-html.light-mode .footer-note  { background: #fafafa !important; border: 1px solid #e0e0e0 !important; color: #666 !important; }
-html.light-mode .disclaimer   { color: #888 !important; }
-html.light-mode .footer       { background: #fafafa !important; border-top: 1px solid #e0e0e0 !important; }
-html.light-mode .footer-line  { color: #999 !important; }
-html.light-mode .footer-cherry { display: none !important; }
-
-/* ════ METHODOLOGY PAGE ═══════════════════════════════════════════ */
-html.light-mode .page-header  { background: #fff !important; border-bottom: 2px solid #1a1a2e !important; }
-html.light-mode .page-eyebrow { color: #888 !important; }
-html.light-mode .page-title   { color: #1a1a2e !important; }
-html.light-mode .page-desc    { color: #555 !important; }
-html.light-mode .section      { background: #fafafa !important; border: 1px solid #e0e0e0 !important; border-radius: 4px !important; box-shadow: none !important; }
-html.light-mode .sh           { color: #1a1a2e !important; border-color: #ddd !important; }
-html.light-mode .sh::before, html.light-mode .sh::after { background: #ddd !important; }
-html.light-mode .body-text    { color: #333 !important; line-height: 1.7 !important; }
-html.light-mode .model-card   { background: #f8f9fa !important; border: 1px solid #e0e0e0 !important; box-shadow: none !important; }
-html.light-mode .model-card.claude { border-left: 4px solid #7c4daa !important; }
-html.light-mode .model-card.gemini { border-left: 4px solid #1a73e8 !important; }
-html.light-mode .model-card.gpt    { border-left: 4px solid #1a7a4a !important; }
-html.light-mode .model-name   { color: #1a1a2e !important; }
-html.light-mode .model-role   { color: #666 !important; }
-html.light-mode .model-says   { color: #333 !important; background: #f0f0f0 !important; border-left: 3px solid #ccc !important; }
-html.light-mode .consensus-box { background: #fff8e1 !important; border: 1px solid #f5c842 !important; color: #1a1a2e !important; box-shadow: none !important; }
-html.light-mode .vs-grid      { background: #fafafa !important; border: 1px solid #e0e0e0 !important; }
-html.light-mode .vs-label     { color: #888 !important; background: #f0f0f0 !important; }
-html.light-mode .vs-item      { color: #333 !important; border-bottom: 1px solid #eee !important; }
-html.light-mode .vs-col.perplexing { background: rgba(26,122,74,.04) !important; }
-html.light-mode .source-entry { background: #fafafa !important; border: 1px solid #e0e0e0 !important; }
-html.light-mode .src-badge    { background: #e8ecf0 !important; color: #333 !important; }
-html.light-mode .src-pub      { color: #888 !important; }
-html.light-mode .src-title a  { color: #1565c0 !important; }
-html.light-mode .disclaimer-box { background: #fff8e1 !important; border: 1px solid #f5c842 !important; color: #555 !important; }
-html.light-mode .back-btn     { background: #1a1a2e !important; color: #fff !important; border-color: #1a1a2e !important; box-shadow: none !important; }
-html.light-mode .back-sub     { color: #888 !important; }
-html.light-mode .page-footer  { background: #fafafa !important; border-top: 1px solid #e0e0e0 !important; color: #888 !important; }
-
-/* ════ @media print — always clean, regardless of toggle ══════════ */
-@media print {
-  #mode-toggle, #bg-video, #elec-video, #matrix-rain, .wire-border-img,
-  #music-player, .music-player, #boot-screen, .crt-sweep, .wire-divider,
-  .lilith-img, .lilith-callsign, .footer-cherry, .hood-icon { display: none !important; }
-  html, body { background: #ffffff !important; color: #1a1a2e !important; }
-  * { text-shadow: none !important; box-shadow: none !important; animation: none !important; }
-  .container  { max-width: 100% !important; padding: 0 12px !important; }
-  .play-card, .opts-box, .sv-grid, .sources-box, .macro-box { page-break-inside: avoid; }
-  .s-bull, .sv-vibe.bull, .kn-chg.up { color: #1a7a4a !important; }
-  .s-bear, .sv-vibe.bear, .kn-chg.down { color: #b71c1c !important; }
-  .s-hi { color: #1565c0 !important; }
-  a { color: #1565c0 !important; }
-  -webkit-print-color-adjust: exact; print-color-adjust: exact;
-}
-
+  /* Methodology-specific additions */
+  .m-hero { padding: 100px var(--gutter) 40px; max-width: 1200px; margin: 0 auto; }
+  .m-hero .eyebrow { font-family: var(--mono); font-size: var(--text-xs); letter-spacing: 0.2em; text-transform: uppercase; color: var(--amber); margin-bottom: 28px; }
+  .m-hero h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(42px, 6vw, 84px); line-height: 0.98; letter-spacing: -0.02em; color: var(--ink); max-width: 18ch; }
+  .m-hero h1 em { font-style: italic; color: var(--amber-soft); }
+  .m-hero .lede { font-family: var(--serif); font-size: var(--text-lg); line-height: 1.55; color: var(--ink-mute); max-width: 60ch; margin-top: 40px; font-weight: 300; }
+
+  .m-section { max-width: 1200px; margin: 0 auto; padding: 64px var(--gutter); }
+  .m-sec-label { font-family: var(--mono); font-size: var(--text-xs); letter-spacing: 0.2em; text-transform: uppercase; color: var(--amber); margin-bottom: 18px; display: flex; align-items: center; gap: 12px; }
+  .m-sec-label::before { content: ''; width: 28px; height: 1px; background: var(--amber); }
+  .m-section h2 { font-family: var(--serif); font-weight: 400; font-size: 40px; line-height: 1.05; letter-spacing: -0.01em; color: var(--ink); margin-bottom: 28px; }
+  .m-section h2 em { font-style: italic; color: var(--amber); }
+  .m-section p { font-family: var(--serif); font-size: var(--text-lg); line-height: 1.65; color: var(--ink); font-weight: 300; margin-bottom: 18px; }
+  .m-section p strong { color: var(--ink); font-weight: 500; }
+  .m-section p em { font-style: italic; color: var(--amber-soft); }
+
+  .council-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); margin: 40px 0 32px; }
+  .council-card { background: var(--bg-card); padding: 32px 28px; position: relative; }
+  .council-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; }
+  .council-card.claude::before { background: #D4A574; }
+  .council-card.gemini::before { background: #8FA4D4; }
+  .council-card.gpt::before { background: var(--bull); }
+  .council-card .cc-label { font-family: var(--mono); font-size: var(--text-xs); letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 14px; }
+  .council-card .cc-name { font-family: var(--serif); font-size: 24px; font-weight: 500; letter-spacing: -0.01em; color: var(--ink); margin-bottom: 4px; }
+  .council-card .cc-role { font-family: var(--serif); font-style: italic; font-size: var(--text-md); color: var(--amber); margin-bottom: 18px; }
+  .council-card .cc-body { font-family: var(--sans); font-size: var(--text-sm); line-height: 1.6; color: var(--ink-mute); }
+
+  .consensus { background: var(--bg-elev); border: 1px solid var(--line); padding: 32px; margin: 32px 0; }
+  .consensus .cx-label { font-family: var(--mono); font-size: var(--text-xs); letter-spacing: 0.2em; text-transform: uppercase; color: var(--amber); margin-bottom: 14px; }
+  .consensus .cx-row { margin-bottom: 16px; }
+  .consensus .cx-row strong { font-family: var(--serif); font-style: italic; font-size: var(--text-lg); color: var(--amber-soft); font-weight: 400; display: block; margin-bottom: 6px; }
+  .consensus p { font-size: var(--text-md); line-height: 1.6; color: var(--ink); margin: 0; }
+
+  .vs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); margin: 32px 0; }
+  .vs-col { background: var(--bg-card); padding: 32px 28px; }
+  .vs-col.google { border-right: 1px solid var(--line); }
+  .vs-col.ours { background: var(--bg-elev); position: relative; }
+  .vs-col.ours::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--amber); }
+  .vs-head { font-family: var(--mono); font-size: var(--text-xs); letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 20px; }
+  .vs-col.ours .vs-head { color: var(--amber); }
+  .vs-item { font-family: var(--sans); font-size: var(--text-sm); line-height: 1.5; color: var(--ink); padding: 10px 0; border-bottom: 1px solid var(--line); display: flex; gap: 12px; align-items: flex-start; }
+  .vs-item:last-child { border-bottom: none; }
+  .vs-item::before { content: '·'; color: var(--ink-dim); font-weight: bold; }
+  .vs-col.ours .vs-item::before { content: '▸'; color: var(--amber); font-size: 10px; margin-top: 2px; }
+
+  .disclaim { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 32px 0; margin: 48px 0 0; font-family: var(--sans); font-size: var(--text-sm); line-height: 1.6; color: var(--ink-mute); letter-spacing: 0.02em; }
+  .disclaim strong { color: var(--amber); }
+
+  @media (max-width: 900px) {
+    .council-grid, .vs-grid { grid-template-columns: 1fr; }
+    .m-section h2 { font-size: 30px; }
+    .vs-col.google { border-right: none; }
+  }
 </style>
 </head>
 <body>
 
-<!-- Neon pulse video background -->
-<video id="neon-bg" autoplay loop muted playsinline>
-  <source src="neon-pulse.mp4" type="video/mp4">
-</video>
+<!-- BOOT -->
+<div id="boot" class="boot">
+  <div class="boot-scan"></div>
+  <div class="boot-crt"></div>
+  <div class="boot-inner">
+    <div class="boot-title">Perplexing <em>Trades</em> · Methodology</div>
+    <div id="boot-log" class="boot-log"></div>
+    <div style="margin-top:20px;color:var(--ink-dim);font-size:11px;letter-spacing:.12em;">PRESS ESC TO SKIP &nbsp;·&nbsp; v2.4</div>
+  </div>
+</div>
+<div class="grain"></div>
 
-<div class="container" id="main">
-
-  <!-- ── GIANT BACK BUTTON ──────────────────────────────────── -->
-  <div class="back-section">
-    <a href="index.html" class="back-btn" id="back-btn" onclick="glitchBack(event)">
-      <span class="back-arrow">◀</span>
-      <div>
-        BACK TO MARKET ALPHA
-        <span class="back-sub">← Return to the report</span>
-      </div>
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-left">
+    <a href="index.html" class="logo" style="border:none">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-label="Perplexing Trades"><rect x="1.5" y="1.5" width="21" height="21" stroke="currentColor" stroke-width="1.5"/><path d="M6 6h5a2.5 2.5 0 010 5H6V6zm0 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg>
+      Perplexing <em style="font-style:italic">Trades</em>
     </a>
+    <span class="sess-badge">Methodology · How This Is Built</span>
   </div>
-
-  <!-- ── PAGE HEADER ─────────────────────────────────────────── -->
-  <div class="page-header">
-    <div class="page-eyebrow">// Under the Hood //</div>
-    <div class="page-title">How This Research<br>Was <span>Synthesized</span></div>
-    <p class="page-desc">
-      A full breakdown of the three frontier AI models that built this report, the real-time data layer powering them, why this outperforms standard financial media, and every source cited in today's session.
-    </p>
+  <div class="topbar-right">
+    <nav class="nav">
+      <a href="index.html">Market Alpha</a>
+      <a href="methodology.html" class="active">Methodology</a>
+      <a href="archive.html">Archive</a>
+    </nav>
+    <div class="timestamp" id="live-ts"></div>
   </div>
+</header>
 
-  <div class="wire-divider"></div>
+<section class="m-hero">
+  <div class="eyebrow">◆ Under the Hood</div>
+  <h1>How three frontier models build one <em>honest</em> dispatch.</h1>
+  <p class="lede">Every Perplexing Trades report is the output of a three-model council — Claude Opus, Gemini, and GPT-5.4 — working in parallel against live market data, verified news, and financial databases. They analyze, disagree, and synthesize. The result is a research brief that used to take a team of analysts several hours to produce.</p>
+</section>
 
-  <!-- ── WHAT IS THIS ─────────────────────────────────────────── -->
-  <div class="section">
-    <div class="sh">What is this report?</div>
-    <div class="body-text">
-      <p>This is a structured investment research brief generated by a <strong>council of three frontier AI models</strong> — Anthropic's Claude Opus 4.6, Google's Gemini, and OpenAI's GPT-5.4 — working in parallel across live market data, verified news sources, and financial databases. They analyze, disagree, and synthesize. The result is a researched, cited, structured report that used to require a team of analysts several hours to produce.</p>
-      <p>The models are grounded in <strong>real-time verified data</strong> via Perplexity's search infrastructure — not their training memory. Every number you see in the report was current at the time of generation and is traceable to a source you can click and verify.</p>
+<section class="m-section" data-reveal>
+  <div class="m-sec-label">01 · What this is</div>
+  <h2>A <em>structured</em> investment brief, not a news feed.</h2>
+  <p>This is a research report — not a market wrap, not a newsletter, not an aggregator. Three frontier AI models read the same live data independently, each with a specific analytical lens. Their outputs are cross-referenced, their disagreements are surfaced, and the final report synthesizes the consensus while preserving the divergence points.</p>
+  <p>The models are grounded in <strong>real-time verified data</strong> via Perplexity's search and finance infrastructure — not their training memory. Every number you see was current at the time of generation and is traceable to a source you can click and verify.</p>
+</section>
+
+<section class="m-section" data-reveal>
+  <div class="m-sec-label">02 · The council</div>
+  <h2>Three models. Three <em>lenses</em>. One consensus.</h2>
+
+  <div class="council-grid">
+    <div class="council-card claude">
+      <div class="cc-label">Anthropic</div>
+      <div class="cc-name">Claude Opus 4.6</div>
+      <div class="cc-role">Narrative Architect</div>
+      <div class="cc-body">Builds the session's dominant narrative — what happened, why it mattered, how the catalyst reshapes the tape. Connects the macro causal chain (e.g., oil crash → Iran diplomacy → EV tailwind → tech multiple expansion) so the story holds together before plays are picked.</div>
     </div>
-  </div>
-
-  <div class="wire-divider red"></div>
-
-  <!-- ── THE THREE MODELS ─────────────────────────────────────── -->
-  <div class="section">
-    <div class="sh">The LLM Council — Session #013 Evening · Apr 22, 2026</div>
-    <div class="body-text" style="margin-bottom:14px">
-      <p>Three models analyzed the same market data independently. Their outputs were cross-referenced, disagreements were surfaced, and the final report synthesizes their consensus — while preserving the divergence points so you understand where the uncertainty lives.</p>
+    <div class="council-card gemini">
+      <div class="cc-label">Google</div>
+      <div class="cc-name">Gemini</div>
+      <div class="cc-role">Data Validator</div>
+      <div class="cc-body">Validates every price and figure against the Perplexity Finance pull executed at the moment of session generation. Cross-references earnings against transcripts, reconciles one-time items vs core EPS, and flags intraday reversals that stale data would miss.</div>
     </div>
-
-    <div class="model-grid">
-      <div class="model-card claude">
-        <span class="model-icon">🤖</span>
-        <div class="model-name">Claude Opus 4.6</div>
-        <div class="model-role">Narrative Architect</div>
-        <div class="model-says">Built today's narrative around oil's -12.18% crash to $83 as the macro catalyst reshaping the entire market. Connected oil collapse → Iran diplomatic acceleration → energy sector implosion → EV tailwind (TSLA +3%) → lower inflation expectations → tech multiple expansion. Identified AAPL as the Mag 7 catch-up play after lagging the entire rally. Flagged MSFT's $431→$420 intraday reversal as a profit-taking signal the morning data missed.</div>
-      </div>
-      <div class="model-card gemini">
-        <span class="model-icon">✦</span>
-        <div class="model-name">Gemini</div>
-        <div class="model-role">Data Validator</div>
-        <div class="model-says">Validated all prices against the 12:31 PM PT Perplexity Finance pull. Cross-referenced TSMC Q1 earnings ($35.86B revenue, 66.2% margins, $56B CapEx) against the TSM earnings transcript. Verified the NFLX 'miss' was inflated by a $2.8B Warner Bros termination fee — ex-fee EPS was ~$0.70 vs $0.76 consensus. Flagged ORCL's intraday reversal (+2.34% at 6:47 AM → -2.52% by midday) as proof the freshness mandate was needed.</div>
-      </div>
-      <div class="model-card gpt">
-        <span class="model-icon">◈</span>
-        <div class="model-name">GPT-5.4</div>
-        <div class="model-role">Risk Analyst</div>
-        <div class="model-says">Stress-tested every play with an "Iran talks collapse, oil reverses" scenario. Identified TSLA as the highest-conviction fresh play — oil crash to $83 structurally lowers the EV adoption bar, Q1 earnings Apr 22 is the immediate catalyst. Flagged XLE short as the energy implosion continuation trade. Most cautious on the NFLX bounce play — contrarian and depends on whether Q2 guide weakness is one-off or structural. Added the STM Mizuho upgrade as a low-profile alpha play nobody is watching.</div>
-      </div>
-    </div>
-
-    <div class="consensus-box">
-      <strong>Where they agreed:</strong> Oil crash as today's dominant macro catalyst. TSLA as the clearest beneficiary. GOOG as a pre-earnings acceleration play ahead of Apr 29. The semi bifurcation (design surging vs foundry selling) as the week's most important structural observation. S&P 7,118 as confirmed support above 7,000.<br><br>
-      <strong>Where they disagreed:</strong> GPT-5.4 was most cautious on NFLX bounce (could be a value trap); Claude was most bullish on AAPL's breakout potential; Gemini pushed hardest on the data freshness issue — flagging that ORCL's intraday reversal proved stale data was misleading readers. <em>These tensions are features, not bugs — they prevent groupthink and surface the real risks in the narrative.</em>
+    <div class="council-card gpt">
+      <div class="cc-label">OpenAI</div>
+      <div class="cc-name">GPT-5.4</div>
+      <div class="cc-role">Risk Analyst</div>
+      <div class="cc-body">Stress-tests every play with a thesis-breaker scenario. Identifies the single highest-conviction fresh idea and the quietest under-followed alpha. Most skeptical of consensus calls that look obvious — surfaces what makes them fragile.</div>
     </div>
   </div>
 
-  <div class="wire-divider"></div>
-
-  <!-- ── THE PERPLEXITY LAYER ─────────────────────────────────── -->
-  <div class="section">
-    <div class="sh">The Perplexity Real-Time Data Layer</div>
-    <div class="body-text">
-      <p>AI models have a training cutoff. Ask them about this morning's market close without a real-time data layer, and they'll hallucinate or decline. What makes this research current is <strong>Perplexity's live search and verification infrastructure</strong>, which acts as a trusted bridge between the models and the world as it exists right now.</p>
-      <p>Rather than the models inferring recent data from training memory, Perplexity retrieves and validates actual current figures — live prices, Fed statements, breaking news, earnings releases — and delivers them to the models as structured, verified context. Think of it as giving three brilliant analysts simultaneous access to a Bloomberg terminal instead of asking them to recall things from memory.</p>
-      <p><em>This is why every key claim in the Macro Story carries a numbered citation</em>. That number is a contract: there is a verifiable source at that URL that substantiates the claim. If a specific number appears without a citation, it shouldn't be in the report — and the models are instructed to call that out.</p>
+  <div class="consensus">
+    <div class="cx-label">◆ Agreement &amp; Divergence</div>
+    <div class="cx-row">
+      <strong>Where they agreed:</strong>
+      <p>The dominant macro catalyst, the clearest beneficiary, the pre-earnings acceleration plays, the structural semi bifurcation, the key support/resistance level. Consensus is what you see as the headline of each dispatch.</p>
+    </div>
+    <div class="cx-row">
+      <strong>Where they disagreed:</strong>
+      <p>GPT-5.4 is typically most cautious on bounce trades (value-trap risk). Claude pushes breakout patterns hardest. Gemini weights data freshness and intraday reversals heaviest. <em>These tensions are features, not bugs</em> — they prevent groupthink and surface the real risks in the narrative.</p>
     </div>
   </div>
+</section>
 
-  <div class="wire-divider red"></div>
+<section class="m-section" data-reveal>
+  <div class="m-sec-label">03 · The real-time layer</div>
+  <h2>Training memory doesn't trade. <em>Live data</em> does.</h2>
+  <p>Every AI model has a training cutoff. Ask one about this morning's close without a real-time data layer and it will hallucinate or decline. What makes this research current is <strong>Perplexity's live search and finance infrastructure</strong>, which acts as a trusted bridge between the models and the world as it exists right now.</p>
+  <p>Rather than inferring recent data from training memory, Perplexity retrieves and validates actual figures — live prices, Fed statements, breaking news, earnings releases — and delivers them to the models as structured, verified context. Think of it as giving three brilliant analysts simultaneous access to a Bloomberg terminal instead of asking them to recall things from memory.</p>
+  <p><em>This is why every key claim carries a numbered citation.</em> The [N] marker is a contract — a verifiable source at that URL that substantiates the claim. If a specific number appears without a citation, it shouldn't be in the report, and the models are instructed to call that out themselves.</p>
+</section>
 
-  <!-- ── VS GOOGLE ─────────────────────────────────────────────── -->
-  <div class="section">
-    <div class="sh">Why this beats searching Google yourself</div>
-    <div class="vs-grid">
-      <div class="vs-col google">
-        <div class="vs-label">Searching Google</div>
-        <div class="vs-item">10 blue links — you still read, evaluate, and synthesize each one</div>
-        <div class="vs-item">No narrative connection — dots stay unconnected</div>
-        <div class="vs-item">Articles ranked for clicks, not accuracy or depth</div>
-        <div class="vs-item">Written for a general audience, not investors</div>
-        <div class="vs-item">No thesis — facts without a conclusion</div>
-        <div class="vs-item">You don't know what you don't know to search</div>
-        <div class="vs-item">One perspective — whoever wrote that article</div>
-        <div class="vs-item">30–60 minutes for a partial picture</div>
-      </div>
-      <div class="vs-col perplexing">
-        <div class="vs-label">This Report</div>
-        <div class="vs-item">Three models read dozens of sources simultaneously</div>
-        <div class="vs-item">Synthesized into a single causal narrative</div>
-        <div class="vs-item">Every claim cited — verify any number in one click</div>
-        <div class="vs-item">Written specifically for traders and investors</div>
-        <div class="vs-item">Clear thesis: macro → sector → plays with entry/exit</div>
-        <div class="vs-item">Models surface what you should watch but aren't</div>
-        <div class="vs-item">Three different analytical lenses — disagreements visible</div>
-        <div class="vs-item">Delivered automatically, multiple times a day</div>
-      </div>
+<section class="m-section" data-reveal>
+  <div class="m-sec-label">04 · Guardrails</div>
+  <h2>Four <em>permanent</em> rules that never loosen.</h2>
+  <div class="council-grid" style="grid-template-columns: repeat(2, 1fr);">
+    <div class="council-card claude">
+      <div class="cc-label">Rule 01</div>
+      <div class="cc-name">Freshness mandate</div>
+      <div class="cc-role" style="color:var(--amber);">No cached data ever</div>
+      <div class="cc-body">Every price in the narrative, Key Numbers, Sector Vibes, and voice summary is pulled from <code style="font-family:var(--mono);font-size:11px;color:var(--amber)">finance_quotes</code> at the moment of session generation. A fresh timestamp is printed on every page. Post-session QA re-pulls and flags anything greater than 2% off live.</div>
     </div>
-    <div class="body-text" style="margin-top:16px">
-      <p>The most important difference: a good Google search tells you <em>what happened</em>. This report tells you <em>what it means, why it matters, and what to do about it</em> — with the reasoning visible so you can agree or disagree with confidence. The goal isn't to replace your judgment. It's to make sure you're starting from the best possible information.</p>
+    <div class="council-card gemini">
+      <div class="cc-label">Rule 02</div>
+      <div class="cc-name">Play diversity</div>
+      <div class="cc-role" style="color:var(--amber);">≥3 new tickers per session</div>
+      <div class="cc-body">At least three of the five Alpha Plays must be tickers not recommended in the previous Morning or Evening session. No ticker may appear as an Alpha Play for more than two consecutive Morning sessions. This kills narrative-gravity and forces fresh scanning.</div>
     </div>
-  </div>
-
-  <div class="wire-divider"></div>
-
-  <!-- ── SESSION SOURCES ─────────────────────────────────────── -->
-  <div class="section">
-    <div class="sh">Session #013 Evening Sources — Apr 22, 2026</div>
-    <div class="body-text" style="margin-bottom:14px">
-      <p>Every claim in the Macro Story is tied to one of these sources. The [N] markers in the report correspond to the numbers below.</p>
+    <div class="council-card gpt">
+      <div class="cc-label">Rule 03</div>
+      <div class="cc-name">Self-healing QA</div>
+      <div class="cc-role" style="color:var(--amber);">Fix stale data within 15 min</div>
+      <div class="cc-body">A ticker-aware parser audits every published page after each session. Any stale Key Number (greater than 2%) or play entry (greater than 5%) triggers an automatic re-pull, HTML patch, redeploy, and re-verify loop — up to three attempts. Silent if clean, notifies if healed.</div>
     </div>
-
-    <div class="source-entry">
-      <span class="src-badge">[1]</span>
-      <div><span class="src-title">Closing Quotes — S&amp;P 7,110, Oil $86.18, NVDA $202, BTC $75,781</span><span class="src-pub">Perplexity Finance · Apr 20, 2026 5:09 PM PT</span></div>
-      <a class="src-link" href="https://perplexity.ai/finance/" target="_blank" rel="noopener">↗ View</a>
-    </div>
-    <div class="source-entry">
-      <span class="src-badge">[2]</span>
-      <div><span class="src-title">2026 Iran War Fuel Crisis — Oil from $128 peak to $83, Hormuz reopening</span><span class="src-pub">Wikipedia · Updated Apr 2026</span></div>
-      <a class="src-link" href="https://en.wikipedia.org/wiki/2026_Iran_war_fuel_crisis" target="_blank" rel="noopener">↗ Read</a>
-    </div>
-    <div class="source-entry">
-      <span class="src-badge">[3]</span>
-      <div><span class="src-title">TSMC Q1 2026 Earnings — $35.86B revenue, 66.2% margins, $56B CapEx</span><span class="src-pub">Perplexity Finance · TSM Transcript</span></div>
-      <a class="src-link" href="https://www.perplexity.ai/finance/TSM/earnings" target="_blank" rel="noopener">↗ View</a>
-    </div>
-    <div class="source-entry">
-      <span class="src-badge">[4]</span>
-      <div><span class="src-title">Upgrades and Downgrades — STM to Outperform (Mizuho), NXPI downgraded</span><span class="src-pub">Daily Trade Alert · Apr 17, 2026</span></div>
-      <a class="src-link" href="https://dailytradealert.com/2026/04/17/upgrades-and-downgrades-for-friday-4-17-2/" target="_blank" rel="noopener">↗ Read</a>
-    </div>
-    <div class="source-entry">
-      <span class="src-badge">[5]</span>
-      <div><span class="src-title">Netflix Q1 CY2026 Results — EPS inflated by $2.8B Warner Bros fee</span><span class="src-pub">Yahoo Finance · Apr 17, 2026</span></div>
-      <a class="src-link" href="https://finance.yahoo.com/markets/stocks/articles/netflix-nasdaq-nflx-beats-q1-201124676.html" target="_blank" rel="noopener">↗ Read</a>
-    </div>
-    <div class="source-entry">
-      <span class="src-badge">[6]</span>
-      <div><span class="src-title">Empty Ships and Shut Wells — Why the Iran Oil Crisis Is Not Over</span><span class="src-pub">Al Jazeera · Apr 8, 2026</span></div>
-      <a class="src-link" href="https://www.aljazeera.com/news/2026/4/8/empty-ships-and-shut-wells-why-the-iran-war-oil-crisis-is-not-over-yet" target="_blank" rel="noopener">↗ Read</a>
+    <div class="council-card claude">
+      <div class="cc-label">Rule 04</div>
+      <div class="cc-name">Privacy wall</div>
+      <div class="cc-role" style="color:var(--amber);">Bloomberg test on public</div>
+      <div class="cc-body">The public dispatch must pass the Bloomberg test: would a Reuters or Financial Times editor run this headline without knowing anything about a portfolio? No personal framing, no position data, no cost basis, no P&amp;L on the public side — ever.</div>
     </div>
   </div>
+</section>
 
-  <div class="disclaimer-box">
-    ⚠ This report is AI-generated market research for educational and informational purposes only. It does not constitute financial advice, a solicitation, or a recommendation to buy or sell any security. All investments involve risk. Always conduct your own due diligence and consult a qualified financial advisor before making investment decisions.
+<section class="m-section" data-reveal>
+  <div class="m-sec-label">05 · Compared to a Google search</div>
+  <h2>The difference between finding <em>facts</em> and understanding <em>consequence</em>.</h2>
+  <div class="vs-grid">
+    <div class="vs-col google">
+      <div class="vs-head">Searching yourself</div>
+      <div class="vs-item">Ten blue links — you still read, evaluate, and synthesize each one.</div>
+      <div class="vs-item">No narrative connection — dots stay unconnected.</div>
+      <div class="vs-item">Articles ranked for clicks, not accuracy or depth.</div>
+      <div class="vs-item">Written for a general audience, not investors.</div>
+      <div class="vs-item">Facts without a conclusion.</div>
+      <div class="vs-item">You don't know what you don't know to search for.</div>
+      <div class="vs-item">One perspective — whoever wrote the article.</div>
+      <div class="vs-item">Thirty to sixty minutes for a partial picture.</div>
+    </div>
+    <div class="vs-col ours">
+      <div class="vs-head">This dispatch</div>
+      <div class="vs-item">Three models read dozens of sources simultaneously.</div>
+      <div class="vs-item">Synthesized into a single causal narrative.</div>
+      <div class="vs-item">Every claim cited — verify any number in one click.</div>
+      <div class="vs-item">Written specifically for traders and investors.</div>
+      <div class="vs-item">Clear thesis — macro → sector → plays with entry and exit.</div>
+      <div class="vs-item">Models surface what you should watch but aren't.</div>
+      <div class="vs-item">Three analytical lenses — disagreements made visible.</div>
+      <div class="vs-item">Delivered automatically, multiple times a day.</div>
+    </div>
   </div>
+  <p>A good Google search tells you <em>what happened</em>. This report tells you <em>what it means, why it matters, and what to do about it</em> — with the reasoning visible so you can agree or disagree with confidence. The goal isn't to replace your judgment. It's to make sure you're starting from the best possible information.</p>
+</section>
 
-  <div class="page-footer">
-    Perplexing Trades · LLM Council: Claude Opus 4.6 · Gemini · GPT-5.4 · Powered by Perplexity
+<section class="m-section" data-reveal>
+  <div class="m-sec-label">06 · Cadence</div>
+  <h2>Four sessions a week. One <em>honest</em> update at a time.</h2>
+  <div class="council-grid" style="grid-template-columns: repeat(4, 1fr);">
+    <div class="council-card claude">
+      <div class="cc-label">Mon–Fri · 6:45 AM PT</div>
+      <div class="cc-name">Morning Alpha</div>
+      <div class="cc-role">Full five-phase pipeline</div>
+      <div class="cc-body">Pre-market read, council synthesis, 5 alpha plays with diversity rule, fresh Lilith voice summary.</div>
+    </div>
+    <div class="council-card gemini">
+      <div class="cc-label">Mon–Fri · 12:30 PM PT</div>
+      <div class="cc-name">Midday Pulse</div>
+      <div class="cc-role">What changed</div>
+      <div class="cc-body">Focused update on the session's meaningful moves — breakouts, breakdowns, catalyst fades, AH positioning.</div>
+    </div>
+    <div class="council-card gpt">
+      <div class="cc-label">Mon–Fri · 5:00 PM PT</div>
+      <div class="cc-name">Evening Playbook</div>
+      <div class="cc-role">Close + tomorrow</div>
+      <div class="cc-body">EOD synthesis, closed-play retrospective, next-day game plan. The most reflective session of the week.</div>
+    </div>
+    <div class="council-card claude">
+      <div class="cc-label">Saturday · 9:00 AM PT</div>
+      <div class="cc-name">Weekend Scan</div>
+      <div class="cc-role">Macro context only</div>
+      <div class="cc-body">Geopolitics, upcoming earnings calendar, insider flow, AI ecosystem news. No plays — pure context building.</div>
+    </div>
   </div>
+</section>
 
-</div><!-- /container -->
+<div class="m-section">
+  <div class="disclaim">
+    <strong>◆ Not investment advice.</strong> This report is AI-generated market research for educational and informational purposes only. It does not constitute financial advice, a solicitation, or a recommendation to buy or sell any security. All investments involve risk. Always conduct your own due diligence and consult a qualified financial advisor before making investment decisions.
+  </div>
+</div>
 
-<script>
-// Glitch-in on page load
-document.body.classList.add('glitch-in-active');
-setTimeout(() => document.body.classList.remove('glitch-in-active'), 700);
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-wrap">
+    <div class="fcol">
+      <h4>Perplexing <em>Trades</em></h4>
+      <p style="color:var(--ink-mute);font-family:var(--sans);text-transform:none;letter-spacing:0;font-size:var(--text-sm);max-width:28ch;">Institutional-grade market alpha, twice daily. LLM council · freshness mandate · self-healing QA.</p>
+    </div>
+    <div class="fcol">
+      <h4>Sessions</h4>
+      <a href="index.html">Today's Dispatch</a>
+      <a href="archive.html">Archive</a>
+      <a href="methodology.html">Methodology</a>
+    </div>
+    <div class="fcol">
+      <h4>Cadence</h4>
+      <span style="color:var(--ink-mute);display:block;padding:4px 0;">Morning · 6:45 AM PT</span>
+      <span style="color:var(--ink-mute);display:block;padding:4px 0;">Midday · 12:30 PM PT</span>
+      <span style="color:var(--ink-mute);display:block;padding:4px 0;">Evening · 5:00 PM PT</span>
+    </div>
+    <div class="fcol">
+      <h4>Not advice</h4>
+      <p style="color:var(--ink-mute);font-family:var(--sans);text-transform:none;letter-spacing:0;font-size:var(--text-sm);max-width:30ch;">Educational content. Trade at your own risk. No warranties.</p>
+    </div>
+  </div>
+  <div class="footer-bar">
+    <span>◆ Methodology · Perplexing Trades v2.4</span>
+    <span>© 2026 Perplexing Trades</span>
+  </div>
+</footer>
 
-// Glitch-out on back button
-function glitchBack(e) {
-  e.preventDefault();
-  const target = e.currentTarget.href;
-  document.body.classList.add('glitch-out-active');
-  setTimeout(() => { window.location.href = target; }, 500);
-}
+<!-- Dock -->
+<div class="dock" id="dock">
+  <div class="lvp">
+    <div class="lvp-avatar" id="lvp-avatar"><img src="assets/lilith-portrait.jpg" alt="Lilith" /></div>
+    <div class="lvp-meta">
+      <div class="lvp-who">Lilith Devai · After Hours Alpha</div>
+      <div class="lvp-title">Latest dispatch · Session #013</div>
+    </div>
+    <div class="lvp-wave" id="lvp-wave" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="lvp-ctrls">
+      <button class="lvp-btn" id="lvp-restart" aria-label="Restart"></button>
+      <button class="lvp-btn primary" id="lvp-play" aria-label="Play / Pause"></button>
+    </div>
+  </div>
+  <div class="dock-divider"></div>
+  <div class="music-p">
+    <button class="lvp-btn" id="mp-play" aria-label="Play music"></button>
+    <div class="music-meta">
+      <div class="music-who">◆ Atmos · Music</div>
+      <div class="music-title" id="mp-title">Alright Pacha Mix</div>
+    </div>
+    <select class="music-select" id="mp-track">
+      <option value="alright-pacha-mix">Alright Pacha Mix</option>
+      <option value="singularity-spanish">Singularity (Spanish)</option>
+      <option value="quantum-love-msg">Quantum Love MSG</option>
+    </select>
+  </div>
+</div>
 
-/* ── Light / Party Mode toggle ─────────────────────────────────── */
-function toggleLightMode() {
-  const html = document.documentElement;
-  const btn  = document.getElementById('mode-toggle');
-  const on   = html.classList.toggle('light-mode');
-  localStorage.setItem('ptLightMode', on ? '1' : '0');
-  btn.innerHTML = on ? '������ Party Mode' : '������ Light Print Mode';
-  btn.title     = on ? 'Switch back to dark mode' : 'Switch to Light Print Mode';
-}
-// Restore preference immediately
-(function() {
-  if (localStorage.getItem('ptLightMode') === '1') {
-    document.documentElement.classList.add('light-mode');
-  }
-})();
+<audio id="lilith-audio" src="assets/lilith-summary.mp3" preload="auto"></audio>
+<audio id="music-audio" src="assets/alright-pacha-mix.mp3" preload="auto" loop></audio>
 
-</script>
+<script src="app.js"></script>
 </body>
 </html>

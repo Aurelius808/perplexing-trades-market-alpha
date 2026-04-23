@@ -1,2171 +1,445 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Perplexing Trades — Market Alpha. AI-powered stock market research and macro analysis. Public edition, updated daily.">
-<title>🍒 Perplexing Trades — Market Alpha · Public Edition</title>
-<script>if(localStorage.getItem("ptLightMode")==="1"){document.documentElement.classList.add("light-mode");}</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;500;600;700;800;900&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
-<style>
-/* ════════════════════════════════════════════════════════
-   PERPLEXING TRADES — MARKET ALPHA
-   PUBLIC EDITION · No Portfolio Data · Safe to Share
-   nano_banana_2 + Veo 3 // Lilith System v2.2
-   ════════════════════════════════════════════════════════ */
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  :root {
-    --glow: #00ff41; --glow-rgb: 0, 255, 65;
-    --cherry: #ff1744; --cherry-rgb: 255, 23, 68;
-    --bear: #ff3d3d; --bull: #00ff41; --bull-rgb: 0, 255, 65;
-    --neutral: #ff9100;
-    --bg: #03030a; --bg-panel: #0b0b16; --bg-card: #0f0f1a; --bg-card-hover: #141425;
-    --text-bright: #f5f5ff; --text-primary: #c8c8d8;
-    --text-dim: #606075; --text-muted: #353548;
-    --border: rgba(255,255,255,.05);
-  }
-
-  body { background: var(--bg); color: var(--text-primary); font-family: 'Share Tech Mono', monospace; min-height: 100vh; overflow-x: hidden; }
-
-  /* ── CRT (screen only) ── */
-  @media screen {
-    body::before { content:''; position:fixed; inset:0; background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.14) 3px,rgba(0,0,0,.14) 4px); pointer-events:none; z-index:9999; }
-    body::after { content:''; position:fixed; inset:0; background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.6) 100%); pointer-events:none; z-index:9998; }
-  }
-
-  #matrix-rain { position:fixed; inset:0; z-index:0; opacity:.05; pointer-events:none; }
-  #bg-video { position:fixed; inset:0; width:100%; height:100%; object-fit:cover; z-index:1; opacity:.035; pointer-events:none; }
-  .crt-sweep { position:fixed; left:0; right:0; height:120px; background:linear-gradient(to bottom,transparent,rgba(var(--glow-rgb),.016),rgba(var(--glow-rgb),.024),rgba(var(--glow-rgb),.016),transparent); pointer-events:none; z-index:9; animation:sweep-down 6s linear infinite; }
-  @keyframes sweep-down { 0%{top:-120px} 100%{top:100vh} }
-
-  /* ── ANIMATIONS ── */
-  @keyframes pulse { 0%,100%{opacity:.65} 50%{opacity:1} }
-  @keyframes glow-pulse { 0%,100%{text-shadow:0 0 6px var(--glow),0 0 12px var(--glow)} 50%{text-shadow:0 0 12px var(--glow),0 0 24px var(--glow),0 0 40px rgba(var(--glow-rgb),.5)} }
-  @keyframes cherry-glow { 0%,100%{text-shadow:0 0 6px var(--cherry),0 0 12px var(--cherry)} 50%{text-shadow:0 0 14px var(--cherry),0 0 28px var(--cherry),0 0 44px rgba(255,23,68,.4)} }
-  @keyframes cursor-blink { 0%,100%{opacity:1} 50%{opacity:0} }
-  @keyframes slide-up { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
-  @keyframes badge-pulse { 0%,100%{box-shadow:0 0 5px rgba(255,23,68,.3)} 50%{box-shadow:0 0 16px rgba(255,23,68,.6),0 0 32px rgba(255,23,68,.2)} }
-  @keyframes avatar-ring { 0%,100%{box-shadow:0 0 0 2px var(--cherry),0 0 18px rgba(255,23,68,.35)} 50%{box-shadow:0 0 0 3px var(--cherry),0 0 28px rgba(255,23,68,.65),0 0 50px rgba(255,23,68,.2)} }
-  @keyframes orbit { 0%{transform:rotate(0deg) translateX(34px) rotate(0deg)} 100%{transform:rotate(360deg) translateX(34px) rotate(-360deg)} }
-  @keyframes flicker { 0%,100%{opacity:1} 93%{opacity:1} 93.3%{opacity:.75} 93.6%{opacity:1} 97%{opacity:.9} 97.4%{opacity:1} }
-
-  /* ── LAYOUT ── */
-  .container { max-width: 960px; margin: 0 auto; padding: 28px 22px 60px; position: relative; z-index: 10; animation: flicker 12s infinite; }
-
-  /* ── PUBLIC BADGE ── */
-  .public-badge {
-    display: inline-flex; align-items: center; gap: 9px;
-    padding: 5px 16px 5px 12px;
-    background: rgba(255,23,68,.08);
-    border: 1px solid rgba(255,23,68,.35);
-    border-radius: 20px;
-    margin-bottom: 22px;
-    animation: badge-pulse 3s ease-in-out infinite;
-  }
-
-  .public-badge-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--cherry); box-shadow: 0 0 8px var(--cherry); animation: pulse 1.5s infinite; }
-  .public-badge-text { font-family: 'Orbitron', sans-serif; font-size: 8px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--cherry); }
-  .public-badge-sep { color: var(--text-muted); font-size: 10px; }
-  .public-badge-safe { font-size: 9px; color: var(--text-dim); letter-spacing: 1px; }
-
-  /* ── HEADER ── */
-  .header {
-    display: flex; justify-content: space-between; align-items: flex-start;
-    padding-bottom: 22px; margin-bottom: 28px;
-    border-bottom: 1px solid rgba(255,145,0,.15);
-    position: relative;
-  }
-  .header::after { content:''; position:absolute; bottom:-1px; left:0; width:160px; height:1px; background:linear-gradient(90deg,var(--cherry),var(--glow),transparent); box-shadow:0 0 8px var(--glow); }
-
-  .header-left { display: flex; align-items: center; gap: 16px; }
-
-  .lilith-wrap { position: relative; flex-shrink: 0; }
-  .lilith-avatar { width: 64px; height: 64px; border-radius: 50%; overflow: hidden; animation: avatar-ring 3s ease-in-out infinite; background: var(--bg-card); }
-  .lilith-avatar img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; filter: saturate(1.15); }
-  .lilith-wrap::after { content: '🍒'; position: absolute; font-size: 10px; top: -3px; right: -3px; animation: orbit 4s linear infinite; transform-origin: 36px 36px; }
-
-  .system-name { font-family: 'Orbitron', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--glow); animation: glow-pulse 4s infinite; }
-  .report-title { font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 900; color: var(--text-bright); letter-spacing: -.3px; line-height: 1.1; }
-  .timestamp { font-size: 10px; color: var(--text-dim); letter-spacing: .5px; margin-top: 2px; }
-  .timestamp::before { content: '> '; color: var(--glow); }
-  .lilith-callsign { font-size: 8.5px; color: var(--cherry); letter-spacing: 1.5px; text-transform: uppercase; animation: cherry-glow 3s infinite; margin-top: 3px; }
-  .lilith-callsign::before { content: '// '; color: var(--text-muted); }
-
-  .header-right { text-align: right; padding-top: 4px; }
-  .market-num { font-family: 'Orbitron', sans-serif; font-size: 34px; font-weight: 900; letter-spacing: -1.5px; line-height: 1; }
-  .market-num.flat { color: var(--neutral); text-shadow: 0 0 14px rgba(255,145,0,.5); }
-  .market-num.positive { color: var(--bull); text-shadow: 0 0 14px rgba(0,255,65,.5); }
-  .market-num.negative { color: var(--bear); text-shadow: 0 0 14px rgba(255,61,61,.5); }
-  .market-lbl { font-family: 'Orbitron', sans-serif; font-size: 7.5px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2.5px; margin-top: 3px; }
-  .market-status { font-size: 8.5px; color: var(--neutral); margin-top: 2px; animation: pulse 2s infinite; }
-  .market-status::before { content: '● '; }
-
-  /* ── SECTION TAGS ── */
-  .section-tag { font-family: 'Orbitron', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-  .section-tag::before { content: '▸'; font-size: 10px; }
-  .section-tag::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, currentColor, transparent); opacity: .2; }
-  .section-tag .jp { font-family: 'Noto Sans JP', sans-serif; font-size: 8px; font-weight: 300; opacity: .35; letter-spacing: 1px; }
-  .section-tag.macro { color: var(--neutral); }
-  .section-tag.plays { color: var(--glow); }
-  .section-tag.opts { color: var(--bull); }
-  .section-tag.lilith { color: var(--cherry); }
-
-
-  /* ══════════════════════════════════════════════════════
-     LILITH VOICE PLAYER
-  ══════════════════════════════════════════════════════ */
-  .lilith-voice-player {
-    position: relative;
-    background: linear-gradient(135deg, rgba(0,0,0,.95) 0%, rgba(20,0,40,.95) 100%);
-    border: 1px solid rgba(0,255,65,.25);
-    border-radius: 8px;
-    padding: 0;
-    margin-bottom: 28px;
-    overflow: hidden;
-    box-shadow: 0 0 30px rgba(0,255,65,.08), inset 0 0 60px rgba(0,0,0,.5);
-  }
-  .lvp-bg {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: url('lilith-voice-avatar.png') center/cover no-repeat;
-    opacity: 0.15;
-    filter: blur(2px);
-    z-index: 0;
-  }
-  .lvp-content {
-    position: relative; z-index: 1;
-    display: flex; align-items: center; gap: 20px;
-    padding: 20px 24px;
-  }
-  .lvp-avatar {
-    width: 120px; height: 120px; border-radius: 50%;
-    border: 2px solid var(--glow);
-    box-shadow: 0 0 20px rgba(0,255,65,.3);
-    object-fit: cover;
-    flex-shrink: 0;
-  }
-  .lvp-avatar.playing {
-    animation: avatar-glow 1.5s ease-in-out infinite;
-  }
-  @keyframes avatar-glow {
-    0%, 100% { box-shadow: 0 0 20px rgba(0,255,65,.3); }
-    50% { box-shadow: 0 0 40px rgba(0,255,65,.6), 0 0 80px rgba(0,255,65,.2); }
-  }
-  .lvp-info {
-    flex: 1; min-width: 0;
-  }
-  .lvp-title {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 11px;
-    letter-spacing: 3px;
-    color: var(--glow);
-    text-transform: uppercase;
-    margin-bottom: 4px;
-  }
-  .lvp-session {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 9px;
-    letter-spacing: 2px;
-    color: rgba(0,255,65,.5);
-    text-transform: uppercase;
-    margin-bottom: 12px;
-  }
-  .lvp-waveform {
-    display: flex; align-items: center; gap: 2px;
-    height: 40px; margin-bottom: 12px;
-  }
-  .lvp-bar {
-    width: 3px;
-    background: var(--glow);
-    border-radius: 2px;
-    opacity: 0.3;
-    transition: height 0.1s ease;
-  }
-  .lvp-bar.active {
-    opacity: 1;
-    animation: bar-dance 0.4s ease-in-out infinite alternate;
-  }
-  @keyframes bar-dance {
-    from { transform: scaleY(0.3); }
-    to { transform: scaleY(1); }
-  }
-  .lvp-controls {
-    display: flex; align-items: center; gap: 12px;
-  }
-  .lvp-btn {
-    width: 48px; height: 48px;
-    border-radius: 50%;
-    border: 2px solid var(--glow);
-    background: rgba(0,255,65,.08);
-    color: var(--glow);
-    font-size: 20px;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: all .2s;
-  }
-  .lvp-btn:hover {
-    background: rgba(0,255,65,.2);
-    box-shadow: 0 0 20px rgba(0,255,65,.3);
-  }
-  .lvp-btn.play-main {
-    width: 56px; height: 56px;
-    font-size: 24px;
-    border-width: 3px;
-  }
-  .lvp-progress {
-    flex: 1; height: 4px;
-    background: rgba(0,255,65,.15);
-    border-radius: 2px;
-    cursor: pointer;
-    position: relative;
-  }
-  .lvp-progress-fill {
-    height: 100%;
-    background: var(--glow);
-    border-radius: 2px;
-    width: 0%;
-    transition: width 0.3s linear;
-  }
-  .lvp-time {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 9px;
-    color: rgba(0,255,65,.5);
-    min-width: 40px;
-    text-align: right;
-  }
-  .lvp-status {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 8px;
-    letter-spacing: 2px;
-    color: rgba(0,255,65,.4);
-    margin-top: 8px;
-    text-transform: uppercase;
-  }
-  .lvp-status.live { color: var(--glow); }
-  /* Light mode */
-  html.light-mode .lilith-voice-player {
-    background: linear-gradient(135deg, #f8f8f8 0%, #f0f0ff 100%) !important;
-    border-color: rgba(34,139,34,.3) !important;
-    box-shadow: 0 2px 12px rgba(0,0,0,.08) !important;
-  }
-  html.light-mode .lvp-bg { opacity: 0.06 !important; }
-  html.light-mode .lvp-title, html.light-mode .lvp-session { color: #228b22 !important; }
-  html.light-mode .lvp-btn { border-color: #228b22 !important; color: #228b22 !important; background: rgba(34,139,34,.05) !important; }
-  html.light-mode .lvp-btn:hover { background: rgba(34,139,34,.15) !important; }
-  html.light-mode .lvp-bar { background: #228b22 !important; }
-  html.light-mode .lvp-progress { background: rgba(34,139,34,.15) !important; }
-  html.light-mode .lvp-progress-fill { background: #228b22 !important; }
-  html.light-mode .lvp-avatar { border-color: #228b22 !important; box-shadow: 0 0 10px rgba(34,139,34,.2) !important; }
-  /* Mobile */
-  @media (max-width: 600px) {
-    .lvp-content { flex-direction: column; text-align: center; padding: 16px; }
-    .lvp-avatar { width: 80px; height: 80px; }
-    .lvp-waveform { justify-content: center; }
-    .lvp-controls { justify-content: center; }
-  }
-
-  /* ══════════════════════════════════════════════════════
-     MACRO STORY — THE CENTERPIECE
-  ══════════════════════════════════════════════════════ */
-  /* ── FRESHNESS BADGE ── */
-  .freshness-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 6px 16px;
-    background: rgba(0,255,65,.06);
-    border: 1px solid rgba(0,255,65,.3);
-    border-radius: 6px;
-    margin-bottom: 16px;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: var(--glow);
-    text-transform: uppercase;
-  }
-  .freshness-dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--glow);
-    box-shadow: 0 0 8px var(--glow);
-    animation: pulse 1.5s infinite;
-  }
-  html.light-mode .freshness-badge { background: rgba(34,139,34,.06) !important; border-color: rgba(34,139,34,.3) !important; color: #228b22 !important; }
-  html.light-mode .freshness-dot { background: #228b22 !important; box-shadow: 0 0 8px #228b22 !important; }
-
-  .macro-box {
-    background: var(--bg-panel);
-    border: 1px solid rgba(var(--glow-rgb), .15);
-    border-radius: 3px;
-    padding: 22px 22px 18px 26px;
-    margin-bottom: 28px;
-    position: relative; overflow: hidden;
-    animation: slide-up .4s ease-out;
-  }
-  .macro-box::before { content:''; position:absolute; top:0; left:0; width:4px; height:100%; background:linear-gradient(180deg,var(--glow),rgba(var(--glow-rgb),.2)); box-shadow:0 0 14px var(--glow); }
-  .macro-box::after { content:''; position:absolute; inset:0; background:repeating-linear-gradient(-55deg,transparent,transparent 16px,rgba(var(--glow-rgb),.008) 16px,rgba(var(--glow-rgb),.008) 17px); pointer-events:none; }
-
-  .macro-label { font-family:'Orbitron',sans-serif; font-size:7.5px; letter-spacing:3px; color:var(--glow); text-transform:uppercase; margin-bottom:14px; opacity:.65; position:relative; z-index:1; }
-
-  /* THE HEADLINE */
-  .macro-headline {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 15px; font-weight: 900; line-height: 1.35;
-    color: var(--neutral);
-    text-shadow: 0 0 18px rgba(var(--glow-rgb), .35), 0 0 36px rgba(var(--glow-rgb), .15);
-    padding: 13px 16px;
-    border: 1px solid rgba(var(--glow-rgb), .22);
-    border-left: 3px solid var(--glow);
-    background: rgba(var(--glow-rgb), .05);
-    border-radius: 2px;
-    margin-bottom: 20px;
-    position: relative; z-index: 1;
-    animation: slide-up .5s ease-out;
-  }
-  .macro-headline::before { content: '// THE HEADLINE //'; display: block; font-size: 7px; letter-spacing: 3px; color: var(--glow); opacity: .6; margin-bottom: 6px; }
-
-  /* THE STORY */
-  .macro-narrative { position: relative; z-index: 1; margin-bottom: 20px; }
-  .macro-para { font-size: 13.5px; line-height: 1.82; color: var(--text-primary); margin-bottom: 14px; }
-  .macro-para:last-child { margin-bottom: 0; }
-  .s-bull { color: var(--bull); font-weight: 700; }
-  .s-bear { color: var(--bear); font-weight: 700; }
-  .s-neutral { color: var(--neutral); font-weight: 700; }
-  .s-hi { color: var(--text-bright); font-weight: 700; }
-  .cite { font-size: 9px; color: var(--glow); vertical-align: super; opacity: .8; font-family: 'Share Tech Mono', monospace; }
-  .cursor::after { content: '█'; color: var(--glow); animation: cursor-blink .9s step-end infinite; margin-left: 2px; font-size: .88em; }
-
-  /* KEY NUMBERS TABLE */
-  .kn-label { font-family:'Orbitron',sans-serif; font-size:7.5px; letter-spacing:2.5px; color:var(--text-dim); text-transform:uppercase; margin-bottom:10px; position:relative; z-index:1; }
-  .kn-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 18px; position: relative; z-index: 1; }
-  .kn-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 520px; }
-  .kn-table th { font-family:'Orbitron',sans-serif; font-size:7px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-muted); padding:5px 10px; text-align:left; border-bottom:1px solid var(--border); }
-  .kn-table td { padding:7px 10px; color:var(--text-primary); border-bottom:1px solid var(--border); vertical-align:top; }
-  .kn-table tr:last-child td { border-bottom:none; }
-  .kn-table tr:hover td { background:rgba(255,255,255,.013); }
-  .kn-ind { font-family:'Orbitron',sans-serif; font-weight:700; font-size:11px; }
-  .kn-val { font-family:'Orbitron',sans-serif; font-weight:700; font-size:12px; color:var(--text-bright); }
-  .kn-chg.up { color:var(--bull); font-weight:700; }
-  .kn-chg.down { color:var(--bear); font-weight:700; }
-  .kn-chg.flat { color:var(--neutral); font-weight:700; }
-  .kn-why { color:var(--text-dim); font-size:11.5px; }
-
-  /* SECTOR VIBE CHECK */
-  .sv-label { font-family:'Orbitron',sans-serif; font-size:7.5px; letter-spacing:2.5px; color:var(--text-dim); text-transform:uppercase; margin-bottom:10px; position:relative; z-index:1; }
-  .sv-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:20px; position:relative; z-index:1; }
-  .sv-row { display:flex; align-items:flex-start; gap:7px; padding:8px 10px; background:var(--bg-card); border-radius:2px; border:1px solid var(--border); font-size:11px; transition:background .15s; }
-  .sv-row:hover { background:var(--bg-card-hover); }
-  .sv-name { font-family:'Orbitron',sans-serif; font-size:8.5px; font-weight:700; color:var(--text-bright); display:block; margin-bottom:2px; }
-  .sv-vibe.bull { color:var(--bull); font-size:9.5px; font-weight:700; }
-  .sv-vibe.bear { color:var(--bear); font-size:9.5px; font-weight:700; }
-  .sv-vibe.neutral { color:var(--neutral); font-size:9.5px; font-weight:700; }
-  .sv-why { color:var(--text-dim); font-size:9.5px; display:block; margin-top:1px; }
-
-  /* SOURCES */
-  .sources-box { border-top:1px solid var(--border); padding-top:14px; position:relative; z-index:1; }
-  .sources-label { font-family:'Orbitron',sans-serif; font-size:7px; letter-spacing:2px; color:var(--text-muted); text-transform:uppercase; margin-bottom:8px; }
-  .source-row { font-size:10.5px; color:var(--text-muted); line-height:1.6; display:flex; align-items:baseline; gap:6px; margin-bottom:3px; }
-  .src-num { font-family:'Orbitron',sans-serif; font-size:7.5px; color:var(--glow); flex-shrink:0; min-width:18px; }
-  .src-link a { color:rgba(var(--glow-rgb),.55); text-decoration:none; }
-  .src-link a:hover { color:var(--glow); text-decoration:underline; }
-
-  /* ── PLAYS GRID ── */
-  .plays-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:28px; }
-
-  .play-card { background:var(--bg-card); border-radius:3px; padding:15px 15px 13px; position:relative; transition:background .2s,transform .2s; animation:slide-up .4s ease-out; overflow:hidden; min-height:44px; }
-  @media screen { .play-card:hover { background:var(--bg-card-hover); transform:translateY(-2px); } }
-  @media screen { .play-card:hover .ticker { text-shadow:2px 0 rgba(255,61,61,.75),-2px 0 rgba(0,255,65,.75),0 0 12px currentColor; } }
-  .play-card::before { content:''; position:absolute; top:0; left:0; width:4px; height:100%; border-radius:3px 0 0 3px; }
-  .play-card::after { content:''; position:absolute; inset:0; background:repeating-linear-gradient(-45deg,transparent,transparent 8px,rgba(255,255,255,.006) 8px,rgba(255,255,255,.006) 9px); pointer-events:none; opacity:0; transition:opacity .2s; }
-  @media screen { .play-card:hover::after { opacity:1; } }
-
-  .play-card.bull::before { background:linear-gradient(180deg,var(--bull),rgba(0,255,65,.25)); box-shadow:0 0 8px var(--bull); }
-  .play-card.bear::before { background:linear-gradient(180deg,var(--bear),rgba(255,61,61,.25)); box-shadow:0 0 8px var(--bear); }
-  .play-card.neutral::before { background:linear-gradient(180deg,var(--neutral),rgba(255,145,0,.25)); box-shadow:0 0 8px var(--neutral); }
-  .play-card.bull { border:1px solid rgba(0,255,65,.1); }
-  .play-card.bear { border:1px solid rgba(255,61,61,.1); }
-  .play-card.neutral { border:1px solid rgba(255,145,0,.1); }
-
-  .play-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:9px; }
-  .ticker { font-family:'Orbitron',sans-serif; font-size:21px; font-weight:900; letter-spacing:1px; transition:text-shadow .2s; }
-  .ticker.bull { color:var(--bull); text-shadow:0 0 10px rgba(0,255,65,.38); }
-  .ticker.bear { color:var(--bear); text-shadow:0 0 10px rgba(255,61,61,.38); }
-  .ticker.neutral { color:var(--neutral); text-shadow:0 0 10px rgba(255,145,0,.38); }
-
-  .badge { font-family:'Orbitron',sans-serif; font-size:7px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:3px 9px; border-radius:2px; white-space:nowrap; }
-  .badge.high { background:rgba(0,255,65,.08); color:var(--bull); border:1px solid rgba(0,255,65,.35); }
-  .badge.medium { background:rgba(255,145,0,.08); color:var(--neutral); border:1px solid rgba(255,145,0,.3); }
-  .badge.asym { background:rgba(0,255,65,.12); color:var(--bull); border:1px solid rgba(0,255,65,.48); }
-  .badge.lc { background:rgba(0,255,65,.08); color:var(--bull); border:1px solid rgba(0,255,65,.3); }
-  .badge.csp { background:rgba(255,145,0,.08); color:var(--neutral); border:1px solid rgba(255,145,0,.3); }
-
-  .entry-exit { font-size:12.5px; color:var(--text-primary); margin-bottom:4px; line-height:1.5; }
-  .entry-exit strong { color:var(--text-bright); font-size:13px; }
-  .play-thesis { font-size:11.5px; color:var(--text-dim); line-height:1.55; margin-bottom:5px; }
-  .thesis-breaker { font-size:10.5px; color:var(--cherry); line-height:1.4; }
-  .thesis-breaker::before { content:'⚠ '; }
-  .play-strategy { font-size:8px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1.5px; margin-top:9px; padding-top:9px; border-top:1px solid var(--border); display:flex; align-items:center; gap:6px; }
-  .play-strategy::before { content:'//'; color:var(--text-muted); }
-
-  /* ── OPTIONS BOX ── */
-  .opts-box { background:var(--bg-panel); border:1px solid rgba(0,255,65,.1); border-radius:3px; padding:18px 18px 18px 22px; margin-bottom:28px; position:relative; overflow:hidden; }
-  .opts-box::before { content:''; position:absolute; top:0; left:0; width:4px; height:100%; background:linear-gradient(180deg,var(--bull),rgba(0,255,65,.2)); box-shadow:0 0 10px rgba(0,255,65,.4); }
-  .opt-block { margin-bottom:18px; }
-  .opt-block:last-child { margin-bottom:0; }
-  .opt-head { font-family:'Orbitron',sans-serif; font-size:8px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(0,255,65,.75); margin-bottom:9px; padding-bottom:6px; border-bottom:1px solid rgba(0,255,65,.1); display:flex; align-items:center; gap:7px; }
-  .opt-head::before { content:'◆'; font-size:7px; }
-  .opt-body { font-size:12px; line-height:1.7; color:var(--text-primary); }
-  .opt-ticker { font-family:'Orbitron',sans-serif; font-weight:700; font-size:13px; color:var(--bull); }
-  .opt-premium { color:var(--bull); font-weight:700; }
-  .opt-warn { color:var(--cherry); font-size:10.5px; display:block; margin-top:3px; }
-  .opt-warn::before { content:'⚠ '; }
-
-  /* ── LILITH SAYS ── */
-  .lilith-box { display:flex; gap:0; background:rgba(255,23,68,.025); border:1px solid rgba(255,23,68,.14); border-radius:3px; margin-bottom:24px; animation:slide-up .5s ease-out; overflow:hidden; position:relative; }
-  .lilith-box::before { content:''; position:absolute; top:0; left:0; width:4px; height:100%; background:linear-gradient(180deg,var(--cherry),rgba(255,23,68,.2)); box-shadow:0 0 12px rgba(255,23,68,.5); }
-  .lilith-img { width:150px; min-width:150px; overflow:hidden; position:relative; flex-shrink:0; }
-  .lilith-img img { width:100%; height:100%; object-fit:cover; object-position:center top; display:block; filter:saturate(1.2) contrast(1.05); }
-  .lilith-img::after { content:''; position:absolute; inset:0; background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.08) 3px,rgba(0,0,0,.08) 4px); pointer-events:none; }
-  .lilith-content { padding:17px 17px 17px 21px; display:flex; flex-direction:column; gap:7px; justify-content:center; }
-  .lilith-name { font-family:'Orbitron',sans-serif; font-size:8.5px; font-weight:700; color:var(--cherry); letter-spacing:2px; text-transform:uppercase; animation:cherry-glow 3s infinite; }
-  .lilith-name::before { content:'[ '; color:var(--text-muted); }
-  .lilith-name::after { content:' ]'; color:var(--text-muted); }
-  .lilith-text { font-size:13px; line-height:1.7; color:var(--text-primary); }
-  .lilith-text em { color:var(--cherry); font-style:normal; font-weight:700; }
-
-  /* ── FOOTER ── */
-  .footer-note { font-size:9.5px; color:var(--text-muted); padding:10px 13px; background:rgba(179,136,255,.04); border:1px solid rgba(179,136,255,.12); border-radius:2px; margin-bottom:16px; line-height:1.55; }
-  .footer-note strong { color:rgba(179,136,255,.7); }
-  .disclaimer { font-size:9px; color:var(--text-muted); line-height:1.6; padding:10px 13px; background:rgba(255,255,255,.015); border-radius:2px; margin-bottom:18px; }
-  .footer { text-align:center; padding-top:18px; border-top:1px solid rgba(255,145,0,.12); }
-  .footer-line { font-family:'Orbitron',sans-serif; font-size:7.5px; letter-spacing:2.5px; text-transform:uppercase; color:var(--text-muted); margin-bottom:4px; }
-  .footer-cherry { margin-top:12px; font-size:18px; opacity:.3; letter-spacing:8px; }
-
-  /* ══════════════════════════════════════════
-     MOBILE RESPONSIVE — Phone browsers
-     iPhone SE: 375px · iPhone 15: 390px · Android: 360–412px
-  ══════════════════════════════════════════ */
-
-  @media (max-width: 768px) {
-    /* Hide all video/canvas layers on mobile — fixes overlay + audio issues */
-    #bg-video, #elec-video, #matrix-rain, .crt-sweep { display: none !important; }
-
-    .container { padding: 14px 14px 40px; }
-
-    /* Badge */
-    .public-badge { font-size: 7px; padding: 4px 12px; margin-bottom: 16px; }
-    .public-badge-text { font-size: 7px; letter-spacing: 1.5px; }
-
-    /* Header */
-    .header { flex-direction: column; gap: 12px; padding-bottom: 16px; margin-bottom: 20px; }
-    .header::after { display: none; }
-    .header-right { text-align: left; }
-    .lilith-avatar { width: 56px; height: 56px; }
-    .system-name { font-size: 8px; letter-spacing: 2px; }
-    .report-title { font-size: 19px; }
-    .timestamp { font-size: 9px; }
-    .lilith-callsign { font-size: 8px; }
-    .market-num { font-size: 28px; }
-    .market-lbl { font-size: 7px; }
-
-    /* Section tags */
-    .section-tag { font-size: 8.5px; letter-spacing: 1.5px; }
-    .section-tag .jp { display: none; }
-
-    /* Macro story */
-    .macro-box { padding: 16px 14px 14px 18px; }
-    .macro-headline { font-size: 13px; line-height: 1.3; padding: 11px 12px; }
-    .macro-para { font-size: 13px; line-height: 1.75; margin-bottom: 12px; }
-    .sv-grid { grid-template-columns: repeat(2, 1fr); gap: 5px; }
-    .sv-name { font-size: 8px; }
-    .sv-why { font-size: 9px; }
-    .source-row { font-size: 9.5px; }
-
-    /* Key numbers — horizontal scroll */
-    .kn-scroll { margin-bottom: 14px; }
-
-    /* Plays */
-    .plays-grid { grid-template-columns: 1fr; gap: 8px; }
-    .ticker { font-size: 19px; }
-    .play-card { padding: 13px 13px 11px; }
-    .entry-exit { font-size: 12.5px; }
-    .play-thesis { font-size: 11px; }
-    .thesis-breaker { font-size: 10px; }
-    .badge { font-size: 6.5px; padding: 3px 7px; }
-
-    /* Options */
-    .opts-box { padding: 14px 14px 14px 18px; }
-    .opt-head { font-size: 7.5px; }
-    .opt-body { font-size: 11.5px; line-height: 1.65; }
-
-    /* Lilith — fixed layout so text doesn't overlap image */
-    .lilith-box { flex-direction: column; }
-    .lilith-img { width: 100%; min-width: unset; max-height: 200px; height: 200px; }
-    .lilith-img img { object-position: center 30%; }
-    .lilith-content { padding: 16px; }
-    .lilith-name { font-size: 8px; }
-    .lilith-text { font-size: 12.5px; }
-
-    /* Footer */
-    .footer-note { font-size: 9px; }
-    .disclaimer { font-size: 8.5px; }
-    .footer-line { font-size: 7px; }
-  }
-
-  @media (max-width: 480px) {
-    .container { padding: 12px 12px 36px; }
-    .sv-grid { grid-template-columns: 1fr; }
-    .macro-headline { font-size: 12px; }
-    .report-title { font-size: 17px; }
-    .ticker { font-size: 17px; }
-    .plays-grid { gap: 7px; }
-    .market-num { font-size: 26px; }
-    .kn-table th, .kn-table td { padding: 5px 7px; font-size: 9.5px; }
-    .kn-val { font-size: 11px; }
-  }
-
-  /* ══════════════════════════════════════════
-     PRINT CSS — Cmd+P → Save as PDF
-  ══════════════════════════════════════════ */
-  @media print {
-    @page { size: A4; margin: 16mm 14mm; }
-    body { background: #fff !important; color: #1a1a2e !important; font-size: 10pt; }
-    body::before, body::after, #matrix-rain, #bg-video, .crt-sweep { display: none !important; }
-    * { animation: none !important; transition: none !important; }
-    .container { max-width: 100%; padding: 0; }
-    .public-badge { border: 1px solid #ff1744 !important; color: #ff1744 !important; background: rgba(255,23,68,.06) !important; }
-    .public-badge-dot, .public-badge-text { color: #cc1133 !important; background: #cc1133 !important; }
-    .header { border-bottom: 2px solid #e09010 !important; }
-    .header::after { display: none; }
-    .lilith-wrap::after { display: none; }
-    .report-title, .system-name, .timestamp { color: #1a1a2e !important; text-shadow: none !important; }
-    .system-name { color: #cc7400 !important; }
-    .macro-box { background: #fafafa !important; border: 1px solid #e0a020 !important; }
-    .macro-box::before { background: #e0a020 !important; box-shadow: none !important; }
-    .macro-box::after { display: none; }
-    .macro-headline { background: rgba(255,145,0,.08) !important; border-color: #e0a020 !important; color: #8a5a00 !important; text-shadow: none !important; }
-    .macro-para { color: #2a2a3e !important; }
-    .s-bull { color: #1a6a2a !important; } .s-bear { color: #8a1a1a !important; } .s-neutral { color: #8a5a00 !important; } .s-hi { color: #1a1a2e !important; }
-    .kn-table th { background: #f5f5f5 !important; color: #555 !important; }
-    .kn-table td { color: #2a2a3e !important; border-color: #eee !important; }
-    .kn-val { color: #1a1a2e !important; }
-    .kn-chg.up { color: #1a6a2a !important; } .kn-chg.down { color: #8a1a1a !important; } .kn-chg.flat { color: #8a5a00 !important; }
-    .kn-why { color: #555 !important; }
-    .sv-row { background: #f9f9f9 !important; border: 1px solid #eee !important; }
-    .sv-name { color: #1a1a2e !important; }
-    .sv-vibe.bull { color: #1a6a2a !important; } .sv-vibe.bear { color: #8a1a1a !important; } .sv-vibe.neutral { color: #8a5a00 !important; }
-    .sv-why { color: #666 !important; }
-    .src-link a { color: #3366cc !important; }
-    .play-card { background: #fafafa !important; border: 1px solid #ddd !important; break-inside: avoid; }
-    .play-card::before { box-shadow: none !important; }
-    .play-card::after { display: none; }
-    .ticker.bull { color: #1a6a2a !important; text-shadow: none !important; }
-    .ticker.neutral { color: #8a5a00 !important; text-shadow: none !important; }
-    .badge.high, .badge.lc, .badge.asym { color: #1a6a2a !important; background: rgba(0,100,0,.08) !important; border-color: #1a6a2a !important; }
-    .badge.medium, .badge.csp { color: #8a5a00 !important; background: rgba(200,130,0,.08) !important; }
-    .entry-exit { color: #2a2a3e !important; } .entry-exit strong { color: #1a1a2e !important; }
-    .play-thesis { color: #4a4a5e !important; } .thesis-breaker { color: #8a1a1a !important; }
-    .opts-box { background: #f8fff8 !important; border: 1px solid #aaddaa !important; }
-    .opts-box::before { background: #1a8a2a !important; box-shadow: none !important; }
-    .opt-head { color: #1a6a2a !important; border-bottom-color: #aaddaa !important; }
-    .opt-ticker { color: #1a6a2a !important; } .opt-premium { color: #1a6a2a !important; } .opt-warn { color: #8a1a1a !important; }
-    .opt-body { color: #2a2a3e !important; }
-    .lilith-box { background: rgba(255,23,68,.03) !important; border-color: #ffaaaa !important; break-inside: avoid; }
-    .lilith-box::before { background: #cc2233 !important; box-shadow: none !important; }
-    .lilith-name { color: #cc2233 !important; }
-    .lilith-text { color: #2a2a3e !important; } .lilith-text em { color: #cc2233 !important; }
-    .footer-note { color: #555 !important; border-color: #ddd !important; background: #f9f9f9 !important; }
-    .disclaimer { color: #888 !important; background: #f5f5f5 !important; }
-    .footer-line { color: #aaa !important; }
-  }
-
-  /* ══ BOOT SCREEN ══════════════════════════════════════════════════ */
-  #boot-screen {
-    position: fixed; inset: 0;
-    background: #000;
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    font-family: 'Share Tech Mono', monospace;
-    color: #00ff41;
-    font-size: 12.5px;
-    padding: 32px 40px;
-    transition: opacity 0.8s ease;
-  }
-
-  #boot-screen.fade-out { opacity: 0; pointer-events: none; }
-
-  .boot-header {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 18px;
-    font-weight: 900;
-    letter-spacing: 4px;
-    color: #ff1744;
-    text-shadow: 0 0 20px rgba(255,23,68,.8), 0 0 40px rgba(255,23,68,.3);
-    margin-bottom: 4px;
-    text-align: center;
-  }
-
-  .boot-sub {
-    font-size: 9px;
-    color: #ff9100;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    margin-bottom: 28px;
-    text-align: center;
-  }
-
-  #boot-text {
-    width: 100%;
-    max-width: 680px;
-    line-height: 1.9;
-    min-height: 280px;
-  }
-
-  .boot-line { display: block; }
-  .boot-line.ok .tag { color: #00ff41; }
-  .boot-line.cherry { color: #ff1744; }
-  .boot-line.head { color: #ff9100; font-weight: 700; }
-  .boot-line.struct { color: #b388ff; }
-  .boot-line.dim { color: #1a1a2a; }
-
-  .boot-bar {
-    width: 100%; max-width: 680px;
-    height: 3px;
-    background: #0a0a0a;
-    margin-top: 20px;
-    overflow: hidden;
-  }
-
-  .boot-bar-fill {
-    height: 100%; width: 0%;
-    background: linear-gradient(90deg, #ff1744, #ff9100, #00ff41);
-    transition: width 2.5s ease;
-  }
-
-  /* Mobile boot screen adjustments */
-  @media (max-width: 480px) {
-    #boot-screen { font-size: 11px; padding: 24px 18px; }
-    .boot-header { font-size: 14px; letter-spacing: 2px; }
-    .boot-sub { font-size: 8px; }
-    #boot-text { min-height: 220px; }
-  }
-
-
-  /* ══ MUSIC PLAYER — Fixed Bottom Bar ════════════════════════════ */
-  body { padding-bottom: 62px; }
-
-  .music-player {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    z-index: 50000;
-    background: rgba(4, 4, 9, 0.93);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border-top: 1px solid rgba(255, 23, 68, 0.22);
-    box-shadow: 0 -4px 24px rgba(0,0,0,0.55), 0 -1px 8px rgba(255,23,68,0.12);
-    font-family: 'Share Tech Mono', 'Courier New', monospace;
-  }
-
-  .player-inner {
-    max-width: 960px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 10px 20px;
-    position: relative;
-  }
-
-  /* Progress bar at very top of player */
-  .progress-bar {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: rgba(255,255,255,.05);
-    cursor: pointer;
-    z-index: 1;
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #ff1744, #ff9100);
-    box-shadow: 0 0 6px rgba(255,23,68,.5);
-    width: 0%;
-    transition: width 0.3s linear;
-  }
-
-  /* Spinning Disc */
-  .disc-container { flex-shrink: 0; }
-
-  .disc {
-    width: 38px; height: 38px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 50% 50%,
-      #1a1a2e 0%,  #1a1a2e 20%,
-      #0d0d14 21%, #111118 40%,
-      #0a0a0f 41%, #111118 60%,
-      #0d0d14 61%, #111118 80%,
-      #0a0a0f 81%, #111118 100%
-    );
-    border: 2px solid rgba(255,23,68,.32);
-    display: flex; align-items: center; justify-content: center;
-    position: relative;
-    box-shadow: 0 0 10px rgba(255,23,68,.15);
-  }
-
-  .disc.spinning { animation: spin-disc 2s linear infinite; }
-
-  .disc-label { font-size: 14px; position: relative; z-index: 1; }
-
-  @keyframes spin-disc {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
-  }
-
-  /* Track Info */
-  .track-info { flex: 1; min-width: 0; overflow: hidden; }
-
-  .track-name {
-    font-size: 12px; font-weight: 700;
-    color: #f0f0f5;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    letter-spacing: .5px;
-  }
-
-  .track-artist {
-    font-size: 10px; color: #ff1744;
-    letter-spacing: 1px; text-transform: uppercase;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    margin-top: 2px;
-  }
-
-  /* Controls */
-  .player-controls { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
-
-  .ctrl-btn {
-    background: none;
-    border: 1px solid rgba(255,255,255,.08);
-    color: #c8c8d0;
-    font-size: 14px;
-    width: 32px; height: 32px; min-height: 32px;
-    border-radius: 3px;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-family: inherit;
-    padding: 0;
-    /* Tactile: fast press, smooth release */
-    transition: transform 0.12s ease, background 0.12s ease,
-                border-color 0.12s ease, box-shadow 0.12s ease;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none; -webkit-user-select: none;
-    will-change: transform;
-  }
-
-  .ctrl-btn:hover {
-    background: rgba(255,23,68,.1);
-    border-color: rgba(255,23,68,.3);
-    color: #ff1744;
-  }
-
-  /* ── TACTILE PRESS STATE ── */
-  .ctrl-btn:active,
-  .ctrl-btn.pressed {
-    transform: scale(0.80);
-    background: rgba(255,23,68,.22);
-    border-color: rgba(255,23,68,.55);
-    color: #ff1744;
-    box-shadow: inset 0 2px 6px rgba(0,0,0,.55),
-                0 0 10px rgba(255,23,68,.18);
-    /* Snap down instantly, release slowly */
-    transition: transform 0.04s ease, background 0.04s ease,
-                border-color 0.04s ease, box-shadow 0.04s ease;
-  }
-
-  .play-btn {
-    width: 36px; height: 36px; min-height: 36px;
-    border-color: rgba(255,23,68,.28);
-    color: #ff1744; font-size: 16px;
-  }
-
-  .play-btn:hover {
-    background: rgba(255,23,68,.15);
-    box-shadow: 0 0 10px rgba(255,23,68,.22);
-  }
-
-  .play-btn:active,
-  .play-btn.pressed {
-    transform: scale(0.82);
-    box-shadow: inset 0 3px 8px rgba(0,0,0,.6),
-                0 0 14px rgba(255,23,68,.28);
-  }
-
-  /* Volume */
-  .volume-control { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-
-  .vol-btn { font-size: 16px; width: 28px; height: 28px; border: none; }
-
-  .vol-slider {
-    width: 60px; height: 3px;
-    -webkit-appearance: none; appearance: none;
-    background: rgba(255,255,255,.1);
-    border-radius: 2px; outline: none; cursor: pointer;
-  }
-
-  .vol-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 10px; height: 10px;
-    border-radius: 50%;
-    background: #ff1744;
-    cursor: pointer;
-    box-shadow: 0 0 4px rgba(255,23,68,.5);
-  }
-
-  /* Mobile — hide volume, shrink everything */
-  @media (max-width: 768px) {
-    .player-inner { padding: 8px 12px; gap: 10px; }
-    .volume-control { display: none; }
-    .disc { width: 32px; height: 32px; }
-    .disc-label { font-size: 12px; }
-    .track-name { font-size: 11px; }
-    .track-artist { font-size: 9px; }
-    .ctrl-btn { width: 28px; height: 28px; font-size: 12px; }
-    .play-btn { width: 32px; height: 32px; font-size: 14px; }
-  }
-
-
-
-  /* ══ NEON PULSE VIDEO OVERLAY ══════════════════════════════════════ */
-  #elec-video {
-    position: fixed; inset: 0;
-    width: 100%; height: 100%;
-    object-fit: cover;
-    z-index: 2;
-    opacity: 0;
-    pointer-events: none;
-    mix-blend-mode: screen;
-    transition: opacity 1s ease;
-  }
-
-  /* Random electricity flicker — triggered by JS */
-  #elec-video.pulse { opacity: .12; }
-
-  /* ══ WIRE BORDERS — section dividers ═══════════════════════════════ */
-  .wire-border-img {
-    width: 100%;
-    height: 36px;
-    object-fit: cover;
-    object-position: center;
-    opacity: .45;
-    display: block;
-    margin: 28px 0;
-    border-radius: 2px;
-    filter: brightness(1.1);
-  }
-
-  .wire-border-img.red {
-    filter: brightness(1.1) hue-rotate(100deg) saturate(1.5);
-  }
-
-  /* ══ GLITCH PAGE TRANSITION ═════════════════════════════════════════ */
-  @keyframes page-glitch-out {
-    0%  { opacity:1; filter:none; transform:none; }
-    15% { filter:brightness(2) hue-rotate(90deg) saturate(4); transform:skewX(5deg); }
-    30% { clip-path:inset(20% 0 60% 0); filter:brightness(3); transform:skewX(-4deg) translateX(8px); }
-    50% { clip-path:inset(55% 0 10% 0); filter:hue-rotate(180deg) brightness(2); transform:skewX(3deg) translateX(-6px); }
-    70% { filter:brightness(0); transform:scaleX(1.08); clip-path:none; }
-    100%{ opacity:0; filter:brightness(0); transform:scaleX(1.08); }
-  }
-
-  body.glitch-out { animation: page-glitch-out 0.55s ease-in forwards; }
-
-  /* ══ NEON HOOD BANNER ═══════════════════════════════════════════════ */
-  .hood-banner {
-    position: relative;
-    margin-bottom: 28px;
-    z-index: 10;
-  }
-
-  .hood-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    width: 100%;
-    padding: 18px 24px;
-    background: rgba(255,23,68,.06);
-    border: 2px solid rgba(255,23,68,.55);
-    border-radius: 4px;
-    cursor: pointer;
-    font-family: 'Orbitron', sans-serif;
-    text-decoration: none;
-    position: relative;
-    overflow: hidden;
-    -webkit-tap-highlight-color: transparent;
-    transition: transform .15s;
-  }
-
-  .hood-btn:hover { transform: scale(1.01); }
-  .hood-btn:active { transform: scale(0.98); }
-
-  /* Pulsing neon glow on the button */
-  @keyframes hood-pulse {
-    0%,100% {
-      box-shadow: 0 0 20px rgba(255,23,68,.35),
-                  0 0 40px rgba(255,23,68,.12),
-                  inset 0 0 24px rgba(255,23,68,.05);
-      border-color: rgba(255,23,68,.55);
-    }
-    50% {
-      box-shadow: 0 0 40px rgba(255,23,68,.65),
-                  0 0 80px rgba(255,23,68,.3),
-                  0 0 120px rgba(255,23,68,.12),
-                  inset 0 0 40px rgba(255,23,68,.1);
-      border-color: rgba(255,23,68,.9);
-    }
-  }
-
-  .hood-btn { animation: hood-pulse 2s ease-in-out infinite; }
-
-  /* Scanning line sweeping the button */
-  .hood-btn::before {
-    content: '';
-    position: absolute; left: -100%; top: 0;
-    width: 50%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,23,68,.08), transparent);
-    animation: hood-scan 2.5s linear infinite;
-  }
-
-  @keyframes hood-scan {
-    from { left: -60%; }
-    to   { left: 160%; }
-  }
-
-  .hood-icon {
-    font-size: 22px;
-    animation: pulse 1.2s infinite;
-    flex-shrink: 0;
-  }
-
-  .hood-text-wrap { text-align: left; }
-
-  .hood-main {
-    font-size: clamp(11px, 2.5vw, 14px);
-    font-weight: 900;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: var(--cherry);
-    display: block;
-    text-shadow: 0 0 12px rgba(255,23,68,.6), 0 0 24px rgba(255,23,68,.3);
-  }
-
-  .hood-sub {
-    font-size: 9px;
-    letter-spacing: 2px;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    display: block;
-    margin-top: 3px;
-  }
-
-  .hood-arrow {
-    font-size: 20px;
-    color: var(--cherry);
-    flex-shrink: 0;
-    animation: pulse 1.2s infinite;
-    text-shadow: 0 0 10px rgba(255,23,68,.5);
-  }
-
-  @media (max-width: 480px) {
-    .hood-btn { padding: 14px 16px; gap: 12px; }
-    .hood-main { font-size: 10px; letter-spacing: 1.5px; }
-    .hood-arrow { font-size: 16px; }
-    .wire-border-img { height: 24px; margin: 20px 0; }
-  }
-
-
-
-/* ════════════════════════════════════════════════════════════════════
-   LIGHT PRINT MODE  ·  Perplexing Trades v2.3
-   Toggle via html.light-mode class  ·  Safe-to-share, printable
-   ════════════════════════════════════════════════════════════════════ */
-
-
-/* ── CSS Variable overrides (most elements use var(--x)) ────────── */
-html.light-mode,
-html.light-mode:root {
-  --bg:          #ffffff;
-  --bg-panel:    #f8f9fa;
-  --bg-card:     #fafafa;
-  --bg-card-hover: #f0f4ff;
-  --text-bright: #1a1a2e;
-  --text-primary:#333333;
-  --text-dim:    #666666;
-  --text-muted:  #999999;
-  --border:      rgba(0,0,0,.1);
-  --glow:        #1a1a2e;
-  --glow-rgb:    26, 26, 46;
-  --cherry:      #b71c1c;
-  --cherry-rgb:  183, 28, 28;
-  --bear:        #b71c1c;
-  --bull:        #1a7a4a;
-  --bull-rgb:    26, 122, 74;
-  --neutral:     #795500;
-}
-
-/* ── Toggle button ───────────────────────────────────────────────── */
-#mode-toggle {
-  position: fixed;
-  top: 14px; right: 16px;
-  z-index: 99999;
-  cursor: pointer;
-  padding: 8px 18px;
-  font-family: 'Orbitron', 'Share Tech Mono', monospace;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 1.8px;
-  text-transform: uppercase;
-  border-radius: 3px;
-  background: rgba(0,0,0,.75);
-  color: #f5c842;
-  border: 1.5px solid #f5c842;
-  animation: toggle-pulse 2.2s ease-in-out infinite;
-  user-select: none;
-  white-space: nowrap;
-  backdrop-filter: blur(4px);
-  transition: background .2s, color .2s;
-}
-#mode-toggle:hover { background: rgba(245,200,66,.15); }
-@keyframes toggle-pulse {
-  0%,100% { box-shadow: 0 0 6px rgba(245,200,66,.3); }
-  50%      { box-shadow: 0 0 20px rgba(245,200,66,.7), 0 0 8px 2px rgba(245,200,66,.15); }
-}
-
-/* ── Light mode: button changes ──────────────────────────────────── */
-html.light-mode #mode-toggle {
-  background: #1a1a2e; color: #fff; border-color: #1a1a2e;
-  animation: none; box-shadow: 0 2px 6px rgba(0,0,0,.15);
-}
-html.light-mode #mode-toggle:hover { background: #2e2e50; }
-
-/* ── Base reset ──────────────────────────────────────────────────── */
-html.light-mode, html.light-mode body {
-  background: #ffffff !important; color: #1a1a2e !important;
-}
-html.light-mode * { text-shadow: none !important; animation: none !important; }
-html.light-mode #mode-toggle { transition: background .2s, color .2s !important; }
-
-/* ── Hide atmospheric/decorative elements ────────────────────────── */
-html.light-mode #bg-video,
-html.light-mode #elec-video,
-html.light-mode #matrix-rain,
-html.light-mode .wire-border-img,
-html.light-mode #music-player,
-html.light-mode .music-player,
-html.light-mode .crt-sweep,
-html.light-mode .wire-divider,
-html.light-mode #boot-screen { display: none !important; }
-
-/* ── Header ──────────────────────────────────────────────────────── */
-html.light-mode .header {
-  background: #ffffff !important;
-  border-bottom: 2px solid #1a1a2e !important;
-  box-shadow: none !important;
-  padding: 14px 20px !important;
-}
-html.light-mode .report-title, html.light-mode .system-name { color: #1a1a2e !important; }
-html.light-mode .timestamp   { color: #666 !important; }
-html.light-mode .market-num  { color: #1a1a2e !important; }
-html.light-mode .market-lbl, html.light-mode .market-status { color: #555 !important; }
-html.light-mode .public-badge,
-html.light-mode [class*="public-badge"] {
-  background: #f0f0f0 !important; border-color: #ccc !important;
-  color: #555 !important; box-shadow: none !important;
-}
-
-/* ── Hood banner ─────────────────────────────────────────────────── */
-html.light-mode .hood-banner {
-  background: #f8f9fa !important; border: 2px solid #1a1a2e !important;
-  box-shadow: none !important; animation: none !important;
-}
-html.light-mode .hood-main  { color: #1a1a2e !important; }
-html.light-mode .hood-sub   { color: #666 !important; }
-html.light-mode .hood-arrow, html.light-mode .hood-icon { color: #1a1a2e !important; }
-
-/* ── Container ───────────────────────────────────────────────────── */
-html.light-mode .container {
-  background: transparent !important;
-  max-width: 900px !important; margin: 0 auto !important;
-}
-
-/* ── Section tags ────────────────────────────────────────────────── */
-html.light-mode .section-tag {
-  color: #555 !important; border-bottom: 1px solid #ddd !important;
-}
-html.light-mode .jp { color: #888 !important; }
-
-/* ── Macro box ───────────────────────────────────────────────────── */
-html.light-mode .macro-box {
-  background: #fafafa !important; border: 1px solid #e0e0e0 !important;
-  border-left: 4px solid #1a1a2e !important; border-radius: 4px !important;
-  box-shadow: none !important;
-}
-html.light-mode .macro-label   { color: #888 !important; border-color: #ddd !important; font-size: 8px !important; }
-html.light-mode .macro-headline { color: #1a1a2e !important; }
-html.light-mode .macro-para    { color: #333 !important; line-height: 1.7 !important; }
-html.light-mode .cursor        { display: none !important; }
-
-/* Semantic inline colors */
-html.light-mode .s-bull { color: #1a7a4a !important; font-weight: 600; }
-html.light-mode .s-bear { color: #b71c1c !important; font-weight: 600; }
-html.light-mode .s-hi   { color: #1565c0 !important; font-weight: 600; }
-html.light-mode .cite   { color: #999 !important; font-size: .82em; }
-
-/* ── Key Numbers table ───────────────────────────────────────────── */
-html.light-mode .kn-scroll { overflow: visible !important; }
-html.light-mode .kn-table  { background: #fff !important; border: 1px solid #ddd !important; border-radius: 4px !important; box-shadow: none !important; }
-html.light-mode .kn-label  { color: #888 !important; border-color: #ddd !important; }
-html.light-mode .kn-table th { background: #1a1a2e !important; color: #fff !important; }
-html.light-mode .kn-table tr:nth-child(even) { background: #f8f8f8 !important; }
-html.light-mode .kn-table tr:hover { background: #f0f4ff !important; }
-html.light-mode .kn-ind  { color: #1a1a2e !important; font-weight: 600; }
-html.light-mode .kn-val  { color: #1a1a2e !important; font-weight: 700; }
-html.light-mode .kn-why  { color: #555 !important; }
-html.light-mode .kn-chg.up   { color: #1a7a4a !important; font-weight: 700; }
-html.light-mode .kn-chg.down { color: #b71c1c !important; font-weight: 700; }
-
-/* ── Sector vibe check ───────────────────────────────────────────── */
-html.light-mode .sv-grid  { background: #fafafa !important; border: 1px solid #e0e0e0 !important; border-radius: 4px !important; box-shadow: none !important; }
-html.light-mode .sv-label { color: #888 !important; border-color: #ddd !important; }
-html.light-mode .sv-row   { border-bottom: 1px solid #f0f0f0 !important; }
-html.light-mode .sv-name  { color: #1a1a2e !important; font-weight: 600; }
-html.light-mode .sv-why   { color: #555 !important; }
-html.light-mode .sv-vibe.bull    { color: #1a7a4a !important; background: rgba(26,122,74,.09) !important; border: 1px solid rgba(26,122,74,.2) !important; }
-html.light-mode .sv-vibe.neutral { color: #795500 !important; background: rgba(121,85,0,.07) !important; border: 1px solid rgba(121,85,0,.2) !important; }
-html.light-mode .sv-vibe.bear    { color: #b71c1c !important; background: rgba(183,28,28,.07) !important; border: 1px solid rgba(183,28,28,.2) !important; }
-
-/* ── Sources ─────────────────────────────────────────────────────── */
-html.light-mode .sources-box   { background: #fafafa !important; border: 1px solid #e0e0e0 !important; border-radius: 4px !important; }
-html.light-mode .sources-label { color: #555 !important; border-color: #ddd !important; }
-html.light-mode .source-row    { border-bottom: 1px solid #f0f0f0 !important; }
-html.light-mode .src-num       { color: #999 !important; }
-html.light-mode .src-link, html.light-mode .src-link a { color: #1565c0 !important; }
-
-/* ── Play cards ──────────────────────────────────────────────────── */
-html.light-mode .play-card {
-  background: #fafafa !important; border: 1px solid #ddd !important;
-  box-shadow: none !important; border-radius: 4px !important;
-}
-html.light-mode .play-card.bull { border-left: 4px solid #1a7a4a !important; }
-html.light-mode .play-card.bear { border-left: 4px solid #b71c1c !important; }
-html.light-mode .play-header    { border-bottom: 1px solid #eee !important; background: transparent !important; }
-html.light-mode .ticker.bull    { color: #1a7a4a !important; }
-html.light-mode .ticker.bear    { color: #b71c1c !important; }
-html.light-mode .badge          { box-shadow: none !important; }
-html.light-mode .badge.high       { background: #fff8e1 !important; color: #795500 !important; border-color: #f5c842 !important; }
-html.light-mode .badge.asym       { background: #e3f2fd !important; color: #1565c0 !important; border-color: #90caf9 !important; }
-html.light-mode .badge.bear-badge { background: #ffebee !important; color: #b71c1c !important; border-color: #ef9a9a !important; }
-html.light-mode .entry-exit     { color: #1a1a2e !important; }
-html.light-mode .play-thesis    { color: #333 !important; line-height: 1.6 !important; }
-html.light-mode .thesis-breaker { color: #888 !important; background: #f5f5f5 !important; border-color: #ddd !important; }
-html.light-mode .play-strategy  { color: #666 !important; }
-html.light-mode .tag            { background: rgba(0,0,0,.06) !important; color: #333 !important; }
-
-/* ── Options box ─────────────────────────────────────────────────── */
-html.light-mode .opts-box  { background: #fafafa !important; border: 1px solid #e0e0e0 !important; border-radius: 4px !important; box-shadow: none !important; }
-html.light-mode .opt-block { border-bottom: 1px solid #eee !important; }
-html.light-mode .opt-head  { color: #1a1a2e !important; border-color: #ddd !important; background: transparent !important; }
-html.light-mode .opt-body  { color: #333 !important; }
-html.light-mode .opt-ticker  { background: #e8ecf0 !important; color: #1a1a2e !important; border: 1px solid #ccc !important; }
-html.light-mode .opt-premium { color: #1565c0 !important; font-weight: 600; }
-html.light-mode .opt-warn    { color: #795500 !important; background: #fff8e1 !important; border-left-color: #f5c842 !important; }
-
-/* ── Lilith Says — image hidden, text kept ───────────────────────── */
-html.light-mode .lilith-wrap    { background: #fafafa !important; border: 1px solid #e0e0e0 !important; border-radius: 4px !important; }
-html.light-mode .lilith-box     { background: transparent !important; border: none !important; flex-direction: column !important; }
-html.light-mode .lilith-img, html.light-mode .lilith-callsign { display: none !important; }
-html.light-mode .lilith-content { padding: 20px 0 !important; width: 100% !important; max-width: 100% !important; }
-html.light-mode .lilith-name    { color: #999 !important; font-size: 8px !important; }
-html.light-mode .lilith-text    { color: #333 !important; font-style: italic !important; line-height: 1.7 !important; }
-
-/* ── Footer ──────────────────────────────────────────────────────── */
-html.light-mode .footer-note  { background: #fafafa !important; border: 1px solid #e0e0e0 !important; color: #666 !important; }
-html.light-mode .disclaimer   { color: #888 !important; }
-html.light-mode .footer       { background: #fafafa !important; border-top: 1px solid #e0e0e0 !important; }
-html.light-mode .footer-line  { color: #999 !important; }
-html.light-mode .footer-cherry { display: none !important; }
-
-/* ════ METHODOLOGY PAGE ═══════════════════════════════════════════ */
-html.light-mode .page-header  { background: #fff !important; border-bottom: 2px solid #1a1a2e !important; }
-html.light-mode .page-eyebrow { color: #888 !important; }
-html.light-mode .page-title   { color: #1a1a2e !important; }
-html.light-mode .page-desc    { color: #555 !important; }
-html.light-mode .section      { background: #fafafa !important; border: 1px solid #e0e0e0 !important; border-radius: 4px !important; box-shadow: none !important; }
-html.light-mode .sh           { color: #1a1a2e !important; border-color: #ddd !important; }
-html.light-mode .sh::before, html.light-mode .sh::after { background: #ddd !important; }
-html.light-mode .body-text    { color: #333 !important; line-height: 1.7 !important; }
-html.light-mode .model-card   { background: #f8f9fa !important; border: 1px solid #e0e0e0 !important; box-shadow: none !important; }
-html.light-mode .model-card.claude { border-left: 4px solid #7c4daa !important; }
-html.light-mode .model-card.gemini { border-left: 4px solid #1a73e8 !important; }
-html.light-mode .model-card.gpt    { border-left: 4px solid #1a7a4a !important; }
-html.light-mode .model-name   { color: #1a1a2e !important; }
-html.light-mode .model-role   { color: #666 !important; }
-html.light-mode .model-says   { color: #333 !important; background: #f0f0f0 !important; border-left: 3px solid #ccc !important; }
-html.light-mode .consensus-box { background: #fff8e1 !important; border: 1px solid #f5c842 !important; color: #1a1a2e !important; box-shadow: none !important; }
-html.light-mode .vs-grid      { background: #fafafa !important; border: 1px solid #e0e0e0 !important; }
-html.light-mode .vs-label     { color: #888 !important; background: #f0f0f0 !important; }
-html.light-mode .vs-item      { color: #333 !important; border-bottom: 1px solid #eee !important; }
-html.light-mode .vs-col.perplexing { background: rgba(26,122,74,.04) !important; }
-html.light-mode .source-entry { background: #fafafa !important; border: 1px solid #e0e0e0 !important; }
-html.light-mode .src-badge    { background: #e8ecf0 !important; color: #333 !important; }
-html.light-mode .src-pub      { color: #888 !important; }
-html.light-mode .src-title a  { color: #1565c0 !important; }
-html.light-mode .disclaimer-box { background: #fff8e1 !important; border: 1px solid #f5c842 !important; color: #555 !important; }
-html.light-mode .back-btn     { background: #1a1a2e !important; color: #fff !important; border-color: #1a1a2e !important; box-shadow: none !important; }
-html.light-mode .back-sub     { color: #888 !important; }
-html.light-mode .page-footer  { background: #fafafa !important; border-top: 1px solid #e0e0e0 !important; color: #888 !important; }
-
-/* ════ @media print — always clean, regardless of toggle ══════════ */
-@media print {
-  #mode-toggle, #bg-video, #elec-video, #matrix-rain, .wire-border-img,
-  #music-player, .music-player, #boot-screen, .crt-sweep, .wire-divider,
-  .lilith-img, .lilith-callsign, .footer-cherry, .hood-icon { display: none !important; }
-  html, body { background: #ffffff !important; color: #1a1a2e !important; }
-  * { text-shadow: none !important; box-shadow: none !important; animation: none !important; }
-  .container  { max-width: 100% !important; padding: 0 12px !important; }
-  .play-card, .opts-box, .sv-grid, .sources-box, .macro-box { page-break-inside: avoid; }
-  .s-bull, .sv-vibe.bull, .kn-chg.up { color: #1a7a4a !important; }
-  .s-bear, .sv-vibe.bear, .kn-chg.down { color: #b71c1c !important; }
-  .s-hi { color: #1565c0 !important; }
-  a { color: #1565c0 !important; }
-  -webkit-print-color-adjust: exact; print-color-adjust: exact;
-}
-
-</style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+<title>Perplexing Trades — Market Alpha · Evening Playbook · Apr 21, 2026</title>
+<meta name="description" content="An AI-driven market alpha dispatch. Twice-daily institutional-grade tape with the Lilith voice summary." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230A0B0D'/%3E%3Cpath d='M8 10h6a4 4 0 110 8H8V10zm0 10h6a4 4 0 110 8H8v-8z' fill='%23FF9500'/%3E%3C/svg%3E" />
 </head>
 <body>
 
-<!-- ══ BOOT SCREEN ══════════════════════════════════════════════ -->
-<div id="boot-screen" title="Click to skip">
-  <div class="boot-header">😈 PERPLEXING TRADES v2.2</div>
-  <div class="boot-sub">// Market Alpha · Public Edition · Lilith System //</div>
-  <div id="boot-text"></div>
-  <div class="boot-bar"><div class="boot-bar-fill" id="boot-bar"></div></div>
+<!-- BOOT SCREEN -->
+<div id="boot" class="boot">
+  <div class="boot-scan"></div>
+  <div class="boot-crt"></div>
+  <div class="boot-inner">
+    <div class="boot-title">Perplexing <em>Trades</em></div>
+    <div id="boot-log" class="boot-log"></div>
+    <div style="margin-top:20px;color:var(--ink-dim);font-size:11px;letter-spacing:.12em;">PRESS ESC TO SKIP &nbsp;·&nbsp; v2.4 · 2026.04.21</div>
+  </div>
 </div>
 
-<!-- CRT / BG LAYERS -->
-<div class="crt-sweep"></div>
-<canvas id="matrix-rain"></canvas>
-<video id="bg-video" autoplay loop muted playsinline>
-  <source src="lilith-bg-loop.mp4" type="video/mp4">
-</video>
-<script>
-  // Belt-and-suspenders mute: HTML attribute + JS property
-  (function(){ var v = document.getElementById('bg-video'); if(v){v.muted=true;v.volume=0;} })();
-  (function(){ var v = document.getElementById('elec-video'); if(v){v.muted=true;v.volume=0;} })();
-</script>
-<video id="elec-video" autoplay loop muted playsinline>
-  <source src="neon-pulse.mp4" type="video/mp4">
-</video>
+<!-- GRAIN OVERLAY -->
+<div class="grain"></div>
 
-<div class="container" id="main-content" style="display:none">
-  <div id="mode-toggle" title="Switch to Light Print Mode" onclick="toggleLightMode()">&#x1F5A8; Light Print Mode</div>
-  
-
-  <!-- PUBLIC BADGE -->
-  <div class="public-badge">
-    <span class="public-badge-dot"></span>
-    <span class="public-badge-text">🍒 Market Alpha — Public Edition</span>
-    <span class="public-badge-sep">·</span>
-    <span class="public-badge-safe">No Portfolio Data · Safe to Share</span>
-  </div>
-
-  <!-- ══ UNDER THE HOOD BANNER ══ -->
-  <div class="hood-banner">
-    <a href="methodology.html" class="hood-btn" id="hood-btn">
-      <span class="hood-icon">⚡</span>
-      <div class="hood-text-wrap">
-        <span class="hood-main">Click here to see under the hood of this analysis</span>
-        <span class="hood-sub">LLM Council breakdown · Source citations · Why this beats Google</span>
-      </div>
-      <span class="hood-arrow">→</span>
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-left">
+    <a href="index.html" class="logo" style="border:none">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-label="Perplexing Trades"><rect x="1.5" y="1.5" width="21" height="21" stroke="currentColor" stroke-width="1.5"/><path d="M6 6h5a2.5 2.5 0 010 5H6V6zm0 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg>
+      Perplexing <em style="font-style:italic">Trades</em>
     </a>
+    <span class="sess-badge">Evening Playbook · Apr 22, 2026</span>
   </div>
-
-  <!-- Wire border -->
-  <img class="wire-border-img" src="wire-border.png" alt="" aria-hidden="true">
-
-  <!-- HEADER -->
-  <header class="header">
-    <div class="header-left">
-      <div class="lilith-wrap">
-        <div class="lilith-avatar"><img src="lilith-avatar.png" alt="Lilith"></div>
-      </div>
-      <div>
-        <div class="system-name">Perplexing Trades</div>
-        <div class="report-title">Market Alpha Report</div>
-        <div class="timestamp">apr.14.2026 // session #006 — midday pulse</div>
-        <div class="lilith-callsign">LILITH.EXE // MARKET ALPHA EDITION 🍒</div>
-      </div>
-    </div>
-    <div class="header-right">
-      <div class="market-num positive">+1.11%</div>
-      <div class="market-lbl">S&P 500 · Session Close</div>
-      <div class="market-status">6,962 · OIL CRASH $91</div>
-    </div>
-  </header>
-
-  <!-- THE MACRO STORY -->
-  <div class="section-tag macro">🌍 What's Going On In The World? <span class="jp">世界の状況</span></div>
-  <div class="freshness-badge" id="freshness-badge"><span class="freshness-dot"></span><span>Research fresh @ Apr 22, 2026 &middot; 5:19 PM PT</span></div>
-
-  <!-- LILITH VOICE PLAYER -->
-  <div class="lilith-voice-player" id="lilith-voice-player">
-    <div class="lvp-bg"></div>
-    <div class="lvp-content">
-      <img class="lvp-avatar" id="lvp-avatar" src="lilith-voice-avatar.png" alt="Lilith Devai">
-      <div class="lvp-info">
-        <div class="lvp-title">LILITH DEVAI — VOICE SUMMARY</div>
-        <div class="lvp-session">EVENING PLAYBOOK // APR 22, 2026 // SESSION #013</div>
-        <div class="lvp-waveform" id="lvp-waveform"></div>
-        <div class="lvp-controls">
-          <button class="lvp-btn" id="lvp-restart" title="Restart">⏮</button>
-          <button class="lvp-btn play-main" id="lvp-play" title="Play/Pause">▶</button>
-          <div class="lvp-progress" id="lvp-progress">
-            <div class="lvp-progress-fill" id="lvp-progress-fill"></div>
-          </div>
-          <span class="lvp-time" id="lvp-time">0:00</span>
-        </div>
-        <div class="lvp-status" id="lvp-status">READY — TAP PLAY TO HEAR LILITH'S MARKET SUMMARY</div>
-      </div>
-    </div>
-    <audio id="lilith-audio" preload="auto" src="music/lilith-summary.mp3"></audio>
+  <div class="topbar-right">
+    <nav class="nav">
+      <a href="index.html" class="active">Market Alpha</a>
+      <a href="methodology.html">Methodology</a>
+      <a href="archive.html">Archive</a>
+    </nav>
+    <div class="timestamp" id="live-ts"></div>
   </div>
+</header>
 
-  <div class="macro-box">
-    <div class="macro-label">// EVENING PLAYBOOK // APR 22 // TSLA BEAT QUALITY-LOW // MU +8.48% CLOSE // AMD +6.67% · AH NEW ATH // 5:19 PM PT //</div>
-    <div class="macro-narrative">
-      <p>Tape closed strong. S&amp;P 500 +1.03% to 7,137.12 [1]. Nasdaq +1.64% to 24,657.57 [2]. VIX 18.92 (−2.97%) [1]. AI melt-up was the story: AMD blew out +6.67% to $303.46 [3] — a fresh all-time high close. MU closed $487.48 (+8.48%) [4] after clearing its $471 52-week high decisively at midday. TSM +5.26% to $387.44 [5]. AVGO +5.09% to $422.65 [6]. NVDA reclaimed $202.50 (+1.31%) [7]. GOOG +2.20%, MSFT +2.07%, META +0.88%. Every major AI-semi line printed green and stayed green.</p>
-      <p>Tesla reported Q1 after the bell. On paper: $0.41 non-GAAP EPS vs $0.37 consensus [8]. Revenue $22.39B beat by $190M [9]. GAAP gross margin 21.1% crushed the 17.7% estimate [9]. AH stock popped ~3.7% initially [9], then faded — closed AH $386.35 (−0.30%) after Electrek dissected the quality [8]. The concerns: one-time warranty reserve releases, tariff refund windfalls, payables stretched $1.3B. GAAP EPS was $0.13 — 8% YoY — not the +52% non-GAAP number. 358K delivery miss held.</p>
-      <p>Intel reports tomorrow AH. Stock closed −1.49% at $65.27 selling INTO its own print [12], then flipped +3.14% to $67.32 after hours [12] — someone positioned short early and got squeezed post-close. Consensus $0.02 EPS / $12.42B rev; 60% YTD gains say priced-for-beat.</p>
-      <p>The real macro rip was oil. WTI exploded +7.25% to $96.17 [1] on escalating Iran headlines — Brent clearing $95 puts the rate-story flip we've been warning about. XOM +0.76% to $149.49 [13]. Crypto held — BTC $77.7K, ETH $2,352. The quantum bounce continued — IONQ +2.33%, QBTS +3.78% — but a short-lived pop; AH already fading flat.</p>
-      <p>Tomorrow: INTC AH print, oil's $100 line of demarcation, GOOG+MSFT+META megaday Apr 29. Let winners run overnight. Hedge any single-name beta concentration with VIX.</p>
-    </div>
-    <div class="kn-scroll">
-                                                <table class="kn-table">
-        <thead><tr><th>Sym</th><th>Name</th><th>Close</th><th>Chg</th><th>Note / AH</th></tr></thead>
-        <tbody>
-          <tr><td style="font-family:'Orbitron',monospace;color:#00ff41;font-weight:700">^GSPC</td><td>S&amp;P 500</td><td style="font-family:'JetBrains Mono',monospace">7,137.12</td><td style="font-family:'JetBrains Mono',monospace;color:#00ff41">+1.03%</td><td style="color:var(--text-muted);font-size:11px">Closed near session highs</td></tr>
-          <tr><td style="font-family:'Orbitron',monospace;color:#00ff41;font-weight:700">^IXIC</td><td>Nasdaq</td><td style="font-family:'JetBrains Mono',monospace">24,657.57</td><td style="font-family:'JetBrains Mono',monospace;color:#00ff41">+1.64%</td><td style="color:var(--text-muted);font-size:11px">AI melt-up new session highs</td></tr>
-          <tr><td style="font-family:'Orbitron',monospace;color:#00ff41;font-weight:700">^VIX</td><td>VIX</td><td style="font-family:'JetBrains Mono',monospace">18.92</td><td style="font-family:'JetBrains Mono',monospace;color:#00ff41">-2.97%</td><td style="color:var(--text-muted);font-size:11px">Crushed through TSLA print</td></tr>
-          <tr><td style="font-family:'Orbitron',monospace;color:#00ff41;font-weight:700">NVDA</td><td>NVIDIA</td><td style="font-family:'JetBrains Mono',monospace">$202.50</td><td style="font-family:'JetBrains Mono',monospace;color:#00ff41">+1.31%</td><td style="color:var(--text-muted);font-size:11px">Reclaimed $200 solid · AH $202.26</td></tr>
-          <tr><td style="font-family:'Orbitron',monospace;color:#00ff41;font-weight:700">MU</td><td>Micron</td><td style="font-family:'JetBrains Mono',monospace">$487.48</td><td style="font-family:'JetBrains Mono',monospace;color:#00ff41">+8.48%</td><td style="color:var(--text-muted);font-size:11px">Closed above $471 ATH · AH $486.50</td></tr>
-          <tr><td style="font-family:'Orbitron',monospace;color:#00ff41;font-weight:700">AMD</td><td>Advanced Micro</td><td style="font-family:'JetBrains Mono',monospace">$303.46</td><td style="font-family:'JetBrains Mono',monospace;color:#00ff41">+6.67%</td><td style="color:var(--text-muted);font-size:11px">★ NEW ATH CLOSE · AH $302.60</td></tr>
-          <tr><td style="font-family:'Orbitron',monospace;color:#00ff41;font-weight:700">MSFT</td><td>Microsoft</td><td style="font-family:'JetBrains Mono',monospace">$432.92</td><td style="font-family:'JetBrains Mono',monospace;color:#00ff41">+2.07%</td><td style="color:var(--text-muted);font-size:11px">Solid · AH fade to $427.44</td></tr>
-          <tr><td style="font-family:'Orbitron',monospace;color:#00ff41;font-weight:700">AVGO</td><td>Broadcom</td><td style="font-family:'JetBrains Mono',monospace">$422.65</td><td style="font-family:'JetBrains Mono',monospace;color:#00ff41">+5.09%</td><td style="color:var(--text-muted);font-size:11px">Hero of afternoon · AH $421.43</td></tr>
-          <tr><td style="font-family:'Orbitron',monospace;color:#00ff41;font-weight:700">GOOG</td><td>Alphabet</td><td style="font-family:'JetBrains Mono',monospace">$337.73</td><td style="font-family:'JetBrains Mono',monospace;color:#00ff41">+2.20%</td><td style="color:var(--text-muted);font-size:11px">Into Apr 29 earnings · AH $337.25</td></tr>
-          <tr><td style="font-family:'Orbitron',monospace;color:#ff9100;font-weight:700">TSLA</td><td>Tesla</td><td style="font-family:'JetBrains Mono',monospace">$387.51</td><td style="font-family:'JetBrains Mono',monospace;color:#ff9100">+0.28%</td><td style="color:var(--text-muted);font-size:11px">Q1 beat quality low · AH $386.35 -0.30%</td></tr>
-          <tr><td style="font-family:'Orbitron',monospace;color:#ff3d3d;font-weight:700">INTC</td><td>Intel</td><td style="font-family:'JetBrains Mono',monospace">$65.27</td><td style="font-family:'JetBrains Mono',monospace;color:#ff3d3d">-1.49%</td><td style="color:var(--text-muted);font-size:11px">Sold into print · AH $67.32 +3.14% squeeze</td></tr>
-          <tr><td style="font-family:'Orbitron',monospace;color:#00ff41;font-weight:700">ORCL</td><td>Oracle</td><td style="font-family:'JetBrains Mono',monospace">$187.50</td><td style="font-family:'JetBrains Mono',monospace;color:#00ff41">+3.49%</td><td style="color:var(--text-muted);font-size:11px">AI cloud · AH fade $184.10 -1.81%</td></tr>
-          <tr><td style="font-family:'Orbitron',monospace;color:#00ff41;font-weight:700">POET</td><td>POET Technologies</td><td style="font-family:'JetBrains Mono',monospace">$12.77</td><td style="font-family:'JetBrains Mono',monospace;color:#00ff41">+24.59%</td><td style="color:var(--text-muted);font-size:11px">Day 3 squeeze · AH $12.57 cooling</td></tr>
-          <tr><td style="font-family:'Orbitron',monospace;color:#00ff41;font-weight:700">NVTS</td><td>Navitas Semi</td><td style="font-family:'JetBrains Mono',monospace">$18.47</td><td style="font-family:'JetBrains Mono',monospace;color:#00ff41">+20.48%</td><td style="color:var(--text-muted);font-size:11px">Day 3 · AH $19.22 +4.06%</td></tr>
-          <tr><td style="font-family:'Orbitron',monospace;color:#ff9100;font-weight:700">IONQ</td><td>IonQ</td><td style="font-family:'JetBrains Mono',monospace">$47.36</td><td style="font-family:'JetBrains Mono',monospace;color:#ff9100">+2.33%</td><td style="color:var(--text-muted);font-size:11px">Quantum bounce · AH flat</td></tr>
-          <tr><td style="font-family:'Orbitron',monospace;color:#ff9100;font-weight:700">QBTS</td><td>D-Wave</td><td style="font-family:'JetBrains Mono',monospace">$21.13</td><td style="font-family:'JetBrains Mono',monospace;color:#ff9100">+3.78%</td><td style="color:var(--text-muted);font-size:11px">Squeeze tail · AH flat</td></tr>
-          <tr><td style="font-family:'Orbitron',monospace;color:#00ff41;font-weight:700">TSM</td><td>Taiwan Semi</td><td style="font-family:'JetBrains Mono',monospace">$387.44</td><td style="font-family:'JetBrains Mono',monospace;color:#00ff41">+5.26%</td><td style="color:var(--text-muted);font-size:11px">AI foundry · AH $384.88</td></tr>
-          <tr><td style="font-family:'Orbitron',monospace;color:#00ff41;font-weight:700">CL=F</td><td>WTI Crude</td><td style="font-family:'JetBrains Mono',monospace">$96.17</td><td style="font-family:'JetBrains Mono',monospace;color:#00ff41">+7.25%</td><td style="color:var(--text-muted);font-size:11px">★ IRAN escalation · approaching $100</td></tr>
-          <tr><td style="font-family:'Orbitron',monospace;color:#ff9100;font-weight:700">GC=F</td><td>Gold</td><td style="font-family:'JetBrains Mono',monospace">$4,738.60</td><td style="font-family:'JetBrains Mono',monospace;color:#ff9100">-0.30%</td><td style="color:var(--text-muted);font-size:11px">Modest fade</td></tr>
-          <tr><td style="font-family:'Orbitron',monospace;color:#00ff41;font-weight:700">BTCUSD</td><td>Bitcoin</td><td style="font-family:'JetBrains Mono',monospace">$77,726</td><td style="font-family:'JetBrains Mono',monospace;color:#00ff41">+1.81%</td><td style="color:var(--text-muted);font-size:11px">Holding $77K</td></tr>
-          <tr><td style="font-family:'Orbitron',monospace;color:#00ff41;font-weight:700">ETHUSD</td><td>Ethereum</td><td style="font-family:'JetBrains Mono',monospace">$2,352</td><td style="font-family:'JetBrains Mono',monospace;color:#00ff41">+1.04%</td><td style="color:var(--text-muted);font-size:11px">Extending gain</td></tr>
-        </tbody>
-        </table>
-    </div>
-
-    <!-- SECTOR VIBE CHECK -->
-    <div class="sv-label">▸ Sector Vibe Check</div>
-                                <div class="sv-grid">
-      <div class="sv-item" style="background:var(--bg-card);padding:10px 12px;border-left:3px solid #00ff41;border-radius:3px">
-        <div style="font-family:'Orbitron',sans-serif;font-size:8.5px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px">AI SEMIS</div>
-        <div style="color:#00ff41;font-weight:700;font-size:12px;margin-bottom:2px">🚀 MELT-UP</div>
-        <div style="color:var(--text-muted);font-size:10.5px;line-height:1.35">AMD +6.67% ATH · MU +8.48% · TSM +5.26% · AVGO +5.09%</div>
-      </div>
-      <div class="sv-item" style="background:var(--bg-card);padding:10px 12px;border-left:3px solid #00ff41;border-radius:3px">
-        <div style="font-family:'Orbitron',sans-serif;font-size:8.5px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px">MEGACAP TECH</div>
-        <div style="color:#00ff41;font-weight:700;font-size:12px;margin-bottom:2px">🟢 STRONG</div>
-        <div style="color:var(--text-muted);font-size:10.5px;line-height:1.35">GOOG +2.20% · MSFT +2.07% · META +0.88%</div>
-      </div>
-      <div class="sv-item" style="background:var(--bg-card);padding:10px 12px;border-left:3px solid #ff9100;border-radius:3px">
-        <div style="font-family:'Orbitron',sans-serif;font-size:8.5px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px">AUTOS/EV</div>
-        <div style="color:#ff9100;font-weight:700;font-size:12px;margin-bottom:2px">⚠️ BEAT/FADE</div>
-        <div style="color:var(--text-muted);font-size:10.5px;line-height:1.35">TSLA +0.28% close · AH -0.30% on quality</div>
-      </div>
-      <div class="sv-item" style="background:var(--bg-card);padding:10px 12px;border-left:3px solid #00ff41;border-radius:3px">
-        <div style="font-family:'Orbitron',sans-serif;font-size:8.5px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px">ENERGY</div>
-        <div style="color:#00ff41;font-weight:700;font-size:12px;margin-bottom:2px">🔥 EXPLODED</div>
-        <div style="color:var(--text-muted);font-size:10.5px;line-height:1.35">Oil +7.25% to $96.17 · $100 next</div>
-      </div>
-      <div class="sv-item" style="background:var(--bg-card);padding:10px 12px;border-left:3px solid #ff9100;border-radius:3px">
-        <div style="font-family:'Orbitron',sans-serif;font-size:8.5px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px">QUANTUM</div>
-        <div style="color:#ff9100;font-weight:700;font-size:12px;margin-bottom:2px">↗️ BOUNCE END</div>
-        <div style="color:var(--text-muted);font-size:10.5px;line-height:1.35">IONQ +2.33% · QBTS +3.78% · AH flat</div>
-      </div>
-      <div class="sv-item" style="background:var(--bg-card);padding:10px 12px;border-left:3px solid #00ff41;border-radius:3px">
-        <div style="font-family:'Orbitron',sans-serif;font-size:8.5px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px">CRYPTO</div>
-        <div style="color:#00ff41;font-weight:700;font-size:12px;margin-bottom:2px">🟢 FIRM</div>
-        <div style="color:var(--text-muted);font-size:10.5px;line-height:1.35">BTC $77.7K · ETH $2,352</div>
-      </div>
-    </div>
-        <div class="sources-box">
-      <div class="sources-label">Sources</div>
-      <ul style="list-style:none;padding:0;margin:0">
-        <li style="margin-bottom:6px;font-size:11px;line-height:1.4"><span style="color:var(--cherry);font-weight:700">[1]</span> <a href="https://electrek.co/2026/04/22/tesla-tsla-q1-2026-one-time-benefits-warranty-tariff-refunds-margins/" target="_blank" style="color:var(--text-primary);text-decoration:none;border-bottom:1px dotted var(--border)">Electrek — Tesla Q1 2026 Quality Concerns</a> <span class="src-pub" style="color:var(--text-muted);font-size:10px">· Apr 22, 2026</span></li>
-        <li style="margin-bottom:6px;font-size:11px;line-height:1.4"><span style="color:var(--cherry);font-weight:700">[2]</span> <a href="https://finance.yahoo.com/markets/stocks/articles/tesla-nasdaq-tsla-q1-cy2026-203801885.html" target="_blank" style="color:var(--text-primary);text-decoration:none;border-bottom:1px dotted var(--border)">Yahoo — TSLA Q1 CY2026 Beats Revenue</a> <span class="src-pub" style="color:var(--text-muted);font-size:10px">· Apr 22, 2026</span></li>
-        <li style="margin-bottom:6px;font-size:11px;line-height:1.4"><span style="color:var(--cherry);font-weight:700">[3]</span> <a href="https://www.gurufocus.com/news/8810261/is-tesla-tsla-overvalued-after-mixed-q1-2026" target="_blank" style="color:var(--text-primary);text-decoration:none;border-bottom:1px dotted var(--border)">GuruFocus — TSLA Mixed Q1 GF Score 86</a> <span class="src-pub" style="color:var(--text-muted);font-size:10px">· Apr 22, 2026</span></li>
-        <li style="margin-bottom:6px;font-size:11px;line-height:1.4"><span style="color:var(--cherry);font-weight:700">[4]</span> <a href="https://electrek.co/2026/04/22/tesla-tsla-q1-2026-financial-results/" target="_blank" style="color:var(--text-primary);text-decoration:none;border-bottom:1px dotted var(--border)">Electrek — TSLA Q1 Financial Results</a> <span class="src-pub" style="color:var(--text-muted);font-size:10px">· Apr 22, 2026</span></li>
-        <li style="margin-bottom:6px;font-size:11px;line-height:1.4"><span style="color:var(--cherry);font-weight:700">[5]</span> <a href="https://ir.tesla.com/press-release/earnings-consensus-first-quarter-2026" target="_blank" style="color:var(--text-primary);text-decoration:none;border-bottom:1px dotted var(--border)">Tesla IR — Q1 2026 Earnings Consensus</a> <span class="src-pub" style="color:var(--text-muted);font-size:10px">· Apr 18, 2026</span></li>
-        <li style="margin-bottom:6px;font-size:11px;line-height:1.4"><span style="color:var(--cherry);font-weight:700">[6]</span> <a href="https://markets.financialcontent.com/stocks/article/stockstory-2026-4-22-intel-intc-q1-earnings-report-preview-what-to-look-for" target="_blank" style="color:var(--text-primary);text-decoration:none;border-bottom:1px dotted var(--border)">FinancialContent — Intel Q1 Preview</a> <span class="src-pub" style="color:var(--text-muted);font-size:10px">· Apr 22, 2026</span></li>
-        <li style="margin-bottom:6px;font-size:11px;line-height:1.4"><span style="color:var(--cherry);font-weight:700">[7]</span> <a href="https://www.reuters.com/markets/commodities/" target="_blank" style="color:var(--text-primary);text-decoration:none;border-bottom:1px dotted var(--border)">Reuters — Iran Escalation / Oil</a> <span class="src-pub" style="color:var(--text-muted);font-size:10px">· Apr 22, 2026</span></li>
-        <li style="margin-bottom:6px;font-size:11px;line-height:1.4"><span style="color:var(--cherry);font-weight:700">[8]</span> <a href="https://www.cnbc.com/markets/" target="_blank" style="color:var(--text-primary);text-decoration:none;border-bottom:1px dotted var(--border)">CNBC — Market Wrap Apr 22</a> <span class="src-pub" style="color:var(--text-muted);font-size:10px">· Apr 22, 2026</span></li>
-      </ul>
-    </div>
+<!-- TICKER TAPE -->
+<div class="ticker-tape">
+  <div class="ticker-track">
+    <span class="ticker-item"><span class="t">S&amp;P 500</span> 7,137.12 <span class="up">+1.03%</span></span>
+    <span class="ticker-item"><span class="t">NDX</span> 24,657.57 <span class="up">+1.64%</span></span>
+    <span class="ticker-item"><span class="t">VIX</span> 18.92 <span class="up">-2.97%</span></span>
+    <span class="ticker-item"><span class="t">NVDA</span> 202.50 <span class="up">+1.31%</span></span>
+    <span class="ticker-item"><span class="t">MU</span> 487.48 <span class="up">+8.48%</span></span>
+    <span class="ticker-item"><span class="t">AMD</span> 303.46 <span class="up">+6.67%</span> · NEW ATH ★</span>
+    <span class="ticker-item"><span class="t">MSFT</span> 432.92 <span class="up">+2.07%</span></span>
+    <span class="ticker-item"><span class="t">AVGO</span> 422.65 <span class="up">+5.09%</span></span>
+    <span class="ticker-item"><span class="t">GOOG</span> 337.73 <span class="up">+2.20%</span></span>
+    <span class="ticker-item"><span class="t">TSM</span> 387.44 <span class="up">+5.26%</span></span>
+    <span class="ticker-item"><span class="t">TSLA</span> 387.51 <span class="up">+0.28%</span> · AH 386.35 (beat-fade)</span>
+    <span class="ticker-item"><span class="t">INTC</span> 65.27 <span class="dn">-1.49%</span> · AH +3.14%</span>
+    <span class="ticker-item"><span class="t">ORCL</span> 187.50 <span class="up">+3.49%</span></span>
+    <span class="ticker-item"><span class="t">POET</span> 12.77 <span class="up">+24.59%</span></span>
+    <span class="ticker-item"><span class="t">NVTS</span> 18.47 <span class="up">+20.48%</span></span>
+    <span class="ticker-item"><span class="t">WTI</span> 96.17 <span class="up">+7.25%</span> · IRAN</span>
+    <span class="ticker-item"><span class="t">GOLD</span> 4,738 <span class="dn">-0.30%</span></span>
+    <span class="ticker-item"><span class="t">BTC</span> 77,726 <span class="up">+1.81%</span></span>
+    <span class="ticker-item"><span class="t">ETH</span> 2,352 <span class="up">+1.04%</span></span>
   </div>
-
-      </div>
-
-    </div>
-
-  <!-- MARKET PLAYS -->
-  <img class="wire-border-img" src="wire-border.png" alt="" aria-hidden="true">
-
-  <div class="section-tag plays">🎯 Market Plays — High-Conviction Opportunities <span class="jp">新規トレード</span></div>
-                <div class="plays-grid">
-    <div class="play-card bull">
-      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-        <div style="font-family:'Orbitron',monospace;font-size:18px;font-weight:900;color:var(--bull);letter-spacing:1px" class="ticker">AMD</div>
-        <div style="font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:2px;color:var(--bull);background:rgba(0,0,0,.25);padding:3px 8px;border-radius:2px">OPEN +6.67%</div>
-      </div>
-      <div class="entry-exit" style="background:rgba(0,0,0,.2);padding:7px 9px;border-radius:2px;font-size:10.5px;margin-bottom:8px;line-height:1.5">
-        <div><span style="color:var(--text-muted);font-size:9px;letter-spacing:1px">ENTRY:</span> $274.95 · Mon Apr 20</div>
-        <div><span style="color:var(--text-muted);font-size:9px;letter-spacing:1px">EXIT:</span> $303.46 close · AH $302.60</div>
-      </div>
-      <div style="font-size:11px;line-height:1.5;color:var(--text-muted)">NEW ATH CLOSE · +$28.51/sh open profit since entry · trail $290</div>
-    </div>
-    <div class="play-card bull">
-      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-        <div style="font-family:'Orbitron',monospace;font-size:18px;font-weight:900;color:var(--bull);letter-spacing:1px" class="ticker">MU</div>
-        <div style="font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:2px;color:var(--bull);background:rgba(0,0,0,.25);padding:3px 8px;border-radius:2px">OPEN +8.48%</div>
-      </div>
-      <div class="entry-exit" style="background:rgba(0,0,0,.2);padding:7px 9px;border-radius:2px;font-size:10.5px;margin-bottom:8px;line-height:1.5">
-        <div><span style="color:var(--text-muted);font-size:9px;letter-spacing:1px">ENTRY:</span> $449.38 · Mon close</div>
-        <div><span style="color:var(--text-muted);font-size:9px;letter-spacing:1px">EXIT:</span> $487.48 close · AH $486.50</div>
-      </div>
-      <div style="font-size:11px;line-height:1.5;color:var(--text-muted)">Cleared 52W high $471 decisively · next target $500</div>
-    </div>
-    <div class="play-card bull">
-      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-        <div style="font-family:'Orbitron',monospace;font-size:18px;font-weight:900;color:var(--bull);letter-spacing:1px" class="ticker">NVTS</div>
-        <div style="font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:2px;color:var(--bull);background:rgba(0,0,0,.25);padding:3px 8px;border-radius:2px">OPEN +20.48%</div>
-      </div>
-      <div class="entry-exit" style="background:rgba(0,0,0,.2);padding:7px 9px;border-radius:2px;font-size:10.5px;margin-bottom:8px;line-height:1.5">
-        <div><span style="color:var(--text-muted);font-size:9px;letter-spacing:1px">ENTRY:</span> $13.20 · Mon close</div>
-        <div><span style="color:var(--text-muted);font-size:9px;letter-spacing:1px">EXIT:</span> $18.47 close · AH $19.22</div>
-      </div>
-      <div style="font-size:11px;line-height:1.5;color:var(--text-muted)">Day 3 extension · GaN AI power · trail $17</div>
-    </div>
-    <div class="play-card bull">
-      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-        <div style="font-family:'Orbitron',monospace;font-size:18px;font-weight:900;color:var(--bull);letter-spacing:1px" class="ticker">POET</div>
-        <div style="font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:2px;color:var(--bull);background:rgba(0,0,0,.25);padding:3px 8px;border-radius:2px">CLOSED +24.59%</div>
-      </div>
-      <div class="entry-exit" style="background:rgba(0,0,0,.2);padding:7px 9px;border-radius:2px;font-size:10.5px;margin-bottom:8px;line-height:1.5">
-        <div><span style="color:var(--text-muted);font-size:9px;letter-spacing:1px">ENTRY:</span> —</div>
-        <div><span style="color:var(--text-muted);font-size:9px;letter-spacing:1px">EXIT:</span> $12.77 close · AH fading $12.57</div>
-      </div>
-      <div style="font-size:11px;line-height:1.5;color:var(--text-muted)">Day 3 of squeeze · AH showing first cooling · $11 likely support</div>
-    </div>
-    <div class="play-card bear">
-      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-        <div style="font-family:'Orbitron',monospace;font-size:18px;font-weight:900;color:var(--bear);letter-spacing:1px" class="ticker">QBTS</div>
-        <div style="font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:2px;color:var(--bear);background:rgba(0,0,0,.25);padding:3px 8px;border-radius:2px">SHORT HELD</div>
-      </div>
-      <div class="entry-exit" style="background:rgba(0,0,0,.2);padding:7px 9px;border-radius:2px;font-size:10.5px;margin-bottom:8px;line-height:1.5">
-        <div><span style="color:var(--text-muted);font-size:9px;letter-spacing:1px">ENTRY:</span> Jun $18P @ $175 avg</div>
-        <div><span style="color:var(--text-muted);font-size:9px;letter-spacing:1px">EXIT:</span> $174 · QBTS $21.13 +3.78%</div>
-      </div>
-      <div style="font-size:11px;line-height:1.5;color:var(--text-muted)">Stock bounced, puts flat · thesis intact into May earnings</div>
-    </div>
-  </div>
-
-  <!-- MARKET OPTIONS -->
-  <img class="wire-border-img red" src="wire-border.png" alt="" aria-hidden="true">
-
-  <div class="section-tag opts">🎰 Options Plays — New Positions Only <span class="jp">市場オプション</span></div>
-              <div class="opts-box">
-    <div class="opts-label" style="font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:2px;color:var(--bull);margin-bottom:12px">// TOMORROW (APR 23) GAME PLAN // MARKET FLOW //</div>
-    <div class="opt-block">
-      <div style="font-weight:700;font-size:13px;color:var(--neutral);margin-bottom:4px">INTC earnings TOMORROW AH · the tell</div>
-      <div style="color:var(--text-muted);font-size:11px;line-height:1.45">Stock closed −1.49% but popped +3.14% AH · someone repositioned. Consensus $0.02 EPS / $12.42B rev. 18A node, foundry revenue, Google AI commentary. 10% implied move.</div>
-    </div>
-    <div class="opt-block">
-      <div style="font-weight:700;font-size:13px;color:var(--bull);margin-bottom:4px">Oil breakout watch · $100 is the line</div>
-      <div style="color:var(--text-muted);font-size:11px;line-height:1.45">WTI +7.25% to $96.17 on Iran escalation. A $100 break flips the rate-story and tests the AI-semi narrative. XLE, XOM, CVX cleanest leverage.</div>
-    </div>
-    <div class="opt-block">
-      <div style="font-weight:700;font-size:13px;color:var(--bull);margin-bottom:4px">MU next target $500</div>
-      <div style="color:var(--text-muted);font-size:11px;line-height:1.45">$487.48 close on a clean ATH breakout. $500 magnet confirmed. HBM3e + TSM AI tailwind structural.</div>
-    </div>
-    <div class="opt-block">
-      <div style="font-weight:700;font-size:13px;color:var(--bull);margin-bottom:4px">AMD new ATH · $310 next</div>
-      <div style="color:var(--text-muted);font-size:11px;line-height:1.45">+6.67% close to $303.46. Rolling 52W high moving target · MI350 ramp + TSM demand + OpenAI deal.</div>
-    </div>
-  </div>
-
-  <!-- LILITH SAYS -->
-  <img class="wire-border-img" src="wire-border.png" alt="" aria-hidden="true">
-
-  <div class="section-tag lilith">Lilith Says 🍒 <span class="jp">リリスの言葉</span></div>
-  <div class="lilith-box">
-    <div class="lilith-img"><img src="lilith-avatar.png" alt="Lilith"></div>
-    <div class="lilith-content">
-                <div class="lilith-name">LILITH.EXE // SESSION #013 // EVENING PLAYBOOK</div>
-        <div class="lilith-text">
-          closing bell. first red day after seven straight all-time highs. s&amp;p 7,110 (-0.22%), vix 18.87 (+8%). orderly pullback — the market just needed to breathe. nvda held $202 above $200 on a down tape. that's the signal. aapl was the only green mega-cap at $273, up 1.04% while everything else bled. meta -2.56%, tsla -2.03%, nflx -2.55% — the high-multiple names got hit hardest. oil settled $86 after spiking $89 intraday, xom +0.85% was the lone sector winner. cmps held +42% and poet held +18% through the entire session. btc +2.66% to $75,781 — crypto doesn't care about equity red days anymore. tomorrow's the event: tsla earnings after close. the market has already priced in fear at $392. a beat gaps it back to $420. a miss tests $370. either way, tomorrow we find out. 🍒
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- NOTES + DISCLAIMER -->
-  <div class="footer-note">
-    <strong>About this report:</strong> This is the public Market Alpha edition of Perplexing Trades — independent market research, updated daily. Personal portfolio holdings, position sizes, and account-specific recommendations are in the private edition only. This report contains only original market research and is safe to share with anyone.
-  </div>
-  <div class="disclaimer">⚠ AI-generated research for educational purposes only. Not financial advice. Always do your own due diligence before making any trades. Options involve significant risk and are not suitable for all investors. Past performance doesn't guarantee future results 🍒</div>
-
-  <footer class="footer">
-    <div class="footer-line">Perplexing Trades &middot; Session #013 Evening Playbook Apr 22 CLOSE @ 5:19 PM PT</div>
-    <div class="footer-cherry">🍒 🍒 🍒</div>
-  </footer>
-
-</div><!-- /container -->
-
-<script>
-/* ── BOOT SEQUENCE ─────────────────────────────────────────── */
-const bootLines = [
-  {t:'━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', c:'dim'},
-  {t:'  PERPLEXING TRADES v2.2 // MARKET ALPHA', c:'head'},
-  {t:'  PUBLIC EDITION · NO PORTFOLIO DATA · SAFE TO SHARE', c:'struct'},
-  {t:'━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', c:'dim'},
-  {t:'', c:''},
-  {t:'> BOOT KERNEL v2.2........................................ <span class="tag">[OK]</span>', c:'ok'},
-  {t:'> LOADING LILITH.EXE..................................... <span class="tag">[OK]</span>', c:'ok'},
-  {t:'> SCANNING MARKET DATA FEEDS: SPY $659.22 +0.04%......... <span class="tag">[OK]</span>', c:'ok'},
-  {t:'> LLM COUNCIL: CLAUDE OPUS 4.6 + GEMINI + GPT-5.4....... <span class="tag">[OK]</span>', c:'ok'},
-  {t:'> MACRO STORY: PYRAMID PRINCIPLE ENGINE LOADED........... <span class="tag">[OK]</span>', c:'struct'},
-  {t:'> SOURCE CITATIONS: HALLUCINATION FAIL-SAFE ACTIVE....... <span class="tag">[OK]</span>', c:'struct'},
-  {t:'> PUBLIC EDITION: ZERO PORTFOLIO DATA INCLUDED........... <span class="tag">[OK]</span>', c:'ok'},
-  {t:'> nano_banana_2 ASSETS: LILITH AVATAR LOADED............. <span class="tag">[OK]</span>', c:'ok'},
-  {t:'> CHERRY PROTOCOL v🍒 ENABLED............................ <span class="tag">[OK]</span>', c:'cherry'},
-  {t:'', c:''},
-  {t:'  SYSTEM READY. EVENING PLAYBOOK — CEASEFIRE EDITION.', c:'head'},
-  {t:'  悪魔の実が咲く。WELCOME, TRADER. 🍒', c:'cherry'},
-];
-
-const bootEl  = document.getElementById('boot-text');
-const bootBar = document.getElementById('boot-bar');
-const bootScr = document.getElementById('boot-screen');
-const mainEl  = document.getElementById('main-content');
-
-let li = 0, ci = 0, cur = null;
-
-function typeBoot() {
-  if (li >= bootLines.length) {
-    bootBar.style.width = '100%';
-    setTimeout(() => {
-      bootScr.classList.add('fade-out');
-      mainEl.style.display = 'block';
-      if (window.unlockAndPlayMusic) window.unlockAndPlayMusic();
-      setTimeout(() => bootScr.remove(), 900);
-    }, 550);
-    return;
-  }
-
-  const line = bootLines[li];
-
-  if (ci === 0) {
-    cur = document.createElement('span');
-    cur.className = 'boot-line ' + line.c;
-    bootEl.appendChild(cur);
-    bootBar.style.width = Math.round((li / bootLines.length) * 100) + '%';
-  }
-
-  // Empty line
-  if (!line.t) {
-    cur.innerHTML = '&nbsp;';
-    li++; ci = 0;
-    setTimeout(typeBoot, 30);
-    return;
-  }
-
-  // Lines with HTML tags — insert all at once
-  if (line.t.includes('<')) {
-    cur.innerHTML = line.t;
-    li++; ci = 0;
-    setTimeout(typeBoot, line.c === 'dim' ? 5 : 55);
-    return;
-  }
-
-  // Typewriter one char at a time
-  cur.textContent = line.t.slice(0, ++ci);
-  if (ci >= line.t.length) {
-    li++; ci = 0;
-    setTimeout(typeBoot, line.c === 'dim' ? 8 : 58);
-  } else {
-    const delay = line.c === 'dim' ? 2 : (Math.random() < 0.12 ? 65 : 16);
-    setTimeout(typeBoot, delay);
-  }
-}
-
-// Click boot screen to skip to end and start music
-bootScr.addEventListener('click', () => {
-  // Fast-forward: show all lines, trigger dismiss
-  while (li < bootLines.length) {
-    const l = bootLines[li];
-    const span = document.createElement('span');
-    span.className = 'boot-line ' + l.c;
-    span.innerHTML = l.t || '&nbsp;';
-    bootEl.appendChild(span);
-    li++;
-  }
-  ci = 0;
-  bootBar.style.width = '100%';
-  bootScr.classList.add('fade-out');
-  mainEl.style.display = 'block';
-  if (window.unlockAndPlayMusic) window.unlockAndPlayMusic();
-  setTimeout(() => bootScr.remove(), 900);
-}, { once: true });
-
-// Kick off after fonts/DOM are ready
-setTimeout(typeBoot, 280);
-
-
-// ── Glitch transition to methodology page ──────────────────────────
-// (Uses document-level delegation so element lookup is deferred)
-document.addEventListener('click', function(e) {
-  const btn = e.target.closest('#hood-btn');
-  if (!btn) return;
-  e.preventDefault();
-  document.body.classList.add('glitch-out');
-  setTimeout(() => { window.location.href = btn.href; }, 550);
-});
-
-// ── Random electricity pulse overlay ──────────────────────────────
-(function() {
-  const vid = document.getElementById('elec-video');
-  if (!vid) return;
-  // Force muted via property (HTML attribute alone unreliable on iOS Safari)
-  vid.muted = true;
-  vid.volume = 0;
-  vid.play().catch(() => {});
-  function randomPulse() {
-    const duration = 600 + Math.random() * 1200;
-    const gap      = 4000 + Math.random() * 12000;
-    vid.classList.add('pulse');
-    setTimeout(() => vid.classList.remove('pulse'), duration);
-    setTimeout(randomPulse, gap + duration);
-  }
-  setTimeout(randomPulse, 3000 + Math.random() * 8000);
-})();
-
-/* ── MATRIX RAIN ── */
-(function(){
-  const c = document.getElementById('matrix-rain'), ctx = c.getContext('2d');
-  const resize = () => { c.width = innerWidth; c.height = innerHeight; };
-  resize(); addEventListener('resize', resize);
-  const chars = 'アイウエオカキクケコサシスセソ0123456789NVDAGOOGAMDSPY$+-.%🍒';
-  let cols = Math.floor(innerWidth/13), drops = Array(cols).fill(0).map(()=>Math.random()*-50);
-  setInterval(()=>{
-    cols = Math.floor(c.width/13);
-    while(drops.length < cols) drops.push(Math.random()*-50);
-    ctx.fillStyle='rgba(3,3,10,.05)'; ctx.fillRect(0,0,c.width,c.height);
-    drops.forEach((y,i)=>{
-      const ch = chars[Math.floor(Math.random()*chars.length)];
-      ctx.fillStyle = Math.random()<.07 ? 'rgba(255,23,68,.85)' : 'rgba(0,255,65,.78)';
-      ctx.font = '13px Share Tech Mono';
-      ctx.fillText(ch, i*13, y*13);
-      if(y*13 > c.height && Math.random() > .975) drops[i] = 0;
-      drops[i] += .5;
-    });
-  }, 50);
-})();
-</script>
-
-
-
-<!-- ══ MUSIC PLAYER
-<!-- ══ MUSIC PLAYER — Fixed Bottom Bar ══════════════════════════════ -->
-<div id="music-player" class="music-player">
-  <div class="player-inner">
-    <!-- Spinning Disc -->
-    <div class="disc-container">
-      <div class="disc" id="disc">
-        <img id="disc-img" src="vinyl-record.png" alt="vinyl"
-          style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
-      </div>
-    </div>
-
-    <!-- Track Info -->
-    <div class="track-info">
-      <div class="track-name" id="track-name">Alright (Pacha Mix)</div>
-      <div class="track-artist" id="track-artist">CJ ft. Lilith Devai</div>
-    </div>
-
-    <!-- Controls -->
-    <div class="player-controls">
-      <button class="ctrl-btn" id="prev-btn" title="Previous">⏮</button>
-      <button class="ctrl-btn play-btn" id="play-btn" title="Play/Pause">▶</button>
-      <button class="ctrl-btn" id="next-btn" title="Next">⏭</button>
-    </div>
-
-    <!-- Volume -->
-    <div class="volume-control">
-      <button class="ctrl-btn vol-btn" id="mute-btn" title="Mute">🔊</button>
-      <input type="range" class="vol-slider" id="vol-slider" min="0" max="100" value="60">
-    </div>
-
-    <!-- Progress bar at top of player -->
-    <div class="progress-bar">
-      <div class="progress-fill" id="progress-fill"></div>
-    </div>
-  </div>
-
-  <audio id="audio-element" preload="auto"></audio>
 </div>
 
-<!-- ══ MUSIC PLAYER JS ═══════════════════════════════════════════════ -->
-<script>
-(function() {
-  const playlist = [
-    { file: 'music/quantum-love-msg.mp3',     name: 'Quantum Love (Live at MSG)', artist: 'Lilith Devai' },
-    { file: 'music/alright-pacha-mix.mp3',    name: 'Alright (Pacha Mix)',      artist: 'CJ ft. Lilith Devai' },
-    { file: 'music/singularity-spanish.mp3',  name: 'Singularity (Spanish)',    artist: 'CJ ft. Lilith Devai' },
-  ];
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-meta">
+    <span class="dot">◆</span>
+    <span>Session #013 · Morning Alpha</span>
+    <span>·</span>
+    <span>Recorded 6:48 AM PT · Apr 22, 2026</span>
+    <span>·</span>
+    <span>Est. read 6 min</span>
+  </div>
+  <div class="hero-eyebrow">Dispatch No. 013 · Evening Playbook</div>
+  <h1>Tesla beat on paper — AI semis <em>melt up</em> and oil detonates.</h1>
 
-  let currentTrack  = 0;
-  let isPlaying     = false;
-  let audioUnlocked = false;
+  <div class="hero-grid">
+    <article class="hero-narrative" data-reveal>
+      <p>Strong close. S&amp;P 500 +1.03% to 7,137.12<sup>[8]</sup>. Nasdaq +1.64% to 24,657.57<sup>[8]</sup>. VIX crushed to 18.92. The AI-semi trade finished what it started at midday — AMD closed +6.67% at $303.46 for a fresh all-time high<sup>[1]</sup>, Micron +8.48% to $487.48 after clearing its $471 52-week high<sup>[1]</sup>, TSM +5.26%, AVGO +5.09% the afternoon's quiet hero<sup>[2]</sup>. NVDA back to $202.50.</p>
 
-  const audio        = document.getElementById('audio-element');
-  const disc         = document.getElementById('disc');
-  const trackName    = document.getElementById('track-name');
-  const trackArtist  = document.getElementById('track-artist');
-  const playBtn      = document.getElementById('play-btn');
-  const prevBtn      = document.getElementById('prev-btn');
-  const nextBtn      = document.getElementById('next-btn');
-  const muteBtn      = document.getElementById('mute-btn');
-  const volSlider    = document.getElementById('vol-slider');
-  const progressFill = document.getElementById('progress-fill');
-  const progressBar  = document.querySelector('.progress-bar');
+      <p>Tesla reported after the bell. Non-GAAP EPS $0.41 crushed the $0.37 consensus<sup>[2]</sup>, revenue $22.39B edged the bar by $190M<sup>[2]</sup>, gross margin 21.1% blew through the 17.7% estimate. On paper, a blowout. Underneath: Electrek dissected the quality<sup>[1]</sup>. One-time warranty reserve releases. Tariff refund windfalls. Payables stretched $1.3B. Inventory days doubled to 27. GAAP EPS? $0.13. Stock popped 3.7% immediately, then faded — AH closed $386.35 (−0.30%). The market noticed what Electrek showed: Tesla is optimizing for the headline, not the business.</p>
 
-  audio.volume = 0.6;
+      <p>Intel prints tomorrow AH and already gave the tell. Stock closed −1.49% at $65.27 — sellers all session. Then flipped +3.14% to $67.32 post-close<sup>[6]</sup>. Somebody positioned wrong early and got squeezed. Watch-only into a binary that already smells informed.</p>
 
-  function loadTrack(index) {
-    currentTrack = index;
-    const t = playlist[currentTrack];
-    audio.src = t.file;
-    trackName.textContent   = t.name;
-    trackArtist.textContent = t.artist;
-  }
+      <p>The real macro is energy. WTI exploded +7.25% to $96.17<sup>[7]</sup> on escalating Iran headlines. Brent is tagging the $100 line of demarcation. Clear it, and the rate-story flips: sticky inflation comes back, AI-semi multiples compress. The cleanest equity hedge: XLE, XOM, CVX.</p>
 
-  function play(silent = false) {
-    audio.play().then(() => {
-      isPlaying = true;
-      playBtn.textContent = '⏸';
-      disc.classList.add('spinning');
-    }).catch(() => {
-      // Autoplay blocked — start on first user interaction anywhere on page
-      const resume = () => {
-        audio.play().then(() => {
-          isPlaying = true;
-          playBtn.textContent = '⏸';
-          disc.classList.add('spinning');
-        }).catch(() => {});
-        document.removeEventListener('touchstart', resume);
-        document.removeEventListener('click',      resume);
-      };
-      document.addEventListener('touchstart', resume, { once: true, passive: true });
-      document.addEventListener('click',      resume, { once: true });
-    });
-  }
+      <p>Let winners run overnight. Tomorrow is INTC AH plus oil's $100 test. Next week is the megacap megaday — GOOG, MSFT, META on Apr 29.</p>
+    </article>
 
-  function pause(silent = false) {
-    audio.pause();
-    isPlaying = false;
-    playBtn.textContent = '▶';
-    disc.classList.remove('spinning');
-  }
+    <aside class="hero-aside" data-reveal>
+      <div class="aside-label">◆ At the close</div>
+      <div class="ha-stat">
+        <div class="ha-stat-label">S&amp;P 500</div>
+        <div class="ha-stat-val">7,137.12</div>
+        <div class="ha-stat-chg up">+73.11 · +1.03% · near highs</div>
+      </div>
+      <div class="ha-stat">
+        <div class="ha-stat-label">AMD · new ATH</div>
+        <div class="ha-stat-val up">$303.46</div>
+        <div class="ha-stat-chg up">+6.67% · AH $302.60 · ★</div>
+      </div>
+      <div class="ha-stat">
+        <div class="ha-stat-label">WTI Crude</div>
+        <div class="ha-stat-val up">$96.17</div>
+        <div class="ha-stat-chg up">+7.25% · Iran escalation</div>
+      </div>
+      <div class="ha-stat">
+        <div class="ha-stat-label">Tomorrow AH</div>
+        <div class="ha-stat-val" style="font-size:22px;">INTC <em style="color:var(--amber)">Q1</em></div>
+        <div class="ha-stat-chg neut">Stock AH squeezed +3.14%</div>
+      </div>
+    </aside>
+  </div>
+</section>
 
-  function nextTrack() {
-    currentTrack = (currentTrack + 1) % playlist.length;
-    loadTrack(currentTrack);
-    if (isPlaying) play();
-  }
+<!-- KEY NUMBERS -->
+<section class="section" data-reveal>
+  <div class="section-head">
+    <div class="sh-left">
+      <span class="kicker">01</span>
+      <h2>Key <em>Numbers</em></h2>
+    </div>
+    <div class="rhs">Fresh @ 5:12 PM PT · N = 14</div>
+  </div>
+  <div class="kn-wrap">
+    <table class="kn-table">
+      <thead>
+        <tr><th>Sym</th><th>Name</th><th style="text-align:right;">Close</th><th style="text-align:right;">Chg</th><th>Context</th></tr>
+      </thead>
+      <tbody id="kn-body">
+        <!-- fresh Apr 22 -->
+        <tr><td class="sym">^GSPC</td><td class="name">S&amp;P 500</td><td class="price">7,114.95</td><td class="chg up">+0.72%</td><td class="note">Bounce after 2 red days</td></tr>
+        <tr><td class="sym">^IXIC</td><td class="name">Nasdaq Composite</td><td class="price">24,464.49</td><td class="chg up">+0.84%</td><td class="note">AI megacaps leading</td></tr>
+        <tr><td class="sym">^VIX</td><td class="name">Volatility Index</td><td class="price">19.02</td><td class="chg up">−2.46%</td><td class="note">Collapsing pre-TSLA</td></tr>
+        <tr><td class="sym">NVDA</td><td class="name">NVIDIA</td><td class="price">$200.53</td><td class="chg up">+0.33%</td><td class="note">Reclaimed $200</td></tr>
+        <tr><td class="sym">MU</td><td class="name">Micron Technology</td><td class="price">$465.76</td><td class="chg up">+3.65%</td><td class="note">$2 from 52W ATH</td></tr>
+        <tr><td class="sym">AMD</td><td class="name">Advanced Micro</td><td class="price">$287.81</td><td class="chg up">+1.17%</td><td class="note">Holding new ATH</td></tr>
+        <tr><td class="sym">MSFT</td><td class="name">Microsoft</td><td class="price">$428.73</td><td class="chg up">+1.08%</td><td class="note">Extending leadership</td></tr>
+        <tr><td class="sym">AVGO</td><td class="name">Broadcom</td><td class="price">$406.31</td><td class="chg up">+1.03%</td><td class="note">Sustained above $400</td></tr>
+        <tr><td class="sym">GOOG</td><td class="name">Alphabet</td><td class="price">$333.92</td><td class="chg up">+1.04%</td><td class="note">Bouncing into Apr 29</td></tr>
+        <tr><td class="sym">TSLA</td><td class="name">Tesla</td><td class="price">$390.25</td><td class="chg neut">+0.99%</td><td class="note">Earnings TONIGHT AH</td></tr>
+        <tr><td class="sym">ORCL</td><td class="name">Oracle</td><td class="price">$185.00</td><td class="chg up">+2.11%</td><td class="note">AI cloud momentum</td></tr>
+        <tr><td class="sym">POET</td><td class="name">POET Technologies</td><td class="price">$12.82</td><td class="chg up">+25.07%</td><td class="note">Day 2 of squeeze</td></tr>
+        <tr><td class="sym">NVTS</td><td class="name">Navitas Semi</td><td class="price">$17.52</td><td class="chg up">+14.25%</td><td class="note">Day 3 GaN extension</td></tr>
+        <tr><td class="sym">IONQ</td><td class="name">IonQ</td><td class="price">$48.91</td><td class="chg dn">+5.68%</td><td class="note">Bounce tests shorts</td></tr>
+        <tr><td class="sym">QBTS</td><td class="name">D-Wave Quantum</td><td class="price">$21.55</td><td class="chg dn">+5.85%</td><td class="note">Short squeeze tail</td></tr>
+        <tr><td class="sym">CL=F</td><td class="name">WTI Crude</td><td class="price">$91.61</td><td class="chg up">+2.16%</td><td class="note">Iran escalation</td></tr>
+        <tr><td class="sym">GC=F</td><td class="name">Gold</td><td class="price">$4,766</td><td class="chg neut">+0.98%</td><td class="note">Rebounding</td></tr>
+        <tr><td class="sym">BTCUSD</td><td class="name">Bitcoin</td><td class="price">$78,712</td><td class="chg up">+3.47%</td><td class="note">Reclaimed $78K</td></tr>
+        <tr><td class="sym">ETHUSD</td><td class="name">Ethereum</td><td class="price">$2,418</td><td class="chg up">+4.77%</td><td class="note">Broke $2,400</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
 
-  function prevTrack() {
-    if (audio.currentTime > 3) {
-      audio.currentTime = 0;
-    } else {
-      currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
-      loadTrack(currentTrack);
-    }
-    if (isPlaying) play();
-  }
+<!-- SECTOR VIBE CHECK -->
+<section class="section" data-reveal>
+  <div class="section-head">
+    <div class="sh-left">
+      <span class="kicker">02</span>
+      <h2>Sector <em>Vibe Check</em></h2>
+    </div>
+    <div class="rhs">6 macro cohorts</div>
+  </div>
+  <div class="sv-grid">
+    <div class="sv-item bull">
+      <div class="sv-label">AI Semis</div>
+      <div class="sv-vibe">Ripping</div>
+      <div class="sv-note">MU +3.65%, AMD +1.17% at ATH, NVDA reclaimed $200</div>
+    </div>
+    <div class="sv-item bull">
+      <div class="sv-label">Megacap Tech</div>
+      <div class="sv-vibe">Broad Bid</div>
+      <div class="sv-note">MSFT +1.08%, GOOG +1.04%, AVGO +1.03%</div>
+    </div>
+    <div class="sv-item bull">
+      <div class="sv-label">Crypto</div>
+      <div class="sv-vibe">Surprise</div>
+      <div class="sv-note">BTC +3.47% to $78.7K, ETH +4.77%</div>
+    </div>
+    <div class="sv-item neutral">
+      <div class="sv-label">Quantum</div>
+      <div class="sv-vibe">Bouncing</div>
+      <div class="sv-note">IONQ +5.68%, QBTS +5.85% — shorts tested</div>
+    </div>
+    <div class="sv-item neutral">
+      <div class="sv-label">Autos / EV</div>
+      <div class="sv-vibe">Binary</div>
+      <div class="sv-note">TSLA +0.99% into AH print · 8–9% implied</div>
+    </div>
+    <div class="sv-item bull">
+      <div class="sv-label">Energy</div>
+      <div class="sv-vibe">Extending</div>
+      <div class="sv-note">Oil +2.16% to $91.61, XOM +1.02%</div>
+    </div>
+  </div>
+</section>
 
-  // ── Web Audio Ping ──────────────────────────────────────────────────
-  // Synthesised directionally: ascending = next, descending = prev
-  let _audioCtx = null;
-  function getAudioCtx() {
-    if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    if (_audioCtx.state === 'suspended') _audioCtx.resume();
-    return _audioCtx;
-  }
+<!-- ALPHA PLAYS -->
+<section class="section" data-reveal>
+  <div class="section-head">
+    <div class="sh-left">
+      <span class="kicker">03</span>
+      <h2>Five Live <em>Alpha Plays</em></h2>
+    </div>
+    <div class="rhs">Session #012 · 4 new vs prior</div>
+  </div>
+  <div class="plays">
 
-  function playPing(forward = true) {
-    try {
-      const ctx = getAudioCtx();
-      const now = ctx.currentTime;
+    <article class="play bull">
+      <div class="play-head">
+        <div class="play-sym">MU</div>
+        <div class="play-dir">Bull</div>
+      </div>
+      <div class="play-name">Micron Technology · 52W ATH hunt</div>
+      <div class="play-levels">
+        <div><div class="lbl">Entry</div><div class="val">$465.76 break · add on $471 close</div></div>
+        <div><div class="lbl">Stop</div><div class="val">$448 below yesterday close</div></div>
+      </div>
+      <p class="play-body">HBM3e AI memory monopoly-adjacent. +3.65% pre-TSLA with $2 runway to the 52-week high. A confirmed close above $471 puts $500 in play by Friday.</p>
+      <div>
+        <div class="play-caption bear-c">Thesis breaker</div>
+        <p class="play-breaker">If TSLA cracks NVDA under $195, AI memory follows back to $440.</p>
+      </div>
+    </article>
 
-      // Two oscillators in a quick chord — feels rich, not harsh
-      [[forward ? 1047 : 880, forward ? 1319 : 659],  // root + fifth
-       [forward ? 1319 : 659, forward ? 1047 : 880]]  // resolve
-        .forEach(([start, end], i) => {
-          const osc  = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.type = 'sine';
-          const t = now + i * 0.05;
-          osc.frequency.setValueAtTime(start, t);
-          osc.frequency.exponentialRampToValueAtTime(end, t + 0.09);
-          gain.gain.setValueAtTime(0.14, t);
-          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
-          osc.start(t);
-          osc.stop(t + 0.22);
-        });
-    } catch(e) {}
-  }
+    <article class="play bull">
+      <div class="play-head">
+        <div class="play-sym">ORCL</div>
+        <div class="play-dir">Bull</div>
+      </div>
+      <div class="play-name">Oracle · AI cloud breakout</div>
+      <div class="play-levels">
+        <div><div class="lbl">Entry</div><div class="val">$185.00 on break of $187</div></div>
+        <div><div class="lbl">Stop</div><div class="val">$178 below yesterday's low</div></div>
+      </div>
+      <p class="play-body">+2.11% this morning on AI cloud headlines. OCI + RPO backlog stack carries into May earnings. Cleanest relative strength vs Apple / Netflix in megacap book.</p>
+      <div>
+        <div class="play-caption bear-c">Thesis breaker</div>
+        <p class="play-breaker">Hyperscaler capex deceleration commentary → $170.</p>
+      </div>
+    </article>
 
-  // ── Play sound (press ▶) — two ascending pings, energetic ────────────
-  function playPlaySound() {
-    try {
-      const ctx = getAudioCtx();
-      const now = ctx.currentTime;
-      // Two rising notes: C5→G5, then G5→C6 — "launching" feel
-      [[523, 784], [784, 1047]].forEach(([start, end], i) => {
-        const osc = ctx.createOscillator(), gain = ctx.createGain();
-        osc.connect(gain); gain.connect(ctx.destination);
-        osc.type = 'sine';
-        const t = now + i * 0.07;
-        osc.frequency.setValueAtTime(start, t);
-        osc.frequency.exponentialRampToValueAtTime(end, t + 0.09);
-        gain.gain.setValueAtTime(0.15, t);
-        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
-        osc.start(t); osc.stop(t + 0.22);
-      });
-    } catch(e) {}
-  }
+    <article class="play bull">
+      <div class="play-head">
+        <div class="play-sym">ETH</div>
+        <div class="play-dir">Bull</div>
+      </div>
+      <div class="play-name">Ethereum · crypto rotation</div>
+      <div class="play-levels">
+        <div><div class="lbl">Entry</div><div class="val">$2,418 break of $2,450</div></div>
+        <div><div class="lbl">Stop</div><div class="val">$2,290 below yesterday</div></div>
+      </div>
+      <p class="play-body">+4.77% with BTC reclaim. ETH outperforming BTC = risk-on rotation through crypto proxy. Spot ETF flows rebuilding.</p>
+      <div>
+        <div class="play-caption bear-c">Thesis breaker</div>
+        <p class="play-breaker">BTC rolls back under $75K → ETH to $2,200.</p>
+      </div>
+    </article>
 
-  // ── Pause sound (press ⏸) — single descending note, softer ──────────
-  function playPauseSound() {
-    try {
-      const ctx = getAudioCtx();
-      const now = ctx.currentTime;
-      const osc = ctx.createOscillator(), gain = ctx.createGain();
-      osc.connect(gain); gain.connect(ctx.destination);
-      osc.type = 'sine';
-      // G5 falling to C4 — mellow "winding down"
-      osc.frequency.setValueAtTime(784, now);
-      osc.frequency.exponentialRampToValueAtTime(261, now + 0.18);
-      gain.gain.setValueAtTime(0.13, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
-      osc.start(now); osc.stop(now + 0.24);
-    } catch(e) {}
-  }
+    <article class="play bull">
+      <div class="play-head">
+        <div class="play-sym">TSM</div>
+        <div class="play-dir">Bull</div>
+      </div>
+      <div class="play-name">Taiwan Semiconductor · AI foundry</div>
+      <div class="play-levels">
+        <div><div class="lbl">Entry</div><div class="val">$373.31 · add on $375 close</div></div>
+        <div><div class="lbl">Stop</div><div class="val">$365 at 20-DMA</div></div>
+      </div>
+      <p class="play-body">AI GPU foundry monopoly. ASML 2nm commentary confirmed. Beneficiary of every AI capex headline across the stack.</p>
+      <div>
+        <div class="play-caption bear-c">Thesis breaker</div>
+        <p class="play-breaker">Geopolitical flare or AI capex miss → $355.</p>
+      </div>
+    </article>
 
-  // ── Tactile button feedback ─────────────────────────────────────────
-  function flashPress(btn) {
-    btn.classList.add('pressed');
-    // Release after 120ms so it feels physical
-    setTimeout(() => btn.classList.remove('pressed'), 120);
-  }
+    <article class="play bull">
+      <div class="play-head">
+        <div class="play-sym">NVTS</div>
+        <div class="play-dir">Bull</div>
+      </div>
+      <div class="play-name">Navitas Semiconductor · GaN AI power</div>
+      <div class="play-levels">
+        <div><div class="lbl">Entry</div><div class="val">$17.52 · add on $18.50 close</div></div>
+        <div><div class="lbl">Stop</div><div class="val">$16.09 today's low</div></div>
+      </div>
+      <p class="play-body">Third day holding the GaN AI-data-center narrative. +14% today on top of +16% yesterday. The momentum chain is intact, rare for a 20%+ breakout.</p>
+      <div>
+        <div class="play-caption bear-c">Thesis breaker</div>
+        <p class="play-breaker">NVDA under $198 or capex headlines soften → $14.</p>
+      </div>
+    </article>
 
-  // Touch events fire before click on mobile — use touchstart for instant feel
-  function addTactile(btn, action, pingForward) {
-    // Keyboard & mouse
-    btn.addEventListener('click', () => {
-      flashPress(btn);
-      action();
-    });
-    // Touch: visual snap happens on touchstart (feels instant)
-    btn.addEventListener('touchstart', (e) => {
-      e.preventDefault(); // stop ghost click
-      flashPress(btn);
-      action();
-    }, { passive: false });
-  }
+  </div>
+</section>
 
-  // ── Button controls ─────────────────────────────────────────────────
-  addTactile(playBtn, () => {
-    if (isPlaying) { playPauseSound(); pause(); }
-    else           { playPlaySound();  play();  }
-  }, null);
-  addTactile(nextBtn, () => { playPing(true);  nextTrack(); }, true);
-  addTactile(prevBtn, () => { playPing(false); prevTrack(); }, false);
+<!-- TOMORROW'S GAME PLAN -->
+<section class="section" data-reveal>
+  <div class="section-head">
+    <div class="sh-left">
+      <span class="kicker">04</span>
+      <h2>Tomorrow's <em>Game Plan</em></h2>
+    </div>
+    <div class="rhs">Wed · Apr 22 · 2026</div>
+  </div>
+  <div class="gameplan">
+    <ol>
+      <li><a href="https://electrek.co/2026/04/21/tesla-tsla-q1-2026-earnings-preview-wall-street-expects-growth/">Electrek — Tesla Q1 2026 Preview</a><span class="date">· Apr 21 2026</span></li>
+      <li><a href="https://www.mexc.co/news/1042563">MEXC — Intel Q1 Preview Apr 23</a><span class="date">· Apr 21 2026</span></li>
+      <li><a href="https://finance.yahoo.com/markets/stocks/articles/tesla-q1-earnings-due-april-160527491.html">Yahoo Finance — Tesla Q1 Earnings Apr 22</a><span class="date">· Apr 21 2026</span></li>
+      <li><a href="https://www.ig.com/ae/news-and-trade-ideas/tesla-q1-2026-earnings-preview-car-company-or-ai-infrastructure-play-260416">IG — Tesla Q1 2026 Preview</a><span class="date">· Apr 16 2026</span></li>
+      <li><a href="https://markets.financialcontent.com/stocks/article/stockstory-2026-4-22-intel-intc-q1-earnings-report-preview-what-to-look-for">FinancialContent — Intel Q1 Preview</a><span class="date">· Apr 22 2026</span></li>
+      <li><a href="https://www.cnbc.com/markets/pre-markets/">CNBC — Pre-market data</a><span class="date">· Apr 22 2026</span></li>
+      <li><a href="https://intellectia.ai/news/crypto/intels-q1-2026-earnings-preview-and-market-expectations">Intellectia AI — Intel Q1 2026 Preview</a><span class="date">· Apr 21 2026</span></li>
+      <li><a href="https://marketrebellion.com/uncategorized/pre-market-iv-report-april-20-2026/">MarketRebellion — Pre-Market IV Report</a><span class="date">· Apr 20 2026</span></li>
+    </ol>
+  </div>
+</section>
 
-  muteBtn.addEventListener('click', () => {
-    audio.muted = !audio.muted;
-    muteBtn.textContent = audio.muted ? '🔇' : '🔊';
-  });
+<!-- LILITH CALLOUT -->
+<section class="lilith-section" data-reveal>
+  <div class="lilith-wrap">
+    <div class="lilith-portrait">
+      <img src="assets/lilith-portrait.jpg" alt="Lilith Devai, editorial portrait" />
+      <div class="lilith-credit">LILITH DEVAI · MARKET DESK · NYC</div>
+    </div>
+    <div class="lilith-body">
+      <div class="callout-label">Lilith says</div>
+      <blockquote>
+        Tesla beat on paper but the quality was garbage — one-time warranty releases and tariff refunds did the lift. GAAP EPS only thirteen cents. After-hours faded. Meanwhile the AI trade printed new highs — AMD plus six sixty-seven to a fresh all-time high, MU plus eight forty-eight clearing the fifty-two-week, TSM plus five twenty-six, AVGO plus five-oh-nine. Oil exploded plus seven twenty-five on Iran — ninety-six seventeen. Brent clears a hundred and the entire rate story flips. Intel tomorrow AH, stock already squeezed plus three-fourteen post-close. Let winners run overnight. Hedge the beta.
+      </blockquote>
+      <div class="lilith-signoff">— Evening Playbook · Session #013 · 5:19 PM PT</div>
+    </div>
+  </div>
+</section>
 
-  volSlider.addEventListener('input', (e) => {
-    audio.volume = e.target.value / 100;
-    audio.muted  = false;
-    muteBtn.textContent = audio.volume === 0 ? '🔇' : '🔊';
-  });
+<!-- SOURCES -->
+<section class="section" data-reveal id="sources">
+  <div class="section-head">
+    <div class="sh-left">
+      <span class="kicker">05</span>
+      <h2>Source <em>Citations</em></h2>
+    </div>
+    <div class="rhs">[N] markers in narrative</div>
+  </div>
+  <div class="sources">
+    <div class="sources-head">◆ Primary sources — Apr 21, 2026</div>
+    <ol>
+      <li><a href="https://electrek.co/2026/04/21/tesla-tsla-q1-2026-earnings-preview-wall-street-expects-growth/">Electrek — Tesla Q1 2026 Earnings Preview</a><span class="date">· Apr 21 2026</span></li>
+      <li><a href="https://capital.com/en-int/market-updates/tesla-stock-forecast-21-04-2026">Capital.com — Tesla Q1 Delivery Miss</a><span class="date">· Apr 21 2026</span></li>
+      <li><a href="https://www.interactivebrokers.com/campus/traders-insight/securities/stocks/tesla-q1-2026-earnings-preview-key-events-from-the-past-three-months/">Interactive Brokers — TSLA Q1 2026 Preview</a><span class="date">· Apr 21 2026</span></li>
+      <li><a href="https://public.com/stocks/tsla/after-hours">Public — TSLA After-Hours</a><span class="date">· Apr 21 2026</span></li>
+      <li><a href="https://capital.com/en-int/market-updates/intel-stock-forecast-16-04-2026">Capital.com — INTC Stock Forecast Q4 Beat</a><span class="date">· Apr 16 2026</span></li>
+      <li><a href="https://seekingalpha.com/article/4892111-poet-technologies-massive-20-percent-monday-surge-makes-it-a-great-trading-candidate">Seeking Alpha — POET Short Rebuttal</a><span class="date">· Apr 20 2026</span></li>
+      <li><a href="https://polymarket.com/event/tsla-close-above-on-april-21-2026">Polymarket — TSLA Close Above</a><span class="date">· Apr 21 2026</span></li>
+      <li><a href="https://www.reuters.com/markets/commodities/">Reuters — Iran Tanker Escalation</a><span class="date">· Apr 21 2026</span></li>
+    </ol>
+  </div>
+</section>
 
-  // Progress bar — display + scrub
-  audio.addEventListener('timeupdate', () => {
-    if (audio.duration) {
-      progressFill.style.width = (audio.currentTime / audio.duration * 100) + '%';
-    }
-  });
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-wrap">
+    <div class="fcol">
+      <h4>Perplexing <em>Trades</em></h4>
+      <p style="color:var(--ink-mute);font-family:var(--sans);text-transform:none;letter-spacing:0;font-size:var(--text-sm);max-width:28ch;">Institutional-grade market alpha, twice daily. LLM council · freshness mandate · self-healing QA.</p>
+    </div>
+    <div class="fcol">
+      <h4>Sessions</h4>
+      <a href="#">Morning Alpha · 6:45 AM PT</a>
+      <a href="#">Midday Pulse · 12:30 PM PT</a>
+      <a href="#">Evening Playbook · 5:00 PM PT</a>
+      <a href="#">Weekend Scan · Sat 9 AM PT</a>
+    </div>
+    <div class="fcol">
+      <h4>Pages</h4>
+      <a href="index.html">Market Alpha</a>
+      <a href="portfolio.html">Portfolio Dashboard</a>
+      <a href="methodology.html">Methodology</a>
+    </div>
+    <div class="fcol">
+      <h4>Not advice</h4>
+      <p style="color:var(--ink-mute);font-family:var(--sans);text-transform:none;letter-spacing:0;font-size:var(--text-sm);max-width:30ch;">Educational content. No position should be taken without your own diligence. No warranties; trade at your own risk.</p>
+    </div>
+  </div>
+  <div class="footer-bar">
+    <span>◆ Session #013 · Evening Playbook · Apr 22, 2026 · 5:19 PM PT</span>
+    <span>© 2026 Perplexing Trades</span>
+  </div>
+</footer>
 
-  progressBar.addEventListener('click', (e) => {
-    const rect = progressBar.getBoundingClientRect();
-    const pct  = (e.clientX - rect.left) / rect.width;
-    if (audio.duration) audio.currentTime = pct * audio.duration;
-  });
+<!-- PERSISTENT DOCK -->
+<div class="dock" id="dock">
+  <!-- Lilith voice player -->
+  <div class="lvp">
+    <div class="lvp-avatar" id="lvp-avatar">
+      <img src="assets/lilith-portrait.jpg" alt="Lilith" />
+    </div>
+    <div class="lvp-meta">
+      <div class="lvp-who">Lilith Devai · After Hours Alpha</div>
+      <div class="lvp-title">Evening Playbook · Session #013 · Apr 22</div>
+    </div>
+    <div class="lvp-wave" id="lvp-wave" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="lvp-ctrls">
+      <button class="lvp-btn" id="lvp-restart" aria-label="Restart"></button>
+      <button class="lvp-btn primary" id="lvp-play" aria-label="Play / Pause"></button>
+    </div>
+  </div>
 
-  // Auto-advance to next track
-  audio.addEventListener('ended', nextTrack);
+  <div class="dock-divider"></div>
 
-  // Called by boot screen dismiss — starts audio as soon as browser allows
-  window.unlockAndPlayMusic = function() {
-    if (!audioUnlocked) {
-      audioUnlocked = true;
-      loadTrack(0);
-      play(true); // silent=true: no play sound on autostart, just begin music
-    }
-  };
+  <!-- Music player -->
+  <div class="music-p">
+    <button class="lvp-btn" id="mp-play" aria-label="Play music"></button>
+    <div class="music-meta">
+      <div class="music-who">◆ Atmos · Music Player</div>
+      <div class="music-title" id="mp-title">Alright Pacha Mix</div>
+    </div>
+    <select class="music-select" id="mp-track">
+      <option value="alright-pacha-mix">Alright Pacha Mix</option>
+      <option value="singularity-spanish">Singularity (Spanish)</option>
+      <option value="quantum-love-msg">Quantum Love MSG</option>
+    </select>
+  </div>
+</div>
 
-  // Also attempt autoplay the moment the page is ready — works when the
-  // page was opened via a link click (counts as a user gesture in most browsers).
-  // Falls back to first-interaction listener inside play() if blocked.
-  if (document.readyState === 'complete') {
-    setTimeout(() => { if (!audioUnlocked) window.unlockAndPlayMusic(); }, 300);
-  } else {
-    window.addEventListener('load', () => {
-      setTimeout(() => { if (!audioUnlocked) window.unlockAndPlayMusic(); }, 300);
-    });
-  }
+<audio id="lilith-audio" src="assets/lilith-summary.mp3" preload="auto"></audio>
+<audio id="music-audio" src="assets/alright-pacha-mix.mp3" preload="auto" loop></audio>
 
-  // Load first track info (paused — no autoplay)
-  loadTrack(0);
-})();
-
-/* ── Light / Party Mode toggle ──────────────────────── */
-function toggleLightMode() {
-  var html = document.documentElement;
-  var btn  = document.getElementById('mode-toggle');
-  var on   = html.classList.toggle('light-mode');
-  localStorage.setItem('ptLightMode', on ? '1' : '0');
-  btn.innerHTML = on ? '&#x1F608; Party Mode' : '&#x1F5A8; Light Print Mode';
-  btn.title     = on ? 'Switch back to dark mode' : 'Switch to Light Print Mode';
-}
-
-</script>
-
-<script>
-
-  // ── LILITH VOICE PLAYER + MUSIC DUCKING ──
-  (function() {
-    const audio = document.getElementById('lilith-audio');
-    const playBtn = document.getElementById('lvp-play');
-    const restartBtn = document.getElementById('lvp-restart');
-    const progressBar = document.getElementById('lvp-progress');
-    const progressFill = document.getElementById('lvp-progress-fill');
-    const timeDisplay = document.getElementById('lvp-time');
-    const statusEl = document.getElementById('lvp-status');
-    const avatar = document.getElementById('lvp-avatar');
-    const waveform = document.getElementById('lvp-waveform');
-
-    if (!audio || !playBtn) return;
-
-    // Build waveform bars
-    for (let i = 0; i < 40; i++) {
-      const bar = document.createElement('div');
-      bar.className = 'lvp-bar';
-      bar.style.height = (Math.random() * 30 + 10) + 'px';
-      bar.style.animationDelay = (Math.random() * 0.5) + 's';
-      waveform.appendChild(bar);
-    }
-
-    const bars = waveform.querySelectorAll('.lvp-bar');
-
-    // Find the background music player audio
-    function getMusicAudio() {
-      // Look for the music player audio element
-      const musicContainer = document.getElementById('music-player');
-      if (musicContainer) {
-        return musicContainer.querySelector('audio');
-      }
-      // Fallback: find any audio that isn't lilith
-      const allAudios = document.querySelectorAll('audio');
-      for (const a of allAudios) {
-        if (a.id !== 'lilith-audio') return a;
-      }
-      return null;
-    }
-
-    let musicOriginalVolume = 1;
-    let duckingActive = false;
-
-    function duckMusic() {
-      const musicAudio = getMusicAudio();
-      if (musicAudio && !duckingActive) {
-        musicOriginalVolume = musicAudio.volume || 1;
-        duckingActive = true;
-        // Fade music down to 15% over 500ms
-        let vol = musicOriginalVolume;
-        const target = musicOriginalVolume * 0.15;
-        const step = (vol - target) / 20;
-        const fadeDown = setInterval(() => {
-          vol -= step;
-          if (vol <= target) { vol = target; clearInterval(fadeDown); }
-          musicAudio.volume = Math.max(0, vol);
-        }, 25);
-      }
-    }
-
-    function unduckMusic() {
-      const musicAudio = getMusicAudio();
-      if (musicAudio && duckingActive) {
-        duckingActive = false;
-        // Fade music back up over 800ms
-        let vol = musicAudio.volume;
-        const target = musicOriginalVolume;
-        const step = (target - vol) / 32;
-        const fadeUp = setInterval(() => {
-          vol += step;
-          if (vol >= target) { vol = target; clearInterval(fadeUp); }
-          musicAudio.volume = Math.min(1, vol);
-        }, 25);
-      }
-    }
-
-    // Set Lilith volume higher than music
-    audio.volume = 1.0;
-
-    function formatTime(s) {
-      const m = Math.floor(s / 60);
-      const sec = Math.floor(s % 60);
-      return m + ':' + (sec < 10 ? '0' : '') + sec;
-    }
-
-    function activateBars() {
-      bars.forEach(b => b.classList.add('active'));
-    }
-    function deactivateBars() {
-      bars.forEach(b => b.classList.remove('active'));
-    }
-
-    playBtn.addEventListener('click', function() {
-      if (audio.paused) {
-        audio.play();
-        playBtn.textContent = '⏸';
-        statusEl.textContent = 'PLAYING — LILITH IS SPEAKING';
-        statusEl.classList.add('live');
-        avatar.classList.add('playing');
-        activateBars();
-        duckMusic();
-      } else {
-        audio.pause();
-        playBtn.textContent = '▶';
-        statusEl.textContent = 'PAUSED';
-        statusEl.classList.remove('live');
-        avatar.classList.remove('playing');
-        deactivateBars();
-        unduckMusic();
-      }
-    });
-
-    restartBtn.addEventListener('click', function() {
-      audio.currentTime = 0;
-      if (audio.paused) {
-        audio.play();
-        playBtn.textContent = '⏸';
-        statusEl.textContent = 'PLAYING — LILITH IS SPEAKING';
-        statusEl.classList.add('live');
-        avatar.classList.add('playing');
-        activateBars();
-        duckMusic();
-      }
-    });
-
-    audio.addEventListener('timeupdate', function() {
-      if (audio.duration) {
-        const pct = (audio.currentTime / audio.duration) * 100;
-        progressFill.style.width = pct + '%';
-        timeDisplay.textContent = formatTime(audio.currentTime);
-      }
-    });
-
-    progressBar.addEventListener('click', function(e) {
-      if (audio.duration) {
-        const rect = progressBar.getBoundingClientRect();
-        const pct = (e.clientX - rect.left) / rect.width;
-        audio.currentTime = pct * audio.duration;
-      }
-    });
-
-    audio.addEventListener('ended', function() {
-      playBtn.textContent = '▶';
-      statusEl.textContent = 'FINISHED — TAP PLAY TO REPLAY';
-      statusEl.classList.remove('live');
-      avatar.classList.remove('playing');
-      deactivateBars();
-      progressFill.style.width = '100%';
-      unduckMusic();
-    });
-
-    // Auto-play after boot screen (if boot exists)
-    const bootScreen = document.getElementById('boot-screen');
-    if (bootScreen) {
-      const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(m) {
-          if (m.type === 'attributes' && bootScreen.style.display === 'none') {
-            // Boot finished, auto-play Lilith after 1.5s
-            setTimeout(function() {
-              audio.play().then(function() {
-                playBtn.textContent = '⏸';
-                statusEl.textContent = 'PLAYING — LILITH IS SPEAKING';
-                statusEl.classList.add('live');
-                avatar.classList.add('playing');
-                activateBars();
-                duckMusic();
-              }).catch(function() {
-                // Autoplay blocked, user needs to tap
-                statusEl.textContent = 'TAP PLAY TO HEAR LILITH';
-              });
-            }, 1500);
-            observer.disconnect();
-          }
-        });
-      });
-      observer.observe(bootScreen, { attributes: true, attributeFilter: ['style'] });
-    }
-  })();
-
-</script>
+<script src="app.js"></script>
 </body>
 </html>

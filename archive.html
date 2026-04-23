@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+<title>Archive — Perplexing Trades</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230A0B0D'/%3E%3Cpath d='M8 10h6a4 4 0 110 8H8V10zm0 10h6a4 4 0 110 8H8v-8z' fill='%23FF9500'/%3E%3C/svg%3E" />
+<style>
+  .arc-hero { padding: 100px var(--gutter) 40px; max-width: 1400px; margin: 0 auto; }
+  .arc-hero .eyebrow { font-family: var(--mono); font-size: var(--text-xs); letter-spacing: 0.2em; text-transform: uppercase; color: var(--amber); margin-bottom: 28px; }
+  .arc-hero h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(42px, 6vw, 84px); line-height: 0.98; letter-spacing: -0.02em; color: var(--ink); max-width: 20ch; }
+  .arc-hero h1 em { font-style: italic; color: var(--amber-soft); }
+  .arc-hero .lede { font-family: var(--serif); font-size: var(--text-lg); line-height: 1.55; color: var(--ink-mute); max-width: 62ch; margin-top: 32px; font-weight: 300; }
+  .arc-list { max-width: 1400px; margin: 0 auto; padding: 40px var(--gutter) 80px; }
+
+  .arc-day {
+    border-top: 1px solid var(--line);
+    padding: 36px 0;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 40px;
+    transition: background .2s;
+  }
+  .arc-day:last-child { border-bottom: 1px solid var(--line); }
+  .arc-day .date {
+    font-family: var(--mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--amber);
+    line-height: 1.6;
+  }
+  .arc-day .date strong { display: block; font-family: var(--serif); font-size: 28px; font-style: italic; font-weight: 400; color: var(--ink); letter-spacing: -0.01em; text-transform: none; margin-bottom: 4px; }
+  .arc-day .sessions { display: flex; flex-direction: column; gap: 18px; }
+  .arc-sess { display: flex; gap: 20px; align-items: baseline; padding: 10px 0; border-bottom: 1px dashed var(--line); }
+  .arc-sess:last-child { border-bottom: none; }
+  .arc-sess .kind { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-mute); min-width: 140px; }
+  .arc-sess .kind.morning { color: var(--amber); }
+  .arc-sess .kind.midday { color: var(--amber-soft); }
+  .arc-sess .kind.evening { color: var(--bull); }
+  .arc-sess .kind.weekend { color: var(--cherry); }
+  .arc-sess .title { font-family: var(--serif); font-size: var(--text-lg); color: var(--ink); line-height: 1.35; flex: 1; font-weight: 300; }
+  .arc-sess .title em { font-style: italic; color: var(--amber-soft); }
+  .arc-sess .stats { font-family: var(--mono); font-size: var(--text-sm); color: var(--ink-mute); font-feature-settings: 'tnum'; }
+  .arc-sess .stats .up { color: var(--bull); } .arc-sess .stats .dn { color: var(--bear); }
+  .arc-filter { display: flex; gap: 20px; padding: 20px 0; margin-bottom: 20px; font-family: var(--mono); font-size: var(--text-xs); letter-spacing: 0.14em; text-transform: uppercase; }
+  .arc-filter .f { color: var(--ink-mute); cursor: default; padding: 6px 14px; border: 1px solid var(--line); border-radius: 2px; }
+  .arc-filter .f.active { color: var(--amber); border-color: var(--amber); }
+
+  @media (max-width: 900px) {
+    .arc-day { grid-template-columns: 1fr; gap: 14px; }
+    .arc-sess { flex-direction: column; gap: 4px; align-items: flex-start; }
+    .arc-sess .kind { min-width: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div id="boot" class="boot">
+  <div class="boot-scan"></div>
+  <div class="boot-crt"></div>
+  <div class="boot-inner">
+    <div class="boot-title">Perplexing <em>Trades</em> · Archive</div>
+    <div id="boot-log" class="boot-log"></div>
+    <div style="margin-top:20px;color:var(--ink-dim);font-size:11px;letter-spacing:.12em;">PRESS ESC TO SKIP</div>
+  </div>
+</div>
+<div class="grain"></div>
+
+<header class="topbar">
+  <div class="topbar-left">
+    <a href="index.html" class="logo" style="border:none">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="1.5" y="1.5" width="21" height="21" stroke="currentColor" stroke-width="1.5"/><path d="M6 6h5a2.5 2.5 0 010 5H6V6zm0 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg>
+      Perplexing <em style="font-style:italic">Trades</em>
+    </a>
+    <span class="sess-badge">Archive · All Dispatches</span>
+  </div>
+  <div class="topbar-right">
+    <nav class="nav">
+      <a href="index.html">Market Alpha</a>
+      <a href="methodology.html">Methodology</a>
+      <a href="archive.html" class="active">Archive</a>
+    </nav>
+    <div class="timestamp" id="live-ts"></div>
+  </div>
+</header>
+
+<section class="arc-hero">
+  <div class="eyebrow">◆ Archive · Sessions #001 to #013</div>
+  <h1>Every dispatch, <em>searchable</em> and dated.</h1>
+  <p class="lede">Morning Alpha, Midday Pulse, Evening Playbook, Weekend Scan — every session lands here with its headline, story summary, and the day's tape. Browse, jump, or read in sequence.</p>
+</section>
+
+<section class="arc-list">
+  <div class="arc-filter">
+    <span class="f active">All</span>
+    <span class="f">Morning</span>
+    <span class="f">Midday</span>
+    <span class="f">Evening</span>
+    <span class="f">Weekend</span>
+  </div>
+
+  <!-- Apr 22 — Session #013 -->
+  <div class="arc-day">
+    <div class="date"><strong>Apr 22</strong>Wednesday · 2026</div>
+    <div class="sessions">
+      <div class="arc-sess">
+        <span class="kind evening">Evening · #013</span>
+        <span class="title">TSLA beat on paper, quality low — AI semi melt-up closes; oil rips +7% on Iran.</span>
+        <span class="stats"><span class="up">S&amp;P +1.03%</span> · AMD $303.46 ATH ★</span>
+      </div>
+      <div class="arc-sess">
+        <span class="kind midday">Midday · #013</span>
+        <span class="title">Micron obliterates its 52-week high — AI melt-up.</span>
+        <span class="stats">MU $487.59 <span class="up">+8.45%</span> · VIX 18.92</span>
+      </div>
+      <div class="arc-sess">
+        <span class="kind morning">Morning · #013</span>
+        <span class="title">Risk-on rip — MU hunts a 52-week high.</span>
+        <span class="stats">S&amp;P 7,114.95 <span class="up">+0.72%</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Apr 21 — Session #012 -->
+  <div class="arc-day">
+    <div class="date"><strong>Apr 21</strong>Tuesday · 2026</div>
+    <div class="sessions">
+      <div class="arc-sess">
+        <span class="kind evening">Evening · #012</span>
+        <span class="title">Two red days, oil rips, and quantum <em>finally</em> breaks.</span>
+        <span class="stats">S&amp;P 7,062.57 <span class="dn">−0.66%</span></span>
+      </div>
+      <div class="arc-sess">
+        <span class="kind midday">Midday · #012</span>
+        <span class="title">Morning bounce fades — AMD ripping to ATH, MSFT leads, POET gives back.</span>
+        <span class="stats">AMD $286.02 <span class="up">+4.03%</span></span>
+      </div>
+      <div class="arc-sess">
+        <span class="kind morning">Morning · #012</span>
+        <span class="title">AI semis bounce after first red day — TSLA earnings tonight frames the tape.</span>
+        <span class="stats">S&amp;P 7,127.82 <span class="up">+0.26%</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Apr 20 — Session #011 -->
+  <div class="arc-day">
+    <div class="date"><strong>Apr 20</strong>Monday · 2026</div>
+    <div class="sessions">
+      <div class="arc-sess">
+        <span class="kind evening">Evening · #011</span>
+        <span class="title">First red day after seven ATHs — POET +27% the quiet monster.</span>
+        <span class="stats">S&amp;P 7,110 <span class="dn">−0.22%</span></span>
+      </div>
+      <div class="arc-sess">
+        <span class="kind midday">Midday · #011</span>
+        <span class="title">POET explodes on short rebuttal — 228% above-avg call volume.</span>
+        <span class="stats">POET $10.93 <span class="up">+27.24%</span></span>
+      </div>
+      <div class="arc-sess">
+        <span class="kind morning">Morning · #011</span>
+        <span class="title">Week opens with AI semi strength — MU + AMD lead.</span>
+        <span class="stats">Nasdaq <span class="up">+0.3%</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Apr 18 Weekend Scan -->
+  <div class="arc-day">
+    <div class="date"><strong>Apr 18</strong>Saturday · 2026</div>
+    <div class="sessions">
+      <div class="arc-sess">
+        <span class="kind weekend">Weekend · #010</span>
+        <span class="title">Setting up a double megaday — TSLA, INTC, GOOG, MSFT, META in nine sessions.</span>
+        <span class="stats">Macro context · no plays</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Apr 17 Session #009 -->
+  <div class="arc-day">
+    <div class="date"><strong>Apr 17</strong>Friday · 2026</div>
+    <div class="sessions">
+      <div class="arc-sess">
+        <span class="kind evening">Evening · #009</span>
+        <span class="title">NVDA broke $200 first time — oil crashed −14% to $81 on Iran ceasefire.</span>
+        <span class="stats">NVDA $200.80 <span class="up">new ATH</span></span>
+      </div>
+      <div class="arc-sess">
+        <span class="kind midday">Midday · #009</span>
+        <span class="title">Oil's $83 macro reset — semis bifurcation accelerates.</span>
+        <span class="stats">Oil $83.40 <span class="dn">−12.18%</span></span>
+      </div>
+      <div class="arc-sess">
+        <span class="kind morning">Morning · #009</span>
+        <span class="title">TSMC Q1 detonates — 66.2% margins, $56B capex — entire AI stack re-rates.</span>
+        <span class="stats">TSM <span class="up">+7.80%</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Apr 16 #008 -->
+  <div class="arc-day">
+    <div class="date"><strong>Apr 16</strong>Thursday · 2026</div>
+    <div class="sessions">
+      <div class="arc-sess">
+        <span class="kind evening">Evening · #008</span>
+        <span class="title">NFLX miss was a Warner Bros fee illusion — AMD +7.80% on TSM demand.</span>
+        <span class="stats">NFLX <span class="dn">−9.61%</span> (headline)</span>
+      </div>
+      <div class="arc-sess">
+        <span class="kind midday">Midday · #008</span>
+        <span class="title">Semis bifurcate — design names rip, foundry sells off.</span>
+        <span class="stats">AMD <span class="up">+7.80%</span></span>
+      </div>
+      <div class="arc-sess">
+        <span class="kind morning">Morning · #008</span>
+        <span class="title">Early week setup — S&amp;P hunting 7,000, TSMC tomorrow AH.</span>
+        <span class="stats">S&amp;P 6,987</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Apr 15 #007 -->
+  <div class="arc-day">
+    <div class="date"><strong>Apr 15</strong>Wednesday · 2026</div>
+    <div class="sessions">
+      <div class="arc-sess">
+        <span class="kind evening">Evening · #007</span>
+        <span class="title">S&amp;P breaks 7,000 for the first time — the rotation is real.</span>
+        <span class="stats">S&amp;P <strong>7,012</strong> <span class="up">new ATH</span></span>
+      </div>
+      <div class="arc-sess">
+        <span class="kind midday">Midday · #007</span>
+        <span class="title">Megacap leadership reasserts — MSFT + GOOG lead rotation.</span>
+        <span class="stats"><span class="up">+0.9%</span></span>
+      </div>
+      <div class="arc-sess">
+        <span class="kind morning">Morning · #007</span>
+        <span class="title">Opening run — bulls grinding toward the 7K line.</span>
+        <span class="stats">S&amp;P 6,974</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Archive note -->
+  <div style="margin-top: 48px; padding: 24px; background: var(--bg-elev); border: 1px solid var(--line); font-family: var(--sans); font-size: var(--text-sm); color: var(--ink-mute); line-height: 1.6;">
+    <span style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--amber); display: block; margin-bottom: 10px;">◆ Full archive</span>
+    Sessions #001–#006 (Apr 8–14, 2026) are preserved in the workspace but not yet rendered here. The scheduled cron system is logging every dispatch to <code style="font-family: var(--mono); color: var(--amber); font-size: 12px;">perplexing-trades/archives/</code>. Public archival UI expanding weekly.
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-wrap">
+    <div class="fcol">
+      <h4>Perplexing <em>Trades</em></h4>
+      <p style="color:var(--ink-mute);font-family:var(--sans);text-transform:none;letter-spacing:0;font-size:var(--text-sm);max-width:28ch;">Institutional-grade market alpha, twice daily.</p>
+    </div>
+    <div class="fcol">
+      <h4>Sessions</h4>
+      <a href="index.html">Today's Dispatch</a>
+      <a href="archive.html">Archive</a>
+      <a href="methodology.html">Methodology</a>
+    </div>
+    <div class="fcol">
+      <h4>Cadence</h4>
+      <span style="color:var(--ink-mute);display:block;padding:4px 0;">Morning · 6:45 AM PT</span>
+      <span style="color:var(--ink-mute);display:block;padding:4px 0;">Midday · 12:30 PM PT</span>
+      <span style="color:var(--ink-mute);display:block;padding:4px 0;">Evening · 5:00 PM PT</span>
+    </div>
+    <div class="fcol">
+      <h4>Not advice</h4>
+      <p style="color:var(--ink-mute);font-family:var(--sans);text-transform:none;letter-spacing:0;font-size:var(--text-sm);max-width:30ch;">Educational content. Trade at your own risk.</p>
+    </div>
+  </div>
+  <div class="footer-bar">
+    <span>◆ Archive · Perplexing Trades v2.4</span>
+    <span>© 2026 Perplexing Trades</span>
+  </div>
+</footer>
+
+<div class="dock" id="dock">
+  <div class="lvp">
+    <div class="lvp-avatar" id="lvp-avatar"><img src="assets/lilith-portrait.jpg" alt="Lilith" /></div>
+    <div class="lvp-meta">
+      <div class="lvp-who">Lilith Devai · After Hours Alpha</div>
+      <div class="lvp-title">Latest dispatch · Session #013</div>
+    </div>
+    <div class="lvp-wave" id="lvp-wave" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="lvp-ctrls">
+      <button class="lvp-btn" id="lvp-restart" aria-label="Restart"></button>
+      <button class="lvp-btn primary" id="lvp-play" aria-label="Play / Pause"></button>
+    </div>
+  </div>
+  <div class="dock-divider"></div>
+  <div class="music-p">
+    <button class="lvp-btn" id="mp-play" aria-label="Play music"></button>
+    <div class="music-meta">
+      <div class="music-who">◆ Atmos · Music</div>
+      <div class="music-title" id="mp-title">Alright Pacha Mix</div>
+    </div>
+    <select class="music-select" id="mp-track">
+      <option value="alright-pacha-mix">Alright Pacha Mix</option>
+      <option value="singularity-spanish">Singularity (Spanish)</option>
+      <option value="quantum-love-msg">Quantum Love MSG</option>
+    </select>
+  </div>
+</div>
+
+<audio id="lilith-audio" src="assets/lilith-summary.mp3" preload="auto"></audio>
+<audio id="music-audio" src="assets/alright-pacha-mix.mp3" preload="auto" loop></audio>
+
+<script src="app.js"></script>
+</body>
+</html>
