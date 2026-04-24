@@ -308,7 +308,7 @@ table.kn-table {
 .play-levels .val.tp-l { color: var(--amber); }
 .play-levels .val.stop { color: var(--bear); }
 .play-levels .val.entry { color: var(--ink); }
-.play-levels .sub { display: block; font-size: 10px; color: var(--ink-mute); margin-top: 2px; letter-spacing: 0.02em; text-transform: none; }
+.play-levels .sub { display: block; font-size: 10px; color: var(--ink-mute); margin-top: 4px; letter-spacing: 0.02em; text-transform: none; white-space: normal; word-break: break-word; overflow-wrap: anywhere; line-height: 1.4; }
 .play-body { font-family: var(--serif); font-size: var(--text-md); color: var(--ink); line-height: 1.55; font-weight: 300; }
 .play-caption { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--amber); margin-bottom: 6px; }
 .play-caption.bear-c { color: var(--bear); }
