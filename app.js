@@ -1,5 +1,5 @@
 /* Perplexing Trades — shared interactions
-   Boot screen · Lilith voice player · Music player · Scroll reveals */
+   Boot screen · Voice Briefing player (top-of-page) · Music player · Scroll reveals */
 
 // ─────── BOOT SCREEN ───────
 const BOOT_LINES = [
@@ -30,36 +30,64 @@ function boot() {
   });
   setTimeout(() => {
     boot.classList.add('done');
-    // Auto-start Lilith voice shortly after boot
-    setTimeout(startLilith, 500);
+    setTimeout(tryAutoplay, 500);
   }, 2400);
 }
 
-// ─────── LILITH VOICE PLAYER (with music ducking) ───────
-let lilithAudio, musicAudio, lilithPlaying = false;
+// ─────── VOICE BRIEFING PLAYER ───────
+let lilithAudio, musicAudio;
+let lilithPlaying = false;
+let userInteracted = false;
+let scrubbing = false;
 
-function startLilith() {
+function tryAutoplay() {
   if (!lilithAudio) return;
+  // Only attempt muted-friendly autoplay; if browser blocks, the big play button
+  // is the obvious affordance. Do NOT mute (we want the briefing audible) — but
+  // gracefully accept rejection.
   lilithAudio.currentTime = 0;
-  lilithAudio.volume = 1;
   const p = lilithAudio.play();
-  if (p !== undefined) p.catch(() => { /* autoplay blocked — user must click */ });
+  if (p && typeof p.then === 'function') {
+    p.catch(() => {
+      const status = document.getElementById('vb-status');
+      if (status) status.textContent = 'Tap play to start the briefing.';
+    });
+  }
+}
+
+function fmtTime(s) {
+  if (!isFinite(s) || s < 0) return '0:00';
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return `${m}:${sec.toString().padStart(2, '0')}`;
 }
 
 function setupPlayers() {
   lilithAudio = document.getElementById('lilith-audio');
   musicAudio = document.getElementById('music-audio');
-  if (!lilithAudio || !musicAudio) return;
+  if (!lilithAudio) return;
 
-  const lvpBtn = document.getElementById('lvp-play');
-  const lvpRestart = document.getElementById('lvp-restart');
-  const wave = document.getElementById('lvp-wave');
-  const avatar = document.getElementById('lvp-avatar');
+  const playBtn = document.getElementById('vb-play');
+  const restartBtn = document.getElementById('vb-restart');
+  const wave = document.getElementById('vb-wave');
+  const portrait = document.getElementById('vb-portrait-img');
+  const scrub = document.getElementById('vb-scrub');
+  const cur = document.getElementById('vb-cur');
+  const dur = document.getElementById('vb-dur');
+  const status = document.getElementById('vb-status');
+  const iconPlay = playBtn?.querySelector('.vb-icon-play');
+  const iconPause = playBtn?.querySelector('.vb-icon-pause');
+
+  function showPlay(isPlaying) {
+    if (!iconPlay || !iconPause) return;
+    iconPlay.style.display = isPlaying ? 'none' : '';
+    iconPause.style.display = isPlaying ? '' : 'none';
+    playBtn.setAttribute('aria-pressed', isPlaying ? 'true' : 'false');
+  }
 
   function duckMusic(on) {
     if (!musicAudio) return;
     const targetVol = on ? 0.15 : 0.65;
-    // smooth fade
     const start = musicAudio.volume;
     const steps = 12;
     let i = 0;
@@ -73,68 +101,110 @@ function setupPlayers() {
   lilithAudio.addEventListener('play', () => {
     lilithPlaying = true;
     wave?.classList.add('active');
-    avatar?.classList.add('speaking');
-    lvpBtn.innerHTML = pauseIcon();
+    portrait?.classList.add('speaking');
+    showPlay(true);
+    if (status) status.textContent = 'Now playing — Lilith, live from the desk.';
     duckMusic(true);
   });
   lilithAudio.addEventListener('pause', () => {
     lilithPlaying = false;
     wave?.classList.remove('active');
-    avatar?.classList.remove('speaking');
-    lvpBtn.innerHTML = playIcon();
+    portrait?.classList.remove('speaking');
+    showPlay(false);
+    if (status && !lilithAudio.ended) status.textContent = 'Paused. Resume any time.';
     duckMusic(false);
   });
   lilithAudio.addEventListener('ended', () => {
     wave?.classList.remove('active');
-    avatar?.classList.remove('speaking');
-    lvpBtn.innerHTML = playIcon();
+    portrait?.classList.remove('speaking');
+    showPlay(false);
+    if (status) status.textContent = 'Briefing complete. Restart to replay.';
     duckMusic(false);
   });
 
-  lvpBtn?.addEventListener('click', () => {
-    if (lilithPlaying) lilithAudio.pause(); else lilithAudio.play();
+  lilithAudio.addEventListener('loadedmetadata', () => {
+    if (dur) dur.textContent = fmtTime(lilithAudio.duration);
   });
-  lvpRestart?.addEventListener('click', () => {
-    lilithAudio.currentTime = 0;
-    lilithAudio.play();
-  });
-
-  // ─── Music Player ───
-  const mpBtn = document.getElementById('mp-play');
-  const mpSelect = document.getElementById('mp-track');
-  const mpTitle = document.getElementById('mp-title');
-
-  const TRACKS = {
-    'alright-pacha-mix': { title: 'Alright Pacha Mix', src: 'assets/alright-pacha-mix.mp3' },
-    'singularity-spanish': { title: 'Singularity (Spanish)', src: 'assets/singularity-spanish.mp3' },
-    'quantum-love-msg': { title: 'Quantum Love MSG', src: 'assets/quantum-love-msg.mp3' },
-  };
-
-  if (mpSelect) {
-    mpSelect.addEventListener('change', () => {
-      const t = TRACKS[mpSelect.value];
-      if (!t) return;
-      musicAudio.src = t.src;
-      mpTitle.textContent = t.title;
-      musicAudio.play().catch(() => {});
-      mpBtn.innerHTML = pauseIcon();
-    });
+  function updateProgressFill() {
+    if (!scrub) return;
+    const pct = (Number(scrub.value) / 1000) * 100;
+    scrub.style.setProperty('--vb-progress', pct + '%');
   }
-  mpBtn?.addEventListener('click', () => {
-    if (musicAudio.paused) {
-      musicAudio.play().catch(() => {});
-      mpBtn.innerHTML = pauseIcon();
-    } else {
-      musicAudio.pause();
-      mpBtn.innerHTML = playIcon();
+
+  lilithAudio.addEventListener('timeupdate', () => {
+    if (scrubbing) return;
+    if (cur) cur.textContent = fmtTime(lilithAudio.currentTime);
+    if (scrub && lilithAudio.duration) {
+      scrub.value = String(Math.round((lilithAudio.currentTime / lilithAudio.duration) * 1000));
+      updateProgressFill();
     }
   });
-  musicAudio.volume = 0.65;
-}
 
-function playIcon() { return `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 2L11 7L3 12V2Z" fill="currentColor"/></svg>`; }
-function pauseIcon() { return `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="3" y="2" width="3" height="10" fill="currentColor"/><rect x="8" y="2" width="3" height="10" fill="currentColor"/></svg>`; }
-function restartIcon() { return `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2V6L10 4L7 2Z" fill="currentColor"/><path d="M12 7A5 5 0 1 1 7 2" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>`; }
+  playBtn?.addEventListener('click', () => {
+    userInteracted = true;
+    if (lilithPlaying) {
+      lilithAudio.pause();
+    } else {
+      lilithAudio.play().catch(() => {
+        if (status) status.textContent = 'Audio blocked — try the Direct MP3 link.';
+      });
+    }
+  });
+  restartBtn?.addEventListener('click', () => {
+    userInteracted = true;
+    lilithAudio.currentTime = 0;
+    lilithAudio.play().catch(() => {});
+  });
+
+  if (scrub) {
+    const seekFromScrub = () => {
+      if (!lilithAudio.duration) return;
+      const v = Number(scrub.value) / 1000;
+      lilithAudio.currentTime = v * lilithAudio.duration;
+      if (cur) cur.textContent = fmtTime(lilithAudio.currentTime);
+    };
+    scrub.addEventListener('input', () => {
+      scrubbing = true;
+      updateProgressFill();
+      if (!lilithAudio.duration) return;
+      const v = Number(scrub.value) / 1000;
+      if (cur) cur.textContent = fmtTime(v * lilithAudio.duration);
+    });
+    scrub.addEventListener('change', () => {
+      seekFromScrub();
+      scrubbing = false;
+    });
+    scrub.addEventListener('pointerup', () => { scrubbing = false; });
+  }
+
+  // ─── Music Player (legacy, hidden if no UI) ───
+  if (musicAudio) {
+    const mpBtn = document.getElementById('mp-play');
+    const mpSelect = document.getElementById('mp-track');
+    const mpTitle = document.getElementById('mp-title');
+
+    const TRACKS = {
+      'alright-pacha-mix': { title: 'Alright Pacha Mix', src: 'assets/alright-pacha-mix.mp3' },
+      'singularity-spanish': { title: 'Singularity (Spanish)', src: 'assets/singularity-spanish.mp3' },
+      'quantum-love-msg': { title: 'Quantum Love MSG', src: 'assets/quantum-love-msg.mp3' },
+    };
+
+    if (mpSelect) {
+      mpSelect.addEventListener('change', () => {
+        const t = TRACKS[mpSelect.value];
+        if (!t) return;
+        musicAudio.src = t.src;
+        if (mpTitle) mpTitle.textContent = t.title;
+        musicAudio.play().catch(() => {});
+      });
+    }
+    mpBtn?.addEventListener('click', () => {
+      if (musicAudio.paused) musicAudio.play().catch(() => {});
+      else musicAudio.pause();
+    });
+    musicAudio.volume = 0.65;
+  }
+}
 
 // ─────── SCROLL REVEALS ───────
 function reveals() {
@@ -146,23 +216,21 @@ function reveals() {
       }
     });
   }, { threshold: 0, rootMargin: '0px 0px -5% 0px' });
-  // Pre-reveal anything already above the fold or scrolled past
   document.querySelectorAll('[data-reveal]').forEach(el => {
     const r = el.getBoundingClientRect();
     if (r.top < window.innerHeight * 1.2) el.classList.add('in');
     else io.observe(el);
   });
-  // Safety: fail-open after 8s — never leave anything invisible
   setTimeout(() => {
     document.querySelectorAll('[data-reveal]:not(.in)').forEach(el => el.classList.add('in'));
   }, 8000);
 }
 
-// ─────── TICKER TAPE (duplicate for seamless scroll) ───────
+// ─────── TICKER TAPE ───────
 function tickerLoop() {
   const track = document.querySelector('.ticker-track');
   if (!track) return;
-  track.innerHTML += track.innerHTML; // double for seamless loop
+  track.innerHTML += track.innerHTML;
 }
 
 // ─────── LIVE TIMESTAMP ───────
@@ -181,24 +249,25 @@ function liveTs() {
 }
 
 // ─────── INIT ───────
-// Allow ESC to skip boot
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     const b = document.getElementById('boot');
     if (b) b.classList.add('done');
-    setTimeout(startLilith, 200);
+    setTimeout(tryAutoplay, 200);
+  }
+  // Space toggles play when not focused on form input
+  if (e.key === ' ' && document.activeElement && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+    const playBtn = document.getElementById('vb-play');
+    if (playBtn && document.activeElement !== playBtn) {
+      e.preventDefault();
+      playBtn.click();
+    }
   }
 });
 
 document.addEventListener('DOMContentLoaded', () => {
   boot();
   setupPlayers();
-  const lvpBtn = document.getElementById('lvp-play');
-  const lvpRestart = document.getElementById('lvp-restart');
-  const mpBtn = document.getElementById('mp-play');
-  if (lvpBtn) lvpBtn.innerHTML = playIcon();
-  if (lvpRestart) lvpRestart.innerHTML = restartIcon();
-  if (mpBtn) mpBtn.innerHTML = playIcon();
   tickerLoop();
   reveals();
   liveTs();

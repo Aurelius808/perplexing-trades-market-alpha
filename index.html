@@ -77,6 +77,60 @@
   </div>
 </div>
 
+<!-- VOICE BRIEFING — top-of-page editorial command deck -->
+<section class="voice-briefing" data-reveal>
+  <div class="vb-card" role="group" aria-label="Lilith voice briefing">
+    <figure class="vb-portrait">
+      <img id="vb-portrait-img" src="assets/lilith-ceo.jpg" alt="Lilith Devai — Perplexing Trades desk" loading="eager" />
+      <figcaption class="vb-portrait-cap">Lilith Devai · Desk</figcaption>
+    </figure>
+
+    <div class="vb-body">
+      <div class="vb-eyebrow">
+        <span class="vb-dot" aria-hidden="true"></span>
+        <span>Voice Briefing</span>
+        <span class="vb-sep">·</span>
+        <span>Session #019</span>
+        <span class="vb-sep">·</span>
+        <span>Apr 27 2026 · 4:30 PM PT</span>
+      </div>
+
+      <h2 class="vb-title">Tape holds firm into <em>Mag 7 + Fed week</em>.</h2>
+
+      <p class="vb-caption">A 90-second read of the close from Lilith — leadership, breadth, and the event-week setup. Use the scrubber to jump to any beat.</p>
+
+      <div class="vb-player">
+        <button id="vb-play" class="vb-play-btn" type="button" aria-label="Play or pause voice briefing" title="Play / Pause">
+          <svg class="vb-icon-play" width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true"><path d="M5 3L18 11L5 19V3Z" fill="currentColor"/></svg>
+          <svg class="vb-icon-pause" width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true" style="display:none"><rect x="5" y="3" width="4" height="16" fill="currentColor"/><rect x="13" y="3" width="4" height="16" fill="currentColor"/></svg>
+        </button>
+
+        <button id="vb-restart" class="vb-mini-btn" type="button" aria-label="Restart from beginning" title="Restart">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8a5 5 0 1 0 1.46-3.54" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M3 2v4h4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+
+        <div class="vb-track-wrap">
+          <div class="vb-wave" id="vb-wave" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <input id="vb-scrub" class="vb-scrub" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek voice briefing" />
+        </div>
+
+        <div class="vb-time" aria-live="off">
+          <span id="vb-cur">0:00</span><span class="vb-time-sep">/</span><span id="vb-dur">--:--</span>
+        </div>
+      </div>
+
+      <div class="vb-aux">
+        <span id="vb-status" class="vb-status">Tap play to start the briefing.</span>
+        <a class="vb-fallback" href="assets/lilith-summary.mp3">Direct MP3</a>
+      </div>
+
+      <audio id="lilith-audio" src="assets/lilith-summary.mp3" preload="auto"></audio>
+    </div>
+  </div>
+</section>
+
 <!-- HERO -->
 <section class="hero">
   <div class="hero-meta">
@@ -348,30 +402,6 @@
       <blockquote>
         Tape held firm despite oil bid and AI bifurcation. NVDA and MU did the leadership; ARM, MRVL, LRCX paid for it. The week is bigger than the day — five Magnificent 7 prints and a Fed meeting decide whether the April run extends or rolls. Carry oil as a hedge, not a thesis.
       </blockquote>
-
-      <!-- Lilith Voice Player (auto-starts after boot, controlled by app.js) -->
-      <div class="lvp" role="group" aria-label="Lilith voice summary player">
-        <div id="lvp-avatar" class="lvp-avatar">
-          <img src="assets/lilith-ceo.jpg" alt="" aria-hidden="true" />
-        </div>
-        <div class="lvp-meta">
-          <div class="lvp-who">Lilith Devai · Voice Summary</div>
-          <div class="lvp-title" id="lvp-title">Evening Playbook · Session #019</div>
-        </div>
-        <div id="lvp-wave" class="lvp-wave" aria-hidden="true">
-          <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-        </div>
-        <div class="lvp-ctrls">
-          <button id="lvp-restart" class="lvp-btn" type="button" aria-label="Restart voice summary" title="Restart">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 2V6L10 4L7 2Z" fill="currentColor"/><path d="M12 7A5 5 0 1 1 7 2" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>
-          </button>
-          <button id="lvp-play" class="lvp-btn primary" type="button" aria-label="Play or pause voice summary" title="Play / Pause">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 2L11 7L3 12V2Z" fill="currentColor"/></svg>
-          </button>
-        </div>
-        <audio id="lilith-audio" src="assets/lilith-summary.mp3" preload="auto"></audio>
-        <a class="lvp-fallback" href="assets/lilith-summary.mp3">Direct MP3</a>
-      </div>
 
       <div class="lilith-signoff">— Evening Playbook · Session #019 · 4:30 PM PT · Apr 27, 2026</div>
     </div>
