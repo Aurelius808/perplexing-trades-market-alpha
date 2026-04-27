@@ -85,6 +85,11 @@ done < <(
   } | sort -u
 )
 
+# Full public audit (filenames + content phrases) — only if script exists.
+if [[ -x scripts/public-audit.sh ]]; then
+  bash scripts/public-audit.sh || exit 1
+fi
+
 # --- 5. Show status, push (or stop if dry-run) ------------------------------
 echo "──────────────────────────────────────────────"
 echo "Repo:    $(basename "$REPO_ROOT")"

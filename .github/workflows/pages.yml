@@ -60,6 +60,14 @@ jobs:
           fi
           echo "Privacy guard: clean."
 
+      - name: Public content audit
+        run: |
+          if [ -x scripts/public-audit.sh ]; then
+            bash scripts/public-audit.sh
+          else
+            echo "scripts/public-audit.sh not present — skipping content audit."
+          fi
+
       - name: Build public artifact
         run: |
           set -euo pipefail
