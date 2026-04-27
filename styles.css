@@ -513,13 +513,29 @@ body { padding-bottom: 88px; }
 [data-reveal] { opacity: 0; transform: translateY(24px); transition: opacity .8s ease-out, transform .8s ease-out; }
 [data-reveal].in { opacity: 1; transform: none; }
 
-/* Lilith voice summary player (Session #019+) */
-.lilith-audio {
-  margin: 18px 0 8px;
+/* Lilith voice player container card (Session #019+) */
+.lilith-body .lvp {
+  margin: 22px 0 10px;
   padding: 14px 16px;
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid var(--line-bright);
   border-radius: 10px;
-  background: rgba(255,255,255,0.03);
+  background: rgba(255,149,0,0.04);
+  flex-wrap: wrap;
+  row-gap: 10px;
 }
-.lilith-audio figcaption.callout-label { margin-bottom: 8px; }
-.lilith-audio audio { width: 100%; max-width: 520px; display: block; }
+.lilith-body .lvp .lvp-fallback {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-left: auto;
+  border-bottom: 1px solid transparent;
+  text-decoration: none;
+}
+.lilith-body .lvp .lvp-fallback:hover { color: var(--amber); border-bottom-color: var(--amber); }
+@media (max-width: 640px) {
+  .lilith-body .lvp .lvp-meta { flex-basis: 100%; order: 2; }
+  .lilith-body .lvp .lvp-wave { order: 3; }
+  .lilith-body .lvp .lvp-ctrls { order: 4; margin-left: auto; }
+}
