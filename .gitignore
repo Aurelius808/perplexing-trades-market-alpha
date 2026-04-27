@@ -1,0 +1,28 @@
+# Huxity / Perplexity Computer sandbox — must never enter the public repo
+perplexing-trades-reimagined/
+archives/
+
+# Private session artifacts
+portfolio*.html
+play_targets*.json
+*_private.*
+*_private/
+
+# Secrets
+.env
+.env.*
+
+# Python build artifacts (script work happens elsewhere)
+__pycache__/
+*.pyc
+*.pyo
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Local Netlify state (deploy is via GitHub Actions now)
+.netlify/

@@ -1,0 +1,72 @@
+name: Deploy Pages
+
+# Ad-hoc deployment workflow for the static site.
+# Triggers:
+#   - Any push to main (auto-deploy after deploy.sh push)
+#   - Manual: Actions tab → "Deploy Pages" → Run workflow
+#   - CLI:    gh workflow run pages.yml
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: "Why are you redeploying? (logged only)"
+        required: false
+        default: "Manual ad-hoc deploy"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deploy; cancel queued duplicates.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Privacy guard (block Huxity-side files)
+        run: |
+          set -e
+          BAD=$(find . \
+            \( -path ./.git -prune \) -o \
+            \( -iname 'portfolio*.html' -o \
+               -iname 'play_targets*.json' -o \
+               -iname '.env*' -o \
+               -iname '*_private.*' -o \
+               -path './perplexing-trades-reimagined/*' -o \
+               -path './archives/*' \
+            \) -print)
+          if [ -n "$BAD" ]; then
+            echo "::error::Forbidden files committed to public repo:"
+            echo "$BAD"
+            exit 1
+          fi
+          echo "Privacy guard: clean."
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
