@@ -10,7 +10,7 @@
 # Notes:
 #   - Works from any local clone; no hardcoded paths.
 #   - Refuses to commit private/Huxity-side files (portfolio*.html, play_targets*.json,
-#     perplexing-trades-reimagined/, .env*, anything matching *_private.*).
+#     perplexing-trades-reimagined/, .netlify/, .env*, keys, anything matching *_private*).
 #   - On push, GitHub Actions (.github/workflows/pages.yml) handles the actual deploy.
 
 set -euo pipefail
@@ -51,27 +51,39 @@ MSG="${MSG:-Site update $(date -u +%Y-%m-%dT%H:%MZ)}"
 
 # --- 4. Forbidden-file guard (defense-in-depth, .gitignore is the primary) --
 FORBIDDEN_PATTERNS=(
-  'portfolio.*\.html$'
-  'play_targets.*\.json$'
-  '^perplexing-trades-reimagined/'
-  '^archives/'
-  '\.env($|\.)'
-  '_private\.'
+  '(^|/)portfolio.*\.html$'
+  '(^|/)play_targets.*\.json$'
+  '(^|/)perplexing-trades-reimagined/'
+  '(^|/)archives/'
+  '(^|/)\.netlify/'
+  '(^|/)\.env($|\.)'
+  '_private($|[/.])'
+  '\.pem$'
+  '\.key$'
+  '\.p12$'
 )
 
-STAGED="$(git status --porcelain | awk '{print $2}')"
-if [[ -n "$STAGED" ]]; then
-  while IFS= read -r f; do
-    [[ -z "$f" ]] && continue
-    for pat in "${FORBIDDEN_PATTERNS[@]}"; do
-      if [[ "$f" =~ $pat ]]; then
-        echo "❌ Forbidden file in tree: $f  (pattern: $pat)" >&2
-        echo "   Remove it or add to .gitignore before deploying." >&2
-        exit 1
-      fi
-    done
-  done <<< "$STAGED"
-fi
+check_forbidden_file() {
+  local f="${1#./}"
+  [[ -z "$f" ]] && return 0
+  for pat in "${FORBIDDEN_PATTERNS[@]}"; do
+    if [[ "$f" =~ $pat ]]; then
+      echo "❌ Forbidden file in tree: $f  (pattern: $pat)" >&2
+      echo "   Remove it or add to .gitignore before deploying." >&2
+      exit 1
+    fi
+  done
+}
+
+while IFS= read -r f; do
+  check_forbidden_file "$f"
+done < <(
+  {
+    git ls-files
+    git status --porcelain --untracked-files=all | awk 'substr($0,1,2) !~ /D/ {print substr($0,4)}' | sed 's/ -> /\
+/g'
+  } | sort -u
+)
 
 # --- 5. Show status, push (or stop if dry-run) ------------------------------
 echo "──────────────────────────────────────────────"

@@ -16,6 +16,7 @@ play_targets*.json
 __pycache__/
 *.pyc
 *.pyo
+_site/
 
 # OS / editor noise
 .DS_Store
