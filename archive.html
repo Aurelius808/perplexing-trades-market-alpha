@@ -104,6 +104,26 @@
     <span class="f">Weekend</span>
   </div>
 
+  <!--
+    PT_ARCHIVE_ROWS_START
+    Scheduled agents append the latest session row(s) at the TOP of this zone.
+    Match the existing markup pattern. Group by date with .arc-day; within
+    each day, list sessions newest-first (Evening above Midday above Morning).
+    Do not edit rows older than the most recent two days from this zone.
+  -->
+
+  <!-- Apr 28 — Session #020 -->
+  <div class="arc-day">
+    <div class="date"><strong>Apr 28</strong>Tuesday · 2026</div>
+    <div class="sessions">
+      <div class="arc-sess">
+        <span class="kind morning">Morning · #020</span>
+        <span class="title">Futures soften into <em>Mag 7 + FOMC apex</em> — oil rips, gold sells, dispersion is the trade.</span>
+        <span class="stats">SPY 712.54 <span class="dn">−0.37%</span> · USO <span class="up">+3.03%</span></span>
+      </div>
+    </div>
+  </div>
+
   <!-- Apr 27 — Session #019 -->
   <div class="arc-day">
     <div class="date"><strong>Apr 27</strong>Monday · 2026</div>
@@ -283,6 +303,8 @@
       </div>
     </div>
   </div>
+
+  <!-- PT_ARCHIVE_ROWS_END -->
 
   <!-- Archive note -->
   <div style="margin-top: 48px; padding: 24px; background: var(--bg-elev); border: 1px solid var(--line); font-family: var(--sans); font-size: var(--text-sm); color: var(--ink-mute); line-height: 1.6;">

@@ -1,9 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!--
+  AUTOMATION CONTRACT (read first if you are a scheduled agent)
+  ================================================================
+  This file is updated by scheduled Morning / Midday / Evening / Weekend
+  agents. Each run MUST replace content ONLY between the marked zones below.
+  Do NOT edit the design shell, masthead, navigation, CSS/JS includes,
+  voice-briefing module, or footer outside markers without a code review.
+
+  Run-owned zones (safe to overwrite each run):
+    <!-- PT_TITLE_START   -->  ...  <!-- PT_TITLE_END   -->   (page <title>)
+    <!-- PT_SESSBADGE_START --> ... <!-- PT_SESSBADGE_END --> (top session chip)
+    <!-- PT_TICKER_START  -->  ...  <!-- PT_TICKER_END  -->   (ticker tape items)
+    <!-- PT_VOICELABEL_START --> ... <!-- PT_VOICELABEL_END --> (voice meta line)
+    <!-- PT_RUN_START     -->  ...  <!-- PT_RUN_END     -->   (hero + sections)
+    <!-- PT_SOURCES_START -->  ...  <!-- PT_SOURCES_END -->   (citations list)
+    <!-- PT_FOOTERBAR_START --> ... <!-- PT_FOOTERBAR_END --> (footer session line)
+
+  Rules for run-owned zones:
+    - Use only public market data and the run payload provided.
+    - No portfolio language, no holdings, no broker / order details, no
+      personal calendar text, no private dashboard URLs.
+    - Citations must be real public URLs from the run payload or its sources.
+    - If voice audio for the current session does not exist yet, keep the
+      existing voice module but mark it as "Prior briefing" — do not imply
+      a fresh recording exists.
+    - Verify the privacy audit (`bash scripts/public-audit.sh`) before push.
+  ================================================================
+-->
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-<title>Perplexing Trades — Market Alpha · Evening Playbook · Apr 27, 2026</title>
+<title><!-- PT_TITLE_START -->Perplexing Trades — Market Alpha · Morning Alpha · Apr 28, 2026<!-- PT_TITLE_END --></title>
 <meta name="description" content="An AI-driven market alpha dispatch. Public-only, twice-daily institutional-grade tape." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -20,7 +48,7 @@
   <div class="boot-inner">
     <div class="boot-title">Perplexing <em>Trades</em></div>
     <div id="boot-log" class="boot-log"></div>
-    <div style="margin-top:20px;color:var(--ink-dim);font-size:11px;letter-spacing:.12em;">PRESS ESC TO SKIP &nbsp;·&nbsp; v2.5 · 2026.04.27</div>
+    <div style="margin-top:20px;color:var(--ink-dim);font-size:11px;letter-spacing:.12em;">PRESS ESC TO SKIP &nbsp;·&nbsp; v2.5 · 2026.04.28</div>
   </div>
 </div>
 
@@ -34,7 +62,7 @@
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-label="Perplexing Trades"><rect x="1.5" y="1.5" width="21" height="21" stroke="currentColor" stroke-width="1.5"/><path d="M6 6h5a2.5 2.5 0 010 5H6V6zm0 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg>
       Perplexing <em style="font-style:italic">Trades</em>
     </a>
-    <span class="sess-badge">Evening Playbook · Apr 27 · 4:30 PM PT</span>
+    <span class="sess-badge"><!-- PT_SESSBADGE_START -->Morning Alpha · Apr 28 · 6:45 AM PT<!-- PT_SESSBADGE_END --></span>
   </div>
   <div class="topbar-right">
     <nav class="nav">
@@ -49,31 +77,38 @@
 <!-- TICKER TAPE -->
 <div class="ticker-tape">
   <div class="ticker-track">
-    <span class="ticker-item"><span class="t">SPY</span> 715.10 <span class="up">+0.16%</span></span>
-    <span class="ticker-item"><span class="t">QQQ</span> 664.24 <span class="up">+0.05%</span></span>
-    <span class="ticker-item"><span class="t">IWM</span> 277.06 <span class="up">+0.15%</span></span>
-    <span class="ticker-item"><span class="t">DIA</span> 491.83 <span class="dn">−0.08%</span></span>
-    <span class="ticker-item"><span class="t">USO</span> 134.72 <span class="up">+1.75%</span> · Hormuz</span>
-    <span class="ticker-item"><span class="t">TLT</span> 86.28 <span class="dn">−0.50%</span></span>
-    <span class="ticker-item"><span class="t">NVDA</span> 216.61 <span class="up">+4.00%</span> ★</span>
-    <span class="ticker-item"><span class="t">MU</span> 524.56 <span class="up">+5.60%</span> ★</span>
-    <span class="ticker-item"><span class="t">AMD</span> 334.49 <span class="dn">−3.83%</span></span>
-    <span class="ticker-item"><span class="t">QCOM</span> 150.26 <span class="up">+0.95%</span> · OpenAI/MTK</span>
-    <span class="ticker-item"><span class="t">AAPL</span> 267.62 <span class="dn">−1.27%</span></span>
-    <span class="ticker-item"><span class="t">MSFT</span> 424.82 <span class="up">+0.05%</span> · Wed AH</span>
-    <span class="ticker-item"><span class="t">GOOGL</span> 350.34 <span class="up">+1.72%</span> · Wed AH</span>
-    <span class="ticker-item"><span class="t">AMZN</span> 261.07 <span class="dn">−1.11%</span> · Wed AH</span>
-    <span class="ticker-item"><span class="t">META</span> 678.62 <span class="up">+0.53%</span> · Wed AH</span>
-    <span class="ticker-item"><span class="t">TSLA</span> 378.67 <span class="up">+0.63%</span></span>
-    <span class="ticker-item"><span class="t">INTC</span> 84.99 <span class="up">+2.97%</span></span>
-    <span class="ticker-item"><span class="t">ARM</span> 215.88 <span class="dn">−8.06%</span></span>
-    <span class="ticker-item"><span class="t">MRVL</span> 158.21 <span class="dn">−3.71%</span></span>
-    <span class="ticker-item"><span class="t">LRCX</span> 259.56 <span class="dn">−3.07%</span></span>
-    <span class="ticker-item"><span class="t">PANW</span> 182.90 <span class="up">+2.44%</span></span>
-    <span class="ticker-item"><span class="t">CRWD</span> 454.61 <span class="up">+1.45%</span></span>
-    <span class="ticker-item"><span class="t">ZS</span> 134.11 <span class="dn">−1.03%</span></span>
-    <span class="ticker-item"><span class="t">VZ</span> reported <span class="neut">Mon BMO</span></span>
-    <span class="ticker-item"><span class="t">DPZ</span> reported <span class="neut">Mon</span></span>
+    <!-- PT_TICKER_START -->
+    <span class="ticker-item"><span class="t">SPY</span> 712.54 <span class="dn">−0.37%</span></span>
+    <span class="ticker-item"><span class="t">QQQ</span> 659.36 <span class="dn">−0.73%</span></span>
+    <span class="ticker-item"><span class="t">IWM</span> 275.80 <span class="dn">−0.49%</span></span>
+    <span class="ticker-item"><span class="t">DIA</span> 492.65 <span class="up">+0.17%</span></span>
+    <span class="ticker-item"><span class="t">USO</span> 138.80 <span class="up">+3.03%</span> · Hormuz tail</span>
+    <span class="ticker-item"><span class="t">TLT</span> 86.17 <span class="dn">−0.12%</span></span>
+    <span class="ticker-item"><span class="t">HYG</span> 80.39 <span class="dn">−0.16%</span></span>
+    <span class="ticker-item"><span class="t">GLD</span> 421.20 <span class="dn">−2.02%</span></span>
+    <span class="ticker-item"><span class="t">UUP</span> 27.52 <span class="up">+0.24%</span></span>
+    <span class="ticker-item"><span class="t">VIXY</span> 28.27 <span class="up">+1.65%</span></span>
+    <span class="ticker-item"><span class="t">KO</span> reports <span class="neut">Tue BMO</span></span>
+    <span class="ticker-item"><span class="t">GM</span> reports <span class="neut">Tue BMO</span></span>
+    <span class="ticker-item"><span class="t">UPS</span> reports <span class="neut">Tue BMO</span></span>
+    <span class="ticker-item"><span class="t">SBUX</span> reports <span class="neut">Tue AH</span></span>
+    <span class="ticker-item"><span class="t">SPOT</span> reports <span class="neut">Tue BMO</span></span>
+    <span class="ticker-item"><span class="t">BKNG</span> reports <span class="neut">Tue AH</span></span>
+    <span class="ticker-item"><span class="t">V</span> reports <span class="neut">Tue AH</span></span>
+    <span class="ticker-item"><span class="t">TMUS</span> reports <span class="neut">Tue AH</span></span>
+    <span class="ticker-item"><span class="t">QCOM</span> reports <span class="neut">Wed AH</span></span>
+    <span class="ticker-item"><span class="t">NXPI</span> reports <span class="neut">Tue AH</span></span>
+    <span class="ticker-item"><span class="t">MSFT</span> · Wed AH ★</span>
+    <span class="ticker-item"><span class="t">META</span> · Wed AH ★</span>
+    <span class="ticker-item"><span class="t">GOOGL</span> · Wed AH ★</span>
+    <span class="ticker-item"><span class="t">AMZN</span> · Wed AH ★</span>
+    <span class="ticker-item"><span class="t">KFRC</span> <span class="up">+36.27%</span> ★</span>
+    <span class="ticker-item"><span class="t">OMCL</span> <span class="up">+20.33%</span></span>
+    <span class="ticker-item"><span class="t">SANM</span> <span class="up">+16.23%</span></span>
+    <span class="ticker-item"><span class="t">RMBS</span> <span class="dn">−21.14%</span></span>
+    <span class="ticker-item"><span class="t">SPOT</span> <span class="dn">−13.91%</span></span>
+    <span class="ticker-item"><span class="t">ARE</span> <span class="dn">−12.23%</span></span>
+    <!-- PT_TICKER_END -->
   </div>
 </div>
 
@@ -88,16 +123,18 @@
     <div class="vb-body">
       <div class="vb-eyebrow">
         <span class="vb-dot" aria-hidden="true"></span>
-        <span>Voice Briefing</span>
+        <!-- PT_VOICELABEL_START -->
+        <span>Prior Voice Briefing</span>
         <span class="vb-sep">·</span>
-        <span>Session #019</span>
+        <span>Session #019 · Apr 27 2026 · 4:30 PM PT</span>
         <span class="vb-sep">·</span>
-        <span>Apr 27 2026 · 4:30 PM PT</span>
+        <span>No new audio for Morning Alpha #020</span>
+        <!-- PT_VOICELABEL_END -->
       </div>
 
-      <h2 class="vb-title">Tape holds firm into <em>Mag 7 + Fed week</em>.</h2>
+      <h2 class="vb-title">Tape held firm into <em>Mag 7 + Fed week</em>.</h2>
 
-      <p class="vb-caption">A 90-second read of the close from Lilith — leadership, breadth, and the event-week setup. Use the scrubber to jump to any beat.</p>
+      <p class="vb-caption">The most recent recorded read from Lilith covers Monday's close. Tuesday's Morning Alpha is below in text — a fresh briefing will follow when the audio is cut.</p>
 
       <div class="vb-player">
         <button id="vb-play" class="vb-play-btn" type="button" aria-label="Play or pause voice briefing" title="Play / Pause">
@@ -122,7 +159,7 @@
       </div>
 
       <div class="vb-aux">
-        <span id="vb-status" class="vb-status">Tap play to start the briefing.</span>
+        <span id="vb-status" class="vb-status">Tap play to hear Monday's close briefing.</span>
         <a class="vb-fallback" href="assets/lilith-summary.mp3">Direct MP3</a>
       </div>
 
@@ -131,51 +168,52 @@
   </div>
 </section>
 
+<!-- PT_RUN_START -->
 <!-- HERO -->
 <section class="hero">
   <div class="hero-meta">
     <span class="dot">◆</span>
-    <span>Session #019 · Evening Playbook</span>
+    <span>Session #020 · Morning Alpha</span>
     <span>·</span>
-    <span>Recorded 4:30 PM PT · Apr 27, 2026</span>
+    <span>Pulled 6:49 AM PT · Apr 28, 2026</span>
     <span>·</span>
-    <span>Est. read 6 min</span>
+    <span>Est. read 5 min</span>
   </div>
-  <div class="hero-eyebrow">Evening Playbook · Apr 27 2026 · Session #019</div>
-  <h1>Tape holds firm into <em>Mag 7 + Fed week</em> — Hormuz oil bid, AI leadership bifurcates.</h1>
+  <div class="hero-eyebrow">Morning Alpha · Apr 28 2026 · Session #020</div>
+  <h1>Futures soften into <em>Mag 7 + FOMC apex</em> — oil rips, gold sells, dispersion is the trade.</h1>
 
   <div class="hero-grid">
     <article class="hero-narrative" data-reveal>
-      <p>US stocks edged higher Monday as investors digested a reported Iran proposal to reopen the Strait of Hormuz<sup>[1]</sup>. SPY printed 715.10 (+0.16%), QQQ 664.24 (+0.05%), IWM 277.06 (+0.15%), DIA 491.83 (−0.08%) — a flat-to-firm session at the open of a heavyweight event week. S&amp;P futures had been little changed around 7:40 ET<sup>[3]</sup>; intraday a +2% WTI move on Hormuz tensions briefly pressured tech<sup>[4]</sup>, but the index kept its bid into the close.</p>
+      <p>US equity tape opens Tuesday with a modest fade after Monday's firm close. Pre-tape quotes show SPY at 712.54 (−0.37%), QQQ 659.36 (−0.73%), IWM 275.80 (−0.49%), DIA 492.65 (+0.17%) — a defensive lean concentrated in tech, with the Dow holding bid<sup>[1]</sup>. The Apr 28 calendar is real but secondary to the event week: Case-Shiller and FHFA at 9:00 ET, Consumer Confidence and Richmond Fed Manufacturing at 10:00 ET<sup>[3]</sup>. The market is pricing the Wednesday gauntlet, not today's data.</p>
 
-      <p>Leadership bifurcated. NVDA ripped +4.00% to 216.61 and MU added +5.60% to 524.56 — AI-infra and memory regained the wheel<sup>[8]</sup>. Cybersecurity caught a real bid: PANW +2.44%, CRWD +1.45%, with software ETF flows doing the work<sup>[4]</sup>. The other side of semis was ugly: AMD −3.83%, ARM −8.06%, MRVL −3.71%, LRCX −3.07% — pockets of profit-taking after the April run, while QCOM +0.95% caught a bid on OpenAI/MediaTek smartphone-processor reporting<sup>[4]</sup>.</p>
+      <p>Two macro tells dominate the open. USO is +3.03% to 138.80 — a clean second-leg of the Strait-of-Hormuz bid that started Monday<sup>[1][2]</sup>. GLD is −2.02% to 421.20 the same morning, an unusual pair: oil-as-tail-hedge bid while gold-as-tail-hedge unwinds. VIXY +1.65% rounds out the defensive posture; UUP +0.24% says no dollar break. TLT −0.12% is a quiet tape into FOMC, but duration has not turned.</p>
 
-      <p>The week is the test. Five Magnificent 7 names report and the Fed meets<sup>[2][7]</sup>. Tuesday brings KMB, GM, UPS, V, SBUX; Wednesday is the apex with MSFT, META, GOOGL, AMZN, QCOM<sup>[2]</sup>; AAPL closes the marquee later in the week<sup>[2][5]</sup>. VZ and DPZ already reported Monday<sup>[2]</sup>. With S&amp;P up &gt;9% and Nasdaq &gt;15% in April<sup>[1]</sup>, the bar is high — guidance, not prints, will price this tape.</p>
+      <p>The week's center of gravity is Wednesday after-hours — MSFT, META, GOOGL, AMZN, QCOM all print on the same evening<sup>[4]</sup>. Today's tape includes KO, GM, UPS, SPOT, SBUX, BKNG, V, TMUS, NXPI, QCOM among the front line<sup>[4]</sup>. SPOT already printed −13.91% pre-open as one of the day's largest losers, with RMBS −21.14% and ARE −12.23% leading the downside cohort. KFRC +36.27% and OMCL +20.33% top the gainer board — single-name dispersion is wide before bell.</p>
 
-      <p>Macro tail: USO +1.75% to 134.72 as the Hormuz/Iran path stays unresolved<sup>[6][7]</sup>. TLT −0.50% to 86.28 — duration weak into the Fed. The regime is risk-on but event-heavy: oil is the live tail-hedge, breadth is selective, and AAPL (−1.27%) is the megacap on the wrong side of trend going into its own print.</p>
+      <p>Regime read: <strong>BULLISH</strong> by the run model, but the trade is dispersion, not direction. SPY is a fade while individual names live and die on prints. Carry oil as a hedge against the equity book; do not chase gold lower; let SPOT and RMBS settle before any post-print engagement. The bar Wednesday is guidance, not headlines, and Tuesday's job is to be sized for it.</p>
     </article>
 
     <aside class="hero-aside" data-reveal>
-      <div class="aside-label">◆ At the close</div>
+      <div class="aside-label">◆ Pre-bell snapshot</div>
       <div class="ha-stat">
         <div class="ha-stat-label">SPY</div>
-        <div class="ha-stat-val">715.10</div>
-        <div class="ha-stat-chg up">+1.14 · +0.16% · firm</div>
-      </div>
-      <div class="ha-stat">
-        <div class="ha-stat-label">NVDA · AI infra</div>
-        <div class="ha-stat-val up">+4.00%</div>
-        <div class="ha-stat-chg up">$216.61 · breakout watch</div>
+        <div class="ha-stat-val">712.54</div>
+        <div class="ha-stat-chg dn">−0.37% · soft open</div>
       </div>
       <div class="ha-stat">
         <div class="ha-stat-label">USO · Hormuz bid</div>
-        <div class="ha-stat-val up">$134.72</div>
-        <div class="ha-stat-chg up">+1.75% · Iran/oil tail</div>
+        <div class="ha-stat-val up">$138.80</div>
+        <div class="ha-stat-chg up">+3.03% · second leg</div>
+      </div>
+      <div class="ha-stat">
+        <div class="ha-stat-label">GLD · safety unwind</div>
+        <div class="ha-stat-val dn">$421.20</div>
+        <div class="ha-stat-chg dn">−2.02% · gold sells</div>
       </div>
       <div class="ha-stat">
         <div class="ha-stat-label">This week</div>
-        <div class="ha-stat-val" style="font-size:22px;">FOMC <em style="color:var(--amber)">+ 5 Mag 7</em></div>
-        <div class="ha-stat-chg neut">MSFT/META/GOOGL/AMZN/QCOM Wed</div>
+        <div class="ha-stat-val" style="font-size:22px;">FOMC <em style="color:var(--amber)">+ 4 Mag 7</em></div>
+        <div class="ha-stat-chg neut">MSFT/META/GOOGL/AMZN Wed AH</div>
       </div>
     </aside>
   </div>
@@ -188,7 +226,7 @@
       <span class="kicker">01</span>
       <h2>Key <em>Numbers</em></h2>
     </div>
-    <div class="rhs">After-hours · Apr 27 · N = 23</div>
+    <div class="rhs">Pre-bell · Apr 28 · N = 18</div>
   </div>
   <div class="kn-wrap">
     <table class="kn-table">
@@ -196,32 +234,27 @@
         <tr><th>Sym</th><th>Name</th><th style="text-align:right;">Last</th><th style="text-align:right;">Chg</th><th>Context</th></tr>
       </thead>
       <tbody id="kn-body">
-        <tr><td class="sym">SPY</td><td class="name">S&amp;P 500 ETF</td><td class="price">$715.10</td><td class="chg up">+0.16%</td><td class="note">Holds firm into Fed/Mag 7 week</td></tr>
-        <tr><td class="sym">QQQ</td><td class="name">Nasdaq-100 ETF</td><td class="price">$664.24</td><td class="chg up">+0.05%</td><td class="note">Flat after 13-day intraday streak</td></tr>
-        <tr><td class="sym">IWM</td><td class="name">Russell 2000 ETF</td><td class="price">$277.06</td><td class="chg up">+0.15%</td><td class="note">Small-cap modest bid</td></tr>
-        <tr><td class="sym">DIA</td><td class="name">Dow ETF</td><td class="price">$491.83</td><td class="chg dn">-0.08%</td><td class="note">Slight drag</td></tr>
-        <tr><td class="sym">USO</td><td class="name">United States Oil Fund</td><td class="price">$134.72</td><td class="chg up">+1.75%</td><td class="note">★ Hormuz/Iran tail bid</td></tr>
-        <tr><td class="sym">TLT</td><td class="name">20+ Yr Treasury</td><td class="price">$86.28</td><td class="chg dn">-0.50%</td><td class="note">Duration weak into FOMC</td></tr>
-        <tr><td class="sym">NVDA</td><td class="name">NVIDIA</td><td class="price">$216.61</td><td class="chg up">+4.00%</td><td class="note">★ AI-infra leadership reasserts</td></tr>
-        <tr><td class="sym">MU</td><td class="name">Micron Technology</td><td class="price">$524.56</td><td class="chg up">+5.60%</td><td class="note">★ Memory/HBM bid</td></tr>
-        <tr><td class="sym">AMD</td><td class="name">Advanced Micro</td><td class="price">$334.49</td><td class="chg dn">-3.83%</td><td class="note">Profit-take after April run</td></tr>
-        <tr><td class="sym">QCOM</td><td class="name">Qualcomm</td><td class="price">$150.26</td><td class="chg up">+0.95%</td><td class="note">OpenAI/MediaTek processor news · Wed AH</td></tr>
-        <tr><td class="sym">INTC</td><td class="name">Intel</td><td class="price">$84.99</td><td class="chg up">+2.97%</td><td class="note">Holding base</td></tr>
-        <tr><td class="sym">ARM</td><td class="name">Arm Holdings</td><td class="price">$215.88</td><td class="chg dn">-8.06%</td><td class="note">Sharp giveback</td></tr>
-        <tr><td class="sym">MRVL</td><td class="name">Marvell</td><td class="price">$158.21</td><td class="chg dn">-3.71%</td><td class="note">Networking-AI under pressure</td></tr>
-        <tr><td class="sym">LRCX</td><td class="name">Lam Research</td><td class="price">$259.56</td><td class="chg dn">-3.07%</td><td class="note">WFE pullback</td></tr>
-        <tr><td class="sym">AAPL</td><td class="name">Apple</td><td class="price">$267.62</td><td class="chg dn">-1.27%</td><td class="note">Soft into own print this week</td></tr>
-        <tr><td class="sym">MSFT</td><td class="name">Microsoft</td><td class="price">$424.82</td><td class="chg up">+0.05%</td><td class="note">Wed AH · Azure/Copilot</td></tr>
-        <tr><td class="sym">GOOGL</td><td class="name">Alphabet</td><td class="price">$350.34</td><td class="chg up">+1.72%</td><td class="note">Wed AH · cloud/AI bar</td></tr>
-        <tr><td class="sym">AMZN</td><td class="name">Amazon</td><td class="price">$261.07</td><td class="chg dn">-1.11%</td><td class="note">Wed AH · AWS growth</td></tr>
-        <tr><td class="sym">META</td><td class="name">Meta Platforms</td><td class="price">$678.62</td><td class="chg up">+0.53%</td><td class="note">Wed AH · ad-rev + capex</td></tr>
-        <tr><td class="sym">TSLA</td><td class="name">Tesla</td><td class="price">$378.67</td><td class="chg up">+0.63%</td><td class="note">Quiet bid</td></tr>
-        <tr><td class="sym">PANW</td><td class="name">Palo Alto Networks</td><td class="price">$182.90</td><td class="chg up">+2.44%</td><td class="note">★ Cybersecurity relative strength</td></tr>
-        <tr><td class="sym">CRWD</td><td class="name">CrowdStrike</td><td class="price">$454.61</td><td class="chg up">+1.45%</td><td class="note">Joining the cyber bid</td></tr>
-        <tr><td class="sym">ZS</td><td class="name">Zscaler</td><td class="price">$134.11</td><td class="chg dn">-1.03%</td><td class="note">Lagging the cohort</td></tr>
+        <tr><td class="sym">SPY</td><td class="name">S&amp;P 500 ETF</td><td class="price">$712.54</td><td class="chg dn">−0.37%</td><td class="note">Soft into FOMC / Mag 7 apex</td></tr>
+        <tr><td class="sym">QQQ</td><td class="name">Nasdaq-100 ETF</td><td class="price">$659.36</td><td class="chg dn">−0.73%</td><td class="note">Tech-led drag</td></tr>
+        <tr><td class="sym">IWM</td><td class="name">Russell 2000 ETF</td><td class="price">$275.80</td><td class="chg dn">−0.49%</td><td class="note">Small-cap soft</td></tr>
+        <tr><td class="sym">DIA</td><td class="name">Dow ETF</td><td class="price">$492.65</td><td class="chg up">+0.17%</td><td class="note">Defensives bid</td></tr>
+        <tr><td class="sym">USO</td><td class="name">United States Oil Fund</td><td class="price">$138.80</td><td class="chg up">+3.03%</td><td class="note">★ Hormuz tail · second leg</td></tr>
+        <tr><td class="sym">GLD</td><td class="name">SPDR Gold</td><td class="price">$421.20</td><td class="chg dn">−2.02%</td><td class="note">Safety bid unwinding</td></tr>
+        <tr><td class="sym">TLT</td><td class="name">20+ Yr Treasury</td><td class="price">$86.17</td><td class="chg dn">−0.12%</td><td class="note">Quiet into FOMC</td></tr>
+        <tr><td class="sym">HYG</td><td class="name">High-Yield Credit</td><td class="price">$80.39</td><td class="chg dn">−0.16%</td><td class="note">No credit break</td></tr>
+        <tr><td class="sym">UUP</td><td class="name">USD Index ETF</td><td class="price">$27.52</td><td class="chg up">+0.24%</td><td class="note">Dollar bid alongside oil</td></tr>
+        <tr><td class="sym">VIXY</td><td class="name">VIX Short-Term Fut</td><td class="price">$28.27</td><td class="chg up">+1.65%</td><td class="note">Vol bid · event week</td></tr>
+        <tr><td class="sym">KFRC</td><td class="name">Kforce Inc</td><td class="price">—</td><td class="chg up">+36.27%</td><td class="note">★ Top pre-bell gainer</td></tr>
+        <tr><td class="sym">OMCL</td><td class="name">Omnicell</td><td class="price">—</td><td class="chg up">+20.33%</td><td class="note">Healthcare-tech rip</td></tr>
+        <tr><td class="sym">KNSA</td><td class="name">Kiniksa Pharma</td><td class="price">—</td><td class="chg up">+17.50%</td><td class="note">Biotech mover</td></tr>
+        <tr><td class="sym">SANM</td><td class="name">Sanmina</td><td class="price">—</td><td class="chg up">+16.23%</td><td class="note">EMS / earnings move</td></tr>
+        <tr><td class="sym">RVMD</td><td class="name">Revolution Medicines</td><td class="price">—</td><td class="chg up">+11.50%</td><td class="note">Biotech rally</td></tr>
+        <tr><td class="sym">RMBS</td><td class="name">Rambus</td><td class="price">—</td><td class="chg dn">−21.14%</td><td class="note">★ Largest pre-bell loser</td></tr>
+        <tr><td class="sym">SPOT</td><td class="name">Spotify</td><td class="price">—</td><td class="chg dn">−13.91%</td><td class="note">Disappointing print reaction</td></tr>
+        <tr><td class="sym">ARE</td><td class="name">Alexandria RE</td><td class="price">—</td><td class="chg dn">−12.23%</td><td class="note">REIT under pressure</td></tr>
       </tbody>
     </table>
-    <div style="margin-top:14px;font-family:var(--mono);font-size:11px;color:var(--ink-mute);letter-spacing:0.06em;">Source: Perplexity Finance snapshot pulled Apr 27, 2026 after-hours.</div>
+    <div style="margin-top:14px;font-family:var(--mono);font-size:11px;color:var(--ink-mute);letter-spacing:0.06em;">Source: scheduled run payload · Apr 28, 2026 13:49 UTC pre-bell snapshot.</div>
   </div>
 </section>
 
@@ -232,38 +265,38 @@
       <span class="kicker">02</span>
       <h2>Regime <em>Card</em></h2>
     </div>
-    <div class="rhs">Risk-on but event-heavy</div>
+    <div class="rhs">Bullish · dispersion-led</div>
   </div>
   <div class="sv-grid">
     <div class="sv-item bull">
       <div class="sv-label">Tone</div>
-      <div class="sv-vibe">Risk-On</div>
-      <div class="sv-note">SPY/QQQ/IWM all green; April: S&amp;P +9%, Nasdaq +15%, Dow +6%</div>
+      <div class="sv-vibe">Bullish · soft open</div>
+      <div class="sv-note">Run model bullish; SPY −0.37% pre-bell is positioning, not break</div>
     </div>
     <div class="sv-item bear">
       <div class="sv-label">Breadth</div>
-      <div class="sv-vibe">Selective</div>
-      <div class="sv-note">NVDA/MU/PANW lead · ARM/MRVL/LRCX punished same day</div>
-    </div>
-    <div class="sv-item bull">
-      <div class="sv-label">AI / Semis</div>
-      <div class="sv-vibe">Bifurcated</div>
-      <div class="sv-note">Memory + leaders bid; mid-cycle WFE + ARM heavy</div>
-    </div>
-    <div class="sv-item bear">
-      <div class="sv-label">Duration</div>
-      <div class="sv-vibe">Weak</div>
-      <div class="sv-note">TLT −0.50% into FOMC · long-end soft</div>
+      <div class="sv-vibe">Dispersion-Wide</div>
+      <div class="sv-note">KFRC +36% / OMCL +20% vs RMBS −21% / SPOT −14% / ARE −12%</div>
     </div>
     <div class="sv-item bull">
       <div class="sv-label">Energy / Geopolitics</div>
       <div class="sv-vibe">Tail Bid</div>
-      <div class="sv-note">USO +1.75%; Strait of Hormuz proposal still unresolved</div>
+      <div class="sv-note">USO +3.03% second leg; Hormuz path unresolved</div>
     </div>
     <div class="sv-item bear">
-      <div class="sv-label">Megacap</div>
-      <div class="sv-vibe">Mixed</div>
-      <div class="sv-note">GOOGL/META up; AAPL/AMZN down · pre-print de-risking</div>
+      <div class="sv-label">Safety</div>
+      <div class="sv-vibe">Mixed Unwind</div>
+      <div class="sv-note">GLD −2.02% sells, VIXY +1.65% bid — pair is unusual</div>
+    </div>
+    <div class="sv-item bear">
+      <div class="sv-label">Duration / Credit</div>
+      <div class="sv-vibe">Quiet</div>
+      <div class="sv-note">TLT −0.12% · HYG −0.16% · no break either way into FOMC</div>
+    </div>
+    <div class="sv-item bull">
+      <div class="sv-label">Megacap Setup</div>
+      <div class="sv-vibe">Coiled</div>
+      <div class="sv-note">MSFT/META/GOOGL/AMZN report Wed AH — guidance is the price</div>
     </div>
   </div>
 </section>
@@ -281,29 +314,29 @@
 
     <article class="play bull">
       <div class="play-head">
-        <div class="play-sym">NVDA</div>
-        <div class="play-dir">Long · Momentum</div>
+        <div class="play-sym">USO</div>
+        <div class="play-dir">Long · Tail Hedge</div>
       </div>
-      <div class="play-name">AI-leadership continuation</div>
-      <p class="play-body"><strong>Entry:</strong> &gt; 217.00 breakout, or pullback 211.50–213.00. <strong>Stop:</strong> 207.20. <strong>ST target:</strong> 224.50. <strong>LT target:</strong> 232.00. <strong>Thesis breaker:</strong> daily close back under 207. After +4.00% to 216.61 on the day, the path of least resistance is up while semis bifurcate around it.</p>
+      <div class="play-name">Hormuz second-leg continuation</div>
+      <p class="play-body"><strong>Entry:</strong> 138–140 hold above Monday's high. <strong>Stop:</strong> 134.80. <strong>ST target:</strong> 144. <strong>LT target:</strong> 150. <strong>Thesis breaker:</strong> daily close back under 134.50 or visible Hormuz de-escalation. +3.03% to 138.80 confirms the bid is alive; sized as hedge to equity book, not directional thesis.</p>
     </article>
 
     <article class="play bull">
       <div class="play-head">
-        <div class="play-sym">MU</div>
-        <div class="play-dir">Long · Trend</div>
-      </div>
-      <div class="play-name">Memory / AI-infra leadership</div>
-      <p class="play-body"><strong>Entry:</strong> 520–525 support hold. <strong>Stop:</strong> 509. <strong>ST target:</strong> 535. <strong>LT target:</strong> 550. <strong>Breaker:</strong> daily close below 509. +5.60% to 524.56 confirms HBM/memory bid; uses NVDA as the read-through.</p>
-    </article>
-
-    <article class="play bull">
-      <div class="play-head">
-        <div class="play-sym">PANW</div>
+        <div class="play-sym">DIA</div>
         <div class="play-dir">Long · Relative Strength</div>
       </div>
-      <div class="play-name">Cybersecurity bid</div>
-      <p class="play-body"><strong>Entry:</strong> 181–183 hold. <strong>Stop:</strong> 176.40. <strong>ST target:</strong> 188.50. <strong>LT target:</strong> 195. <strong>Breaker:</strong> software ETF rollover or PANW close &lt; 176. CRWD +1.45% backs the cohort; ZS lagging at −1.03% is the cohort risk to watch.</p>
+      <div class="play-name">Defensive Dow vs tech-heavy fade</div>
+      <p class="play-body"><strong>Entry:</strong> 491.50–493 hold. <strong>Stop:</strong> 488.20. <strong>ST target:</strong> 497. <strong>LT target:</strong> 502. <strong>Breaker:</strong> close under 488 or QQQ stabilizes and pulls flows back. DIA +0.17% while QQQ −0.73% is the cleanest dispersion read at the open.</p>
+    </article>
+
+    <article class="play bear">
+      <div class="play-head">
+        <div class="play-sym">GLD</div>
+        <div class="play-dir">Short · Trend Break</div>
+      </div>
+      <div class="play-name">Gold safety-bid unwind</div>
+      <p class="play-body"><strong>Entry:</strong> rejection of 425; ideal entry 422–423. <strong>Stop:</strong> 428.50. <strong>ST target:</strong> 412. <strong>LT target:</strong> 405. <strong>Breaker:</strong> reclaim &gt; 428 on closing basis. −2.02% on the same morning oil rips +3% is an unusual hedge unwind worth fading until proven wrong.</p>
     </article>
 
     <article class="play bull">
@@ -312,16 +345,16 @@
         <div class="play-dir">Long · Pre-Earnings</div>
       </div>
       <div class="play-name">Megacap setup into Wednesday AH</div>
-      <p class="play-body"><strong>Entry:</strong> 348–351 hold. <strong>Stop:</strong> 341.80. <strong>ST target:</strong> 357.50. <strong>LT target:</strong> 365. <strong>Breaker:</strong> failed close &lt; 342 or weak cloud/AI read-through from peers. Reports Wed AH alongside MSFT/META/AMZN/QCOM<sup>[2]</sup>.</p>
+      <p class="play-body"><strong>Entry:</strong> base-build only — accept fills on stable tape day-one, not chase. <strong>Stop:</strong> set 4% below entry. <strong>ST target:</strong> +5%. <strong>LT target:</strong> +9%. <strong>Breaker:</strong> any pre-print hint of soft cloud/AI guidance from peers. GOOGL reports alongside MSFT/META/AMZN/QCOM Wed AH<sup>[4]</sup>.</p>
     </article>
 
-    <article class="play bull">
+    <article class="play bear">
       <div class="play-head">
-        <div class="play-sym">USO</div>
-        <div class="play-dir">Long · Tail Hedge</div>
+        <div class="play-sym">SPY</div>
+        <div class="play-dir">Short · Tactical Fade</div>
       </div>
-      <div class="play-name">Oil / Strait-of-Hormuz hedge</div>
-      <p class="play-body"><strong>Entry:</strong> 134–135. <strong>Stop:</strong> 131.80. <strong>ST target:</strong> 138. <strong>LT target:</strong> 142. <strong>Breaker:</strong> Hormuz risk fades and oil reverses &lt; 132. Sized as a hedge against the equity book, not an outright theme.</p>
+      <div class="play-name">Index fade until dispersion resolves</div>
+      <p class="play-body"><strong>Entry:</strong> 712–713 fade. <strong>Stop:</strong> 716.50. <strong>ST target:</strong> 706. <strong>LT target:</strong> 700. <strong>Breaker:</strong> close back over 715 reclaiming Monday's high. With single-name dispersion this wide and event-week vol bid, SPY is the cleaner short than picking a single beta proxy.</p>
     </article>
 
   </div>
@@ -338,34 +371,34 @@
   </div>
   <div class="sv-grid">
     <div class="sv-item bear">
-      <div class="sv-label">ARM</div>
+      <div class="sv-label">SPOT</div>
       <div class="sv-vibe">Wait</div>
-      <div class="sv-note">−8.06% to 215.88 · let sellers exhaust before any bounce trade</div>
+      <div class="sv-note">−13.91% pre-bell · let the print reaction settle a full session before any setup</div>
     </div>
     <div class="sv-item bear">
-      <div class="sv-label">MRVL</div>
+      <div class="sv-label">RMBS</div>
+      <div class="sv-vibe">Avoid</div>
+      <div class="sv-note">−21.14% · single-name break, no knife-catch</div>
+    </div>
+    <div class="sv-item bear">
+      <div class="sv-label">ARE</div>
       <div class="sv-vibe">Wait</div>
-      <div class="sv-note">−3.71% · networking-AI under pressure into peer prints</div>
+      <div class="sv-note">−12.23% · REIT pressure; sector-wide check before any bounce trade</div>
     </div>
-    <div class="sv-item bear">
-      <div class="sv-label">LRCX</div>
-      <div class="sv-vibe">Wait</div>
-      <div class="sv-note">−3.07% · WFE pullback; need stabilization day</div>
-    </div>
-    <div class="sv-item bear">
-      <div class="sv-label">AMD</div>
-      <div class="sv-vibe">Stabilize</div>
-      <div class="sv-note">−3.83% to 334.49 · only re-engage after a base, not a knife-catch</div>
-    </div>
-    <div class="sv-item bear">
-      <div class="sv-label">AAPL</div>
-      <div class="sv-vibe">Avoid Long</div>
-      <div class="sv-note">−1.27% pre-print; needs to reclaim trend before any setup</div>
+    <div class="sv-item bull">
+      <div class="sv-label">KFRC</div>
+      <div class="sv-vibe">Watch</div>
+      <div class="sv-note">+36.27% gainer · way too extended to chase, monitor for base</div>
     </div>
     <div class="sv-item bull">
       <div class="sv-label">QCOM</div>
       <div class="sv-vibe">Watch</div>
-      <div class="sv-note">+0.95% on OpenAI/MediaTek reports; reports Wed AH · skip outright bet, watch for post-print setup</div>
+      <div class="sv-note">Reports Wed AH · skip outright bet, watch for post-print setup</div>
+    </div>
+    <div class="sv-item bull">
+      <div class="sv-label">SANM</div>
+      <div class="sv-vibe">Watch</div>
+      <div class="sv-note">+16.23% · EMS/earnings reaction; monitor follow-through before commit</div>
     </div>
   </div>
 </section>
@@ -377,16 +410,16 @@
       <span class="kicker">05</span>
       <h2>Public <em>Catalyst Map</em></h2>
     </div>
-    <div class="rhs">Apr 27 — May 1</div>
+    <div class="rhs">Apr 28 — May 1</div>
   </div>
   <div class="gameplan">
     <ol>
-      <li><strong>Mon Apr 27</strong> — VZ &amp; DPZ reported BMO; CDNS / AMKR / RMBS / SANM / LC after-close<sup>[2][5]</sup>.</li>
-      <li><strong>Tue Apr 28</strong> — KMB, GM, UPS, V, KO, TMUS, GLW, BKNG, SPGI, STX, SBUX, NXPI, HOOD<sup>[2][5]</sup>.</li>
-      <li><strong>Wed Apr 29</strong> — MSFT, META, GOOGL, AMZN, QCOM, KLAC, SOFI · <em>five Mag 7 prints + FOMC week peak</em><sup>[2][5][7]</sup>.</li>
-      <li><strong>Thu Apr 30 →</strong> AAPL marquee print later in the week<sup>[2][5]</sup>.</li>
-      <li><strong>Tail risk</strong> — Strait of Hormuz / Iran proposal status; WTI bid persists<sup>[1][6]</sup>.</li>
-      <li><strong>Macro</strong> — FOMC decision frames duration; TLT is the read-through<sup>[7]</sup>.</li>
+      <li><strong>Tue Apr 28 · 09:00 ET</strong> — S&amp;P/Case-Shiller Home Price Index (Feb) &amp; FHFA House Price Index (Feb)<sup>[3]</sup>.</li>
+      <li><strong>Tue Apr 28 · 10:00 ET</strong> — Consumer Confidence (Apr) &amp; Richmond Fed Manufacturing Index (Apr)<sup>[3]</sup>.</li>
+      <li><strong>Tue Apr 28 · earnings</strong> — KO, GM, UPS, SPOT, SBUX, BKNG, V, TMUS, NXPI, QCOM (selected names AH)<sup>[4]</sup>.</li>
+      <li><strong>Wed Apr 29</strong> — <em>MSFT, META, GOOGL, AMZN AH</em> · five-Mag-7-print apex into FOMC week.</li>
+      <li><strong>Tail risk</strong> — Strait of Hormuz / Iran path unresolved; USO +3.03% confirms the bid<sup>[1][2]</sup>.</li>
+      <li><strong>Macro</strong> — FOMC frames duration; TLT and credit (HYG) are the read-throughs.</li>
     </ol>
   </div>
 </section>
@@ -400,10 +433,10 @@
     <div class="lilith-body">
       <div class="callout-label">Desk note</div>
       <blockquote>
-        Tape held firm despite oil bid and AI bifurcation. NVDA and MU did the leadership; ARM, MRVL, LRCX paid for it. The week is bigger than the day — five Magnificent 7 prints and a Fed meeting decide whether the April run extends or rolls. Carry oil as a hedge, not a thesis.
+        Tuesday opens with a soft index, an oil bid, and gold getting sold — that's a positioning tape, not a thesis tape. The work today is being sized for Wednesday: do not pre-load Mag 7 into a print, do not fade the single-name dispersion that is already telegraphed. Carry oil as the hedge it has earned. Let SPOT and RMBS prove a base. Wednesday after-hours decides the regime — Tuesday's job is just to arrive intact.
       </blockquote>
 
-      <div class="lilith-signoff">— Evening Playbook · Session #019 · 4:30 PM PT · Apr 27, 2026</div>
+      <div class="lilith-signoff">— Morning Alpha · Session #020 · 6:45 AM PT · Apr 28, 2026</div>
     </div>
   </div>
   <!-- Hidden music element required by app.js controller; no UI surfaced. -->
@@ -420,23 +453,23 @@
     <div class="rhs">[N] markers in narrative</div>
   </div>
   <div class="sources">
-    <div class="sources-head">◆ Primary sources — Apr 27, 2026</div>
+    <div class="sources-head">◆ Primary sources — Apr 28, 2026</div>
+    <!-- PT_SOURCES_START -->
     <ol>
-      <li><a href="https://finance.yahoo.com/markets/stocks/live/stock-market-today-monday-april-27-232226050.html">Yahoo Finance — Stock Market Today, Monday Apr 27 (live)</a><span class="date">· Apr 27 2026</span></li>
-      <li><a href="https://www.cnbc.com/2026/04/24/stock-market-next-week-outlook-for-april-27-may-1-2026.html">CNBC — Week-ahead outlook Apr 27 – May 1</a><span class="date">· Apr 24 2026</span></li>
-      <li><a href="https://www.bloomberg.com/news/articles/2026-04-27/us-stock-futures-today-organon-qualcomm-veradermics-verizon">Bloomberg — US Stock Futures Today (premarket)</a><span class="date">· Apr 27 2026</span></li>
-      <li><a href="https://ts2.tech/en/stock-market-today-27-04-2026/">TechStock² — Live market notes Apr 27</a><span class="date">· Apr 27 2026</span></li>
-      <li><a href="https://www.tipranks.com/news/earnings-this-week-april-27-may-1-2026">TipRanks — Earnings This Week Apr 27 – May 1</a><span class="date">· Apr 25 2026</span></li>
-      <li><a href="https://www.thestreet.com/latest-news/stock-market-today-apr-27-2026-updates">TheStreet — Stock Market Today Apr 27 updates</a><span class="date">· Apr 27 2026</span></li>
-      <li><a href="https://www.youtube.com/watch?v=DB5Mz9p8PxA">Bloomberg Open Interest — Make-or-break week (video)</a><span class="date">· Apr 27 2026</span></li>
-      <li><a href="https://www.perplexity.ai/finance/earnings?fromDate=2026-04-27&amp;toDate=2026-05-01">Perplexity Finance — Earnings calendar Apr 27 – May 1</a><span class="date">· Apr 27 2026</span></li>
+      <li><a href="https://finance.yahoo.com/markets/stocks/live/">Yahoo Finance — Live US markets stream</a><span class="date">· Apr 28 2026</span></li>
+      <li><a href="https://www.nyse.com/markets/hours-calendars">NYSE — Markets Hours &amp; Calendars (open confirmed)</a><span class="date">· Apr 28 2026</span></li>
+      <li><a href="https://www.investing.com/economic-calendar/">Investing.com — US Economic Calendar Apr 28</a><span class="date">· Apr 28 2026</span></li>
+      <li><a href="https://www.perplexity.ai/finance/earnings?fromDate=2026-04-28&amp;toDate=2026-05-01">Perplexity Finance — Earnings calendar Apr 28 – May 1</a><span class="date">· Apr 28 2026</span></li>
+      <li><a href="https://www.nasdaqtrader.com/trader.aspx?id=calendar">Nasdaq Trader — 2026 Holiday Calendar (no Apr 28 closure)</a><span class="date">· Apr 28 2026</span></li>
     </ol>
+    <!-- PT_SOURCES_END -->
     <div style="margin-top:18px;padding:14px 16px;border:1px solid var(--line);background:var(--bg-elev);font-family:var(--sans);font-size:var(--text-sm);color:var(--ink-mute);line-height:1.55;">
       <span style="font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:6px;">◆ Privacy note</span>
       Private calendar and inbox checks are used only for scheduling hygiene and are excluded from this public brief. No personal calendar entries, broker emails, holdings, or account data are reflected in this dispatch.
     </div>
   </div>
 </section>
+<!-- PT_RUN_END -->
 
 <!-- FOOTER -->
 <footer class="footer">
@@ -464,7 +497,7 @@
     </div>
   </div>
   <div class="footer-bar">
-    <span>◆ Session #019 · Evening Playbook · Apr 27, 2026 · 4:30 PM PT</span>
+    <span><!-- PT_FOOTERBAR_START -->◆ Session #020 · Morning Alpha · Apr 28, 2026 · 6:45 AM PT<!-- PT_FOOTERBAR_END --></span>
     <span>© 2026 Perplexing Trades</span>
   </div>
 </footer>
