@@ -3,7 +3,7 @@
 
 // ─────── BOOT SCREEN ───────
 const BOOT_LINES = [
-  { t: 100, text: "PERPLEXING TRADES v2.4 — Boot Sequence" },
+  { t: 100, text: "PERPLEXING TRADES v2.5 — Boot Sequence" },
   { t: 280, text: "» Initializing terminal..", cls: "dim" },
   { t: 420, text: "» Loading Bloomberg feed...                  [ OK ]", cls: "done-l" },
   { t: 560, text: "» Connecting finance_quotes API...           [ OK ]", cls: "done-l" },
