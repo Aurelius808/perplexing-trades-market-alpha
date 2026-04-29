@@ -96,7 +96,15 @@
   </div>
 </div>
 
-<!-- VOICE BRIEFING — top-of-page editorial command deck -->
+<!-- VOICE BRIEFING — top-of-page editorial command deck
+     Voice hero contract:
+       - PT_VOICELABEL_*    : meta line shown above the title (session + recording date).
+       - PT_VOICETITLE_*    : module headline.
+       - PT_VOICECAPTION_*  : one-line caption / framing under the title.
+       - PT_VOICESRC_*      : MP3 path used by both <audio> src and the Direct MP3 fallback.
+       - PT_VOICESTATUS_*   : default status string before play.
+     Scheduled agents that publish a fresh recording must update all five together so
+     the audio asset, label, and copy stay in lockstep. -->
 <section class="voice-briefing" data-reveal>
   <div class="vb-card" role="group" aria-label="Lilith voice briefing">
     <figure class="vb-portrait">
@@ -108,17 +116,17 @@
       <div class="vb-eyebrow">
         <span class="vb-dot" aria-hidden="true"></span>
         <!-- PT_VOICELABEL_START -->
-        <span>Prior Voice Briefing</span>
+        <span>Voice Briefing</span>
         <span class="vb-sep">·</span>
-        <span>Session #019 · Apr 27 2026 · 4:30 PM PT</span>
+        <span>Session #022 · Apr 29 Setup Brief</span>
         <span class="vb-sep">·</span>
-        <span>No new audio for Setup Brief #022</span>
+        <span>Super Wednesday · FOMC + Mag 4</span>
         <!-- PT_VOICELABEL_END -->
       </div>
 
-      <h2 class="vb-title">Setup brief into <em>Super Wednesday</em> — FOMC + Mag 4.</h2>
+      <h2 class="vb-title"><!-- PT_VOICETITLE_START -->Setup brief into <em>Super Wednesday</em> — FOMC + Mag 4.<!-- PT_VOICETITLE_END --></h2>
 
-      <p class="vb-caption">The most recent recorded read from Lilith covers the Apr 27 close. The Apr 29 Setup Brief is below in text — a fresh briefing will follow when the audio is cut.</p>
+      <p class="vb-caption"><!-- PT_VOICECAPTION_START -->Lilith from the desk on the Apr 29 setup: Tuesday's defensive close, the Fed at 14:00 ET, and the Mag 4 print stack after the bell. Public-only — no inbox, calendar, broker, or portfolio data.<!-- PT_VOICECAPTION_END --></p>
 
       <div class="vb-player">
         <button id="vb-play" class="vb-play-btn" type="button" aria-label="Play or pause voice briefing" title="Play / Pause">
@@ -135,19 +143,18 @@
             <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
           </div>
           <input id="vb-scrub" class="vb-scrub" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek voice briefing" />
-        </div>
-
-        <div class="vb-time" aria-live="off">
-          <span id="vb-cur">0:00</span><span class="vb-time-sep">/</span><span id="vb-dur">--:--</span>
+          <div class="vb-time" aria-live="off">
+            <span id="vb-cur">0:00</span><span class="vb-time-sep">/</span><span id="vb-dur">--:--</span>
+          </div>
         </div>
       </div>
 
       <div class="vb-aux">
-        <span id="vb-status" class="vb-status">Tap play to hear the prior voice briefing (Apr 27 close).</span>
-        <a class="vb-fallback" href="assets/lilith-summary.mp3">Direct MP3</a>
+        <span id="vb-status" class="vb-status"><!-- PT_VOICESTATUS_START -->Tap play — Lilith on the Apr 29 setup into the Fed and Mag 4 prints.<!-- PT_VOICESTATUS_END --></span>
+        <a class="vb-fallback" href="<!-- PT_VOICESRC_START -->assets/lilith-apr29-setup-brief.mp3<!-- PT_VOICESRC_END -->">Direct MP3</a>
       </div>
 
-      <audio id="lilith-audio" src="assets/lilith-summary.mp3" preload="auto"></audio>
+      <audio id="lilith-audio" src="assets/lilith-apr29-setup-brief.mp3" preload="auto"></audio>
     </div>
   </div>
 </section>

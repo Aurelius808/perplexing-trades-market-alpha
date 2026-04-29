@@ -17,6 +17,10 @@ must remain untouched without an explicit code review.
 | `PT_SESSBADGE_START` / `PT_SESSBADGE_END` | session chip in the topbar |
 | `PT_TICKER_START` / `PT_TICKER_END` | ticker tape items |
 | `PT_VOICELABEL_START` / `PT_VOICELABEL_END` | voice-briefing meta line |
+| `PT_VOICETITLE_START` / `PT_VOICETITLE_END` | voice-briefing module headline |
+| `PT_VOICECAPTION_START` / `PT_VOICECAPTION_END` | one-line caption / framing under the voice title |
+| `PT_VOICESRC_START` / `PT_VOICESRC_END` | MP3 path used by the Direct MP3 fallback link |
+| `PT_VOICESTATUS_START` / `PT_VOICESTATUS_END` | default status string before first play |
 | `PT_RUN_START` / `PT_RUN_END` | hero + numbered sections (Key Numbers, Regime Card, Plays, Watch/Avoid, Catalyst Map, Desk Note, Sources) |
 | `PT_SOURCES_START` / `PT_SOURCES_END` | the citations `<ol>` |
 | `PT_FOOTERBAR_START` / `PT_FOOTERBAR_END` | session line in the footer bar |
@@ -29,15 +33,33 @@ must remain untouched without an explicit code review.
 
 ## Voice briefing rule
 
-The voice-briefing module is part of the design shell, not a per-run zone. It
-points at `assets/lilith-summary.mp3`, which is a recorded asset, not regenerated
-each run. If the asset has not been refreshed for the current session:
+The voice-briefing module shell (markup, CSS classes, `app.js` controller) is
+part of the design shell. The five `PT_VOICE*` markers above are the only
+fields a run is allowed to change. Treat them as one atomic group — when a
+fresh recording exists, all five must be updated together so the asset, label,
+and copy stay in lockstep.
 
-- Update only the `PT_VOICELABEL_START` / `PT_VOICELABEL_END` line to label it
-  "Prior Voice Briefing" with the date of the recording.
-- Do **not** imply a new audio recording exists.
-- Leave the player markup untouched so the existing controller in `app.js` keeps
-  working.
+When a fresh recording IS published for the current session:
+
+- Drop a versioned MP3 into `assets/` (e.g. `lilith-apr29-setup-brief.mp3`) so
+  cached copies of the previous file don't shadow the new one.
+- Update both the `<audio id="lilith-audio">` `src` attribute (outside markers,
+  fixed string) **and** `PT_VOICESRC_*` to point at the new file. Keep the two
+  in sync. Verify with `grep` that no stale MP3 path remains as the live source.
+- `PT_VOICELABEL_*` should read as the current session label (e.g.
+  "Voice Briefing · Session #022 · Apr 29 Setup Brief · …"), not "Prior".
+- `PT_VOICETITLE_*` and `PT_VOICECAPTION_*` should reflect the substance of the
+  recorded read for this session.
+- `PT_VOICESTATUS_*` is the pre-play one-liner; keep it specific to the session.
+
+When a fresh recording does NOT exist for the current session:
+
+- Leave `PT_VOICESRC_*` and the `<audio>` `src` pointing at the most recent
+  recorded asset.
+- Update only `PT_VOICELABEL_*` to "Prior Voice Briefing · Session #N · DATE",
+  and adjust `PT_VOICETITLE_*` / `PT_VOICECAPTION_*` / `PT_VOICESTATUS_*` so
+  they do not imply a new recording exists.
+- Never change the player markup or the controller in `app.js`.
 
 ## Per-run checklist for scheduled agents
 
