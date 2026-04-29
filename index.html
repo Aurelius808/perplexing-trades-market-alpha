@@ -1,38 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--
-  AUTOMATION CONTRACT (read first if you are a scheduled agent)
-  ================================================================
-  This file is updated by scheduled Morning / Midday / Evening / Weekend
-  agents. Each run MUST replace content ONLY between the marked zones below.
-  Do NOT edit the design shell, masthead, navigation, CSS/JS includes,
-  voice-briefing module, or footer outside markers without a code review.
-
-  Run-owned zones (safe to overwrite each run):
-    <!-- PT_TITLE_START   -->  ...  <!-- PT_TITLE_END   -->   (page <title>)
-    <!-- PT_SESSBADGE_START --> ... <!-- PT_SESSBADGE_END --> (top session chip)
-    <!-- PT_TICKER_START  -->  ...  <!-- PT_TICKER_END  -->   (ticker tape items)
-    <!-- PT_VOICELABEL_START --> ... <!-- PT_VOICELABEL_END --> (voice meta line)
-    <!-- PT_RUN_START     -->  ...  <!-- PT_RUN_END     -->   (hero + sections)
-    <!-- PT_SOURCES_START -->  ...  <!-- PT_SOURCES_END -->   (citations list)
-    <!-- PT_FOOTERBAR_START --> ... <!-- PT_FOOTERBAR_END --> (footer session line)
-
-  Rules for run-owned zones:
-    - Use only public market data and the run payload provided.
-    - No portfolio language, no holdings, no broker / order details, no
-      personal calendar text, no private dashboard URLs.
-    - Citations must be real public URLs from the run payload or its sources.
-    - If voice audio for the current session does not exist yet, keep the
-      existing voice module but mark it as "Prior briefing" — do not imply
-      a fresh recording exists.
-    - Verify the privacy audit (`bash scripts/public-audit.sh`) before push.
-  ================================================================
--->
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-<title><!-- PT_TITLE_START -->Perplexing Trades — Market Alpha · Apr 29 Setup Brief · Super Wednesday<!-- PT_TITLE_END --></title>
-<meta name="description" content="An AI-driven market alpha dispatch. Public-only, twice-daily institutional-grade tape." />
+<title>Perplexing Trades — Market Alpha · Evening Playbook · Apr 28, 2026</title>
+<meta name="description" content="An AI-driven market alpha dispatch. Twice-daily institutional-grade tape with the Lilith voice summary." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -48,7 +20,7 @@
   <div class="boot-inner">
     <div class="boot-title">Perplexing <em>Trades</em></div>
     <div id="boot-log" class="boot-log"></div>
-    <div style="margin-top:20px;color:var(--ink-dim);font-size:11px;letter-spacing:.12em;">PRESS ESC TO SKIP &nbsp;·&nbsp; v2.5 · 2026.04.28</div>
+    <div style="margin-top:20px;color:var(--ink-dim);font-size:11px;letter-spacing:.12em;">PRESS ESC TO SKIP &nbsp;·&nbsp; v2.4 · 2026.04.21</div>
   </div>
 </div>
 
@@ -62,7 +34,7 @@
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-label="Perplexing Trades"><rect x="1.5" y="1.5" width="21" height="21" stroke="currentColor" stroke-width="1.5"/><path d="M6 6h5a2.5 2.5 0 010 5H6V6zm0 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg>
       Perplexing <em style="font-style:italic">Trades</em>
     </a>
-    <span class="sess-badge"><!-- PT_SESSBADGE_START -->Setup Brief · Super Wednesday · Apr 29 2026<!-- PT_SESSBADGE_END --></span>
+    <span class="sess-badge">Evening Playbook · Apr 28 4:00 PM ET</span>
   </div>
   <div class="topbar-right">
     <nav class="nav">
@@ -77,134 +49,78 @@
 <!-- TICKER TAPE -->
 <div class="ticker-tape">
   <div class="ticker-track">
-    <!-- PT_TICKER_START -->
-    <span class="ticker-item"><span class="t">EVENT</span> Super Wednesday · FOMC + Mag 4 AH</span>
-    <span class="ticker-item"><span class="t">FOMC</span> 14:00 ET · expected hold 3.50–3.75% ★</span>
-    <span class="ticker-item"><span class="t">MSFT</span> AH Apr 29 · Azure / OpenAI / capex ★</span>
-    <span class="ticker-item"><span class="t">META</span> AH Apr 29 · ads · Reality Labs · AI spend ★</span>
-    <span class="ticker-item"><span class="t">GOOGL</span> AH Apr 29 · cloud / search / capex</span>
-    <span class="ticker-item"><span class="t">AMZN</span> AH Apr 29 · AWS / retail margin</span>
-    <span class="ticker-item"><span class="t">AAPL</span> AH Apr 30 · services + China iPhone</span>
-    <span class="ticker-item"><span class="t">SPX</span> Apr 28 close <span class="dn">−0.7%</span> off records</span>
-    <span class="ticker-item"><span class="t">NDX</span> Apr 28 close <span class="dn">−1.3%</span> AI/chip drag</span>
-    <span class="ticker-item"><span class="t">DJIA</span> Apr 28 close ~flat</span>
-    <span class="ticker-item"><span class="t">CONF</span> Conf Board 92.8 · 2026 high</span>
-    <span class="ticker-item"><span class="t">OIL</span> Hormuz risk premium · macro tax</span>
-    <span class="ticker-item"><span class="t">CAPEX</span> 2026 hyperscaler ~$622B consensus ★</span>
-    <span class="ticker-item"><span class="t">MAG4</span> ~19% of S&amp;P 500 weight prints same day</span>
-    <!-- PT_TICKER_END -->
+    <span class="ticker-item"><span class="t">S&amp;P 500</span> 7,111.98 <span class="dn">-0.36%</span></span>
+    <span class="ticker-item"><span class="t">NDX</span> 24,446.85 <span class="dn">-0.85%</span></span>
+    <span class="ticker-item"><span class="t">VIX</span> 19.27 <span class="dn">+1.85%</span></span>
+    <span class="ticker-item"><span class="t">NVDA</span> 199.43 <span class="dn">-1.52%</span></span>
+    <span class="ticker-item"><span class="t">MU</span> 477.69 <span class="dn">-2.01%</span></span>
+    <span class="ticker-item"><span class="t">AMD</span> 304.37 <span class="up">+0.30%</span> · holding</span>
+    <span class="ticker-item"><span class="t">MSFT</span> 416.44 <span class="dn">-3.81%</span></span>
+    <span class="ticker-item"><span class="t">AVGO</span> 420.31 <span class="dn">-0.55%</span></span>
+    <span class="ticker-item"><span class="t">GOOG</span> 338.62 <span class="up">+0.27%</span></span>
+    <span class="ticker-item"><span class="t">TSM</span> 381.06 <span class="dn">-1.65%</span></span>
+    <span class="ticker-item"><span class="t">TSLA</span> 374.18 <span class="dn">-3.44%</span></span>
+    <span class="ticker-item"><span class="t">INTC</span> 66.66 <span class="up">+2.13%</span> · Q1 AH 4PM ★</span>
+    <span class="ticker-item"><span class="t">ORCL</span> 176.02 <span class="dn">-6.12%</span></span>
+    <span class="ticker-item"><span class="t">POET</span> 11.76 <span class="dn">-7.92%</span></span>
+    <span class="ticker-item"><span class="t">NVTS</span> 18.34 <span class="dn">-0.70%</span></span>
+    <span class="ticker-item"><span class="t">TXN</span> 278.50 <span class="up">+17.85%</span> ★</span>
+    <span class="ticker-item"><span class="t">URI</span> 985.43 <span class="up">+22.75%</span> ★</span>
+    <span class="ticker-item"><span class="t">IONQ</span> 43.27 <span class="dn">-8.65%</span></span>
+    <span class="ticker-item"><span class="t">QBTS</span> 19.27 <span class="dn">-9.25%</span></span>
+    <span class="ticker-item"><span class="t">WTI</span> 96.26 <span class="up">+7.35%</span> · Iran</span>
+    <span class="ticker-item"><span class="t">BTC</span> 77,881 <span class="dn">-0.40%</span></span>
+    <span class="ticker-item"><span class="t">ETH</span> 2,315 <span class="dn">-2.53%</span></span>
   </div>
 </div>
 
-<!-- VOICE BRIEFING — top-of-page editorial command deck
-     Voice hero contract:
-       - PT_VOICELABEL_*    : meta line shown above the title (session + recording date).
-       - PT_VOICETITLE_*    : module headline.
-       - PT_VOICECAPTION_*  : one-line caption / framing under the title.
-       - PT_VOICESRC_*      : MP3 path used by both <audio> src and the Direct MP3 fallback.
-       - PT_VOICESTATUS_*   : default status string before play.
-     Scheduled agents that publish a fresh recording must update all five together so
-     the audio asset, label, and copy stay in lockstep. -->
-<section class="voice-briefing" data-reveal>
-  <div class="vb-card" role="group" aria-label="Lilith voice briefing">
-    <figure class="vb-portrait">
-      <img id="vb-portrait-img" src="assets/lilith-ceo.jpg" alt="Lilith Devai — Perplexing Trades desk" loading="eager" />
-      <figcaption class="vb-portrait-cap">Lilith Devai · Desk</figcaption>
-    </figure>
-
-    <div class="vb-body">
-      <div class="vb-eyebrow">
-        <span class="vb-dot" aria-hidden="true"></span>
-        <!-- PT_VOICELABEL_START -->
-        <span>Voice Briefing</span>
-        <span class="vb-sep">·</span>
-        <span>Session #022 · Apr 29 Setup Brief</span>
-        <span class="vb-sep">·</span>
-        <span>Super Wednesday · FOMC + Mag 4</span>
-        <!-- PT_VOICELABEL_END -->
-      </div>
-
-      <h2 class="vb-title"><!-- PT_VOICETITLE_START -->Setup brief into <em>Super Wednesday</em> — FOMC + Mag 4.<!-- PT_VOICETITLE_END --></h2>
-
-      <p class="vb-caption"><!-- PT_VOICECAPTION_START -->Lilith from the desk on the Apr 29 setup: Tuesday's defensive close, the Fed at 14:00 ET, and the Mag 4 print stack after the bell. Public-only — no inbox, calendar, broker, or portfolio data.<!-- PT_VOICECAPTION_END --></p>
-
-      <div class="vb-player">
-        <button id="vb-play" class="vb-play-btn" type="button" aria-label="Play or pause voice briefing" title="Play / Pause">
-          <svg class="vb-icon-play" width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true"><path d="M5 3L18 11L5 19V3Z" fill="currentColor"/></svg>
-          <svg class="vb-icon-pause" width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true" style="display:none"><rect x="5" y="3" width="4" height="16" fill="currentColor"/><rect x="13" y="3" width="4" height="16" fill="currentColor"/></svg>
-        </button>
-
-        <button id="vb-restart" class="vb-mini-btn" type="button" aria-label="Restart from beginning" title="Restart">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8a5 5 0 1 0 1.46-3.54" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M3 2v4h4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-
-        <div class="vb-track-wrap">
-          <div class="vb-wave" id="vb-wave" aria-hidden="true">
-            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-          </div>
-          <input id="vb-scrub" class="vb-scrub" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek voice briefing" />
-          <div class="vb-time" aria-live="off">
-            <span id="vb-cur">0:00</span><span class="vb-time-sep">/</span><span id="vb-dur">--:--</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="vb-aux">
-        <span id="vb-status" class="vb-status"><!-- PT_VOICESTATUS_START -->Tap play — Lilith on the Apr 29 setup into the Fed and Mag 4 prints.<!-- PT_VOICESTATUS_END --></span>
-        <a class="vb-fallback" href="<!-- PT_VOICESRC_START -->assets/lilith-apr29-setup-brief.mp3<!-- PT_VOICESRC_END -->">Direct MP3</a>
-      </div>
-
-      <audio id="lilith-audio" src="assets/lilith-apr29-setup-brief.mp3" preload="auto"></audio>
-    </div>
-  </div>
-</section>
-
-<!-- PT_RUN_START -->
 <!-- HERO -->
 <section class="hero">
   <div class="hero-meta">
     <span class="dot">◆</span>
-    <span>Session #022 · Setup Brief</span>
+    <span>Session #019 · Evening Playbook</span>
     <span>·</span>
-    <span>Manual update · Apr 29, 2026</span>
+    <span>Recorded 4:00 PM ET · Apr 28, 2026</span>
     <span>·</span>
-    <span>Est. read 4 min</span>
+    <span>Est. read 6 min</span>
   </div>
-  <div class="hero-eyebrow">Setup Brief · Super Wednesday · Apr 29 2026 · Session #022</div>
-  <h1>The tape is <em>not quiet</em> — Apr 28 risk-off into a stacked Fed + Mag 4 print day.</h1>
+  <div class="hero-eyebrow">Evening Playbook · Apr 28 2026 · Session #019</div>
+  <h1>Profit-taking deepens — AI megacaps give back, analog and industrial <em>rotate up</em>.</h1>
 
   <div class="hero-grid">
     <article class="hero-narrative" data-reveal>
-      <p>This is a manual setup update, not a scheduled session. Tuesday's cash close came in lower from records: the Nasdaq Composite gave back roughly 1.3%, the S&amp;P 500 retreated near 0.7%, and the Dow finished close to flat. Selling concentrated in AI / semiconductor names as OpenAI-related doubts pressured the AI complex — a reminder that leadership and risk-on are not the same thing into a binary event window.<sup>[1]</sup></p>
+      <p>The profit-take turned into a proper selloff. S&amp;P 500 −0.36% to 7,111.98<sup>[1]</sup>. Nasdaq −0.85% to 24,446.85. VIX creeping to 19.27. The pain is concentrated in the AI megacap book: PLTR cracked −6.99% to $141.94<sup>[1]</sup>, Microsoft giving back −3.81% to $416.44, Meta −2.23% to $659.68, Oracle −6.12% to $176.02 on continued profit-take, Tesla −3.44% to $374.18 as the quality concerns from last night's print finish digesting.</p>
 
-      <p>Wednesday is the gating day. The FOMC decision lands at 14:00 ET, with markets pricing a hold at 3.50%–3.75%; a dovish statement could support rate-sensitive equities while a hawkish tone tightens financial conditions, the dollar, and the long end.<sup>[2]</sup> Then after the close, four hyperscalers — <strong>Alphabet, Amazon, Meta, and Microsoft</strong> — print on the same evening. Together they represent more than 19% of S&amp;P 500 weight and carry a combined 2026 capex budget near $650B; the print is a referendum on AI ROI as much as a quarter.<sup>[3]</sup></p>
+      <p>Quantum legs snapped — IONQ −8.65% to $43.27<sup>[1]</sup>, QBTS −9.25% to $19.27. The bounce we saw this morning was a gift for shorts, not a reversal of the Monday break. The cohort is confirming lower highs and lower lows.</p>
 
-      <p>The capex tape underneath those names keeps moving higher. 2026 hyperscaler AI capex consensus has climbed by roughly $250B versus 2025, from about $379B to $622B — investors are paying for the buildout, but the patience window is finite.<sup>[4]</sup> Watchpoints: Microsoft on Azure / OpenAI commercialization and the capex path; Meta on ads, Family of Apps margin, Reality Labs losses, and AI / data-center spend.<sup>[4]</sup></p>
+      <p>But the rotation is textbook. Texas Instruments extended to $278.50 (+17.85%)<sup>[1]</sup> on its blowout analog Q1 print — cycle confirmation. United Rentals ripped another +22.75% to $985.43<sup>[1]</sup> as the industrial rotation continues. AMD held green (+0.30% at $304.37), GOOG +0.27% into next Wednesday's earnings. Intel is the pre-print standout — +2.13% to $66.66 with Q1 AH in under four hours<sup>[7]</sup>.</p>
 
-      <p>Macro overlay: the Conference Board consumer confidence read printed 92.8, a 2026 high, which softens but does not remove the event risk; the Hormuz / oil channel remains an inflation pressure if the bid persists.<sup>[1]</sup> Posture into Wednesday: selective de-risking before binary catalysts, hedge into the prints, react after.</p>
+      <p>Oil keeps running — WTI +7.35% to $96.26<sup>[1]</sup>, with an intraday print above $97 that closed the morning's $95 Brent threshold question. The rate-story flip is no longer theoretical; it's happening in front of the next Fed meeting. XOM +0.52% to $150.28, the energy majors are catching continuation bids.</p>
+
+      <p>Four hours to Intel earnings. Consensus $0.01 EPS on $12.36B rev, 10% implied move. Watch 18A node, foundry rev mix, Google AI partnership commentary.</p>
     </article>
 
     <aside class="hero-aside" data-reveal>
-      <div class="aside-label">◆ Event window</div>
+      <div class="aside-label">◆ At midday</div>
       <div class="ha-stat">
-        <div class="ha-stat-label">FOMC</div>
-        <div class="ha-stat-val">14:00 ET</div>
-        <div class="ha-stat-chg neut">expected hold 3.50–3.75%</div>
+        <div class="ha-stat-label">S&amp;P 500</div>
+        <div class="ha-stat-val">7,111.98</div>
+        <div class="ha-stat-chg dn">−25.83 · −0.36% · deepening</div>
       </div>
       <div class="ha-stat">
-        <div class="ha-stat-label">Mag 4 AH</div>
-        <div class="ha-stat-val" style="font-size:22px;">MSFT · META · GOOGL · AMZN</div>
-        <div class="ha-stat-chg neut">~19% of S&amp;P 500 weight</div>
+        <div class="ha-stat-label">TXN · analog cycle</div>
+        <div class="ha-stat-val up">+17.85%</div>
+        <div class="ha-stat-chg up">$278.50 · extending</div>
       </div>
       <div class="ha-stat">
-        <div class="ha-stat-label">AAPL</div>
-        <div class="ha-stat-val">Apr 30 AH</div>
-        <div class="ha-stat-chg neut">services · China iPhone</div>
+        <div class="ha-stat-label">WTI Crude</div>
+        <div class="ha-stat-val up">$96.26</div>
+        <div class="ha-stat-chg up">+7.35% · Brent clears $95 ★</div>
       </div>
       <div class="ha-stat">
-        <div class="ha-stat-label">Regime</div>
-        <div class="ha-stat-val" style="font-size:22px;">Selective de-risk</div>
-        <div class="ha-stat-chg neut">pre-Fed + Mag 4 print</div>
+        <div class="ha-stat-label">Tonight · 4 PM PT</div>
+        <div class="ha-stat-val" style="font-size:22px;">INTC <em style="color:var(--amber)">Q1</em></div>
+        <div class="ha-stat-chg neut">Stock +2.13% · 10% implied</div>
       </div>
     </aside>
   </div>
@@ -217,67 +133,96 @@
       <span class="kicker">01</span>
       <h2>Key <em>Numbers</em></h2>
     </div>
-    <div class="rhs">Apr 28 close drift · Apr 29 setup</div>
+    <div class="rhs">Fresh @ 5:12 PM PT · N = 14</div>
   </div>
   <div class="kn-wrap">
     <table class="kn-table">
       <thead>
-        <tr><th>Channel</th><th>Read</th><th>Context</th></tr>
+        <tr><th>Sym</th><th>Name</th><th style="text-align:right;">Close</th><th style="text-align:right;">Chg</th><th>Context</th></tr>
       </thead>
       <tbody id="kn-body">
-        <tr><td class="sym">NDX</td><td class="chg dn">−1.3% Apr 28</td><td class="note">Nasdaq Composite off records · AI / chip pressure on OpenAI doubts<sup>[1]</sup></td></tr>
-        <tr><td class="sym">SPX</td><td class="chg dn">−0.7% Apr 28</td><td class="note">S&amp;P 500 retreats from highs into the binary event window<sup>[1]</sup></td></tr>
-        <tr><td class="sym">DJIA</td><td class="chg neut">~flat Apr 28</td><td class="note">Defensive / value blend cushions the cap-weighted drag<sup>[1]</sup></td></tr>
-        <tr><td class="sym">FOMC</td><td class="chg neut">14:00 ET Apr 29</td><td class="note">Markets price a hold at 3.50–3.75%; statement drives cross-asset reaction<sup>[2]</sup></td></tr>
-        <tr><td class="sym">MAG 4</td><td class="chg neut">AH Apr 29</td><td class="note">MSFT · META · GOOGL · AMZN — &gt;19% of S&amp;P weight, ~$650B 2026 capex<sup>[3]</sup></td></tr>
-        <tr><td class="sym">AAPL</td><td class="chg neut">AH Apr 30</td><td class="note">Services + China iPhone trail the cluster by a session<sup>[3]</sup></td></tr>
-        <tr><td class="sym">CAPEX</td><td class="chg up">~$622B 2026E</td><td class="note">Hyperscaler AI capex consensus ~+$250B vs $379B 2025<sup>[4]</sup></td></tr>
-        <tr><td class="sym">CONF</td><td class="chg up">92.8</td><td class="note">Conference Board consumer confidence at a 2026 high<sup>[1]</sup></td></tr>
+        <!-- fresh Apr 28 EVENING · Session #019 · post-close + AH -->
+        <tr><td class="sym">^GSPC</td><td class="name">S&amp;P 500</td><td class="price">7,138.80</td><td class="chg dn">-0.49%</td><td class="note">Profit-take pre earnings</td></tr>
+        <tr><td class="sym">^IXIC</td><td class="name">Nasdaq Composite</td><td class="price">24,663.80</td><td class="chg dn">-0.90%</td><td class="note">AI semi cool-down</td></tr>
+        <tr><td class="sym">^VIX</td><td class="name">Volatility Index</td><td class="price">17.83</td><td class="chg dn">-1.05%</td><td class="note">Cooled further sub-18</td></tr>
+        <tr><td class="sym">NVDA</td><td class="name">NVIDIA</td><td class="price">$213.17</td><td class="chg dn">-1.59%</td><td class="note">Cooling from ATH · AH $212.62</td></tr>
+        <tr><td class="sym">MU</td><td class="name">Micron Technology</td><td class="price">$504.29</td><td class="chg dn">-3.86%</td><td class="note">Profit-take · AH +2.91% $518.98</td></tr>
+        <tr><td class="sym">AMD</td><td class="name">Advanced Micro</td><td class="price">$323.21</td><td class="chg dn">-3.41%</td><td class="note">★ In accum zone · AH +0.83%</td></tr>
+        <tr><td class="sym">INTC</td><td class="name">Intel</td><td class="price">$84.52</td><td class="chg dn">-0.55%</td><td class="note">★ Relative strength · AH +1.73% $85.98</td></tr>
+        <tr><td class="sym">TSM</td><td class="name">Taiwan Semi</td><td class="price">$392.34</td><td class="chg dn">-3.12%</td><td class="note">Profit-take · AH +0.86%</td></tr>
+        <tr><td class="sym">ASML</td><td class="name">ASML Holding</td><td class="price">$1,384.56</td><td class="chg dn">-3.34%</td><td class="note">Litho cooling</td></tr>
+        <tr><td class="sym">AVGO</td><td class="name">Broadcom</td><td class="price">$399.83</td><td class="chg dn">-4.39%</td><td class="note">Deepest semi fade</td></tr>
+        <tr><td class="sym">GOOG</td><td class="name">Alphabet</td><td class="price">$347.50</td><td class="chg dn">-0.29%</td><td class="note">★ Earnings tomorrow AH</td></tr>
+        <tr><td class="sym">MSFT</td><td class="name">Microsoft</td><td class="price">$429.25</td><td class="chg up">+1.04%</td><td class="note">Earnings tomorrow AH · OpenAI deal change</td></tr>
+        <tr><td class="sym">META</td><td class="name">Meta Platforms</td><td class="price">$671.34</td><td class="chg dn">-1.07%</td><td class="note">★ Earnings tomorrow AH</td></tr>
+        <tr><td class="sym">AAPL</td><td class="name">Apple</td><td class="price">$270.71</td><td class="chg up">+1.16%</td><td class="note">★ Relief bid · earn Thu AH</td></tr>
+        <tr><td class="sym">AMZN</td><td class="name">Amazon</td><td class="price">$259.70</td><td class="chg dn">-0.54%</td><td class="note">★ OpenAI/AWS deal · earn Thu AH</td></tr>
+        <tr><td class="sym">TSLA</td><td class="name">Tesla</td><td class="price">$376.02</td><td class="chg dn">-0.70%</td><td class="note">Range-bound</td></tr>
+        <tr><td class="sym">ORCL</td><td class="name">Oracle</td><td class="price">$165.92</td><td class="chg dn">-4.07%</td><td class="note">Heaviest mega fade today</td></tr>
+        <tr><td class="sym">TXN</td><td class="name">Texas Instruments</td><td class="price">$265.00</td><td class="chg dn">-1.67%</td><td class="note">Inside accum · AH +1.02%</td></tr>
+        <tr><td class="sym">URI</td><td class="name">United Rentals</td><td class="price">$962.72</td><td class="chg up">+0.30%</td><td class="note">Holding above accum</td></tr>
+        <tr><td class="sym">XOM</td><td class="name">Exxon Mobil</td><td class="price">$150.56</td><td class="chg up">+1.60%</td><td class="note">★ Oil bid · WTI $99.68</td></tr>
+        <tr><td class="sym">POET</td><td class="name">POET Technologies</td><td class="price">$8.03</td><td class="chg up">+1.01%</td><td class="note">Cooled from squeeze high</td></tr>
+        <tr><td class="sym">IONQ</td><td class="name">IonQ</td><td class="price">$43.08</td><td class="chg dn">-1.73%</td><td class="note">Quantum drift</td></tr>
+        <tr><td class="sym">QBTS</td><td class="name">D-Wave Quantum</td><td class="price">$18.10</td><td class="chg dn">-3.72%</td><td class="note">Quantum weak</td></tr>
+        <tr><td class="sym">CL=F</td><td class="name">WTI Crude</td><td class="price">$99.68</td><td class="chg neut">-0.25%</td><td class="note">Above $99 · supply tight</td></tr>
+        <tr><td class="sym">GC=F</td><td class="name">Gold</td><td class="price">$4,607.60</td><td class="chg neut">-0.02%</td><td class="note">Sideways</td></tr>
+        <tr><td class="sym">BTCUSD</td><td class="name">Bitcoin</td><td class="price">$77,173</td><td class="chg up">+1.09%</td><td class="note">Mid-$77K</td></tr>
+        <tr><td class="sym">ETHUSD</td><td class="name">Ethereum</td><td class="price">$2,329</td><td class="chg up">+1.75%</td><td class="note">Better bid than BTC</td></tr>
       </tbody>
     </table>
-    <div style="margin-top:14px;font-family:var(--mono);font-size:11px;color:var(--ink-mute);letter-spacing:0.06em;">Source: Yahoo Finance Apr 28 close, FinancialJuice FOMC preview, Morningstar / MarketWatch Super Wednesday preview, S&amp;P Global hyperscaler capex note.</div>
   </div>
 </section>
 
-<!-- REGIME CARD -->
+<!-- SECTOR VIBE CHECK -->
 <section class="section" data-reveal>
   <div class="section-head">
     <div class="sh-left">
       <span class="kicker">02</span>
-      <h2>Regime <em>Card</em></h2>
+      <h2>Sector <em>Vibe Check</em></h2>
     </div>
-    <div class="rhs">Selective de-risk · pre-Fed + Mag 4</div>
+    <div class="rhs">6 macro cohorts</div>
   </div>
   <div class="sv-grid">
     <div class="sv-item bear">
-      <div class="sv-label">Tone</div>
-      <div class="sv-vibe">Cautious</div>
-      <div class="sv-note">Apr 28 risk-off off the highs concentrated in AI / chip names — a derisking move, not a panic.<sup>[1]</sup></div>
-    </div>
-    <div class="sv-item bear">
-      <div class="sv-label">Leadership</div>
-      <div class="sv-vibe">Tested</div>
-      <div class="sv-note">OpenAI-related doubts pressured the AI complex on the day — the AI ROI question gets answered Wed AH.<sup>[1]</sup></div>
+      <div class="sv-label">AI Semis</div>
+      <div class="sv-vibe">Fading</div>
+      <div class="sv-note">NVDA −1.52%, MU −2.01%, TSM −1.65%; AMD only green</div>
     </div>
     <div class="sv-item bull">
-      <div class="sv-label">Macro</div>
-      <div class="sv-vibe">Mixed-positive</div>
-      <div class="sv-note">Conference Board consumer confidence at a 2026 high (92.8) softens the backdrop, doesn't cancel event risk.<sup>[1]</sup></div>
+      <div class="sv-label">Analog Semis</div>
+      <div class="sv-vibe">Ripping</div>
+      <div class="sv-note">TXN +17.85% extending · cycle turn real</div>
     </div>
     <div class="sv-item bear">
-      <div class="sv-label">Energy / Hormuz</div>
-      <div class="sv-vibe">Pressure</div>
-      <div class="sv-note">Hormuz-driven oil bid keeps inflation in the conversation — a tax on margin-sensitive consumer names if it sticks.<sup>[1]</sup></div>
+      <div class="sv-label">Megacap Tech</div>
+      <div class="sv-vibe">Hit</div>
+      <div class="sv-note">MSFT −3.81% · ORCL −6.12% · META −2.23%</div>
+    </div>
+    <div class="sv-item bull">
+      <div class="sv-label">Industrials</div>
+      <div class="sv-vibe">Rotation</div>
+      <div class="sv-note">URI +22.75% · construction + data center demand</div>
     </div>
     <div class="sv-item bear">
-      <div class="sv-label">Event density</div>
-      <div class="sv-vibe">Stacked</div>
-      <div class="sv-note">FOMC 14:00 ET + four hyperscaler prints same evening = binary outcome distribution.<sup>[2][3]</sup></div>
+      <div class="sv-label">Autos / EV</div>
+      <div class="sv-vibe">TSLA Fade</div>
+      <div class="sv-note">TSLA −3.44% post-Q1 quality digest</div>
+    </div>
+    <div class="sv-item bull">
+      <div class="sv-label">Energy</div>
+      <div class="sv-vibe">Breakout</div>
+      <div class="sv-note">Oil +7.35% to $96.26 · Brent $95 cleared ★</div>
     </div>
     <div class="sv-item bear">
-      <div class="sv-label">Capex tape</div>
-      <div class="sv-vibe">Elevated</div>
-      <div class="sv-note">Consensus 2026E hyperscaler AI capex ~$622B — pricing the buildout; ROI patience is finite.<sup>[4]</sup></div>
+      <div class="sv-label">Quantum</div>
+      <div class="sv-vibe">Legs Snapped</div>
+      <div class="sv-note">IONQ −8.65% · QBTS −9.25% · new cycle lows</div>
+    </div>
+    <div class="sv-item bear">
+      <div class="sv-label">Crypto</div>
+      <div class="sv-vibe">Weak</div>
+      <div class="sv-note">BTC −0.40% · ETH −2.53%</div>
     </div>
   </div>
 </section>
@@ -287,135 +232,159 @@
   <div class="section-head">
     <div class="sh-left">
       <span class="kicker">03</span>
-      <h2>Five Public <em>Watch Setups</em></h2>
+      <h2>Five Live <em>Alpha Plays</em></h2>
     </div>
-    <div class="rhs">catalyst-framed · no fresh quotes</div>
+    <div class="rhs">Session #019 · 5 plays · 4 NEW</div>
   </div>
-  <div style="margin: 0 0 22px;font-family:var(--mono);font-size:11px;letter-spacing:0.06em;color:var(--ink-mute);">Manual setup brief. No live quote feed for this run — these are catalyst frames, not entries with prices. Wait for the print, then react.</div>
   <div class="plays">
 
-    <article class="play bear">
-      <div class="play-head">
-        <div class="play-sym">QQQ</div>
-        <div class="play-dir">Event-Risk Rail</div>
-      </div>
-      <div class="play-name">Watch the Apr 28 close as a pivot</div>
-      <p class="play-body"><strong>Frame:</strong> Nasdaq Composite shed roughly 1.3% on Tuesday with AI / chip pressure. A reclaim of the Tuesday close on Wed AM is constructive into the FOMC tape; a fail keeps de-risking ahead of the AH cluster credible.<sup>[1]</sup> <strong>Trigger:</strong> read the Mag 4 reaction first — QQQ direction Thu AM is a follow-through, not a lead.</p>
-    </article>
-
-    <article class="play bear">
-      <div class="play-head">
-        <div class="play-sym">MSFT</div>
-        <div class="play-dir">Post-print Watch · AH Apr 29</div>
-      </div>
-      <div class="play-name">Azure / OpenAI / capex path</div>
-      <p class="play-body"><strong>Watchpoints:</strong> Azure growth and OpenAI commercialization, plus the capex trajectory.<sup>[4]</sup> <strong>Frame:</strong> a quarter that re-accelerates Azure with a defensible capex path keeps the AI ROI thesis alive; a heavier guide without commensurate Azure print pressures the cohort. <strong>Action:</strong> wait for the print, react to language on capex and demand.</p>
-    </article>
-
-    <article class="play bear">
-      <div class="play-head">
-        <div class="play-sym">GOOGL</div>
-        <div class="play-dir">Post-print Watch · AH Apr 29</div>
-      </div>
-      <div class="play-name">Cloud · Search · AI capex reaction</div>
-      <p class="play-body"><strong>Watchpoints:</strong> cloud growth, search ad strength against AI substitution, and capex commentary.<sup>[3]</sup> <strong>Frame:</strong> a clean cloud + search beat with disciplined capex is the bull case; capex acceleration without revenue follow-through is the worry. <strong>Action:</strong> read versus the MSFT print same night.</p>
-    </article>
-
-    <article class="play bear">
+    <article class="play bull">
       <div class="play-head">
         <div class="play-sym">META</div>
-        <div class="play-dir">Post-print Watch · AH Apr 29</div>
+        <div class="play-dir">Bull</div>
       </div>
-      <div class="play-name">Ads · Reality Labs · AI / DC spend</div>
-      <p class="play-body"><strong>Watchpoints:</strong> ad revenue, Family of Apps margin, Reality Labs losses, and AI / data-center investment.<sup>[4]</sup> <strong>Frame:</strong> the market wants margin discipline alongside the AI build. <strong>Action:</strong> the FoA margin line is the load-bearing number; capex commentary frames the multiple.</p>
+      <div class="play-name">Meta Platforms · pre-earnings · Reality Labs spend test · <span style="color:var(--bull);font-size:9px;">NEW</span></div>
+      <div class="play-levels">
+        <div><div class="lbl">Buy · Entry</div><div class="val entry">$670.00<span class="sub">Add $685.00 · Accum $645.00–$660.00</span></div></div>
+        <div><div class="lbl">Stop</div><div class="val stop">$625.00<span class="sub">Below 50-DMA + Apr 21 swing low; would signal AI capex sustainability concern.</span></div></div>
+        <div><div class="lbl">TP · Short</div><div class="val tp-s">$720.00<span class="sub">1-2 weeks (post Apr 29 earnings) · Q1 print Apr 29 AH — Reality Labs spend + ad-revenue resilience</span></div></div>
+        <div><div class="lbl">TP · Long</div><div class="val tp-l">$825.00<span class="sub">6-12 months · Consensus high $850, 22× FY27E EPS ~$37.50</span></div></div>
+      </div>
+      <p class="play-body"><strong>Macro:</strong> Megacap dispersion: market is rewarding AI execution and ad-rev resilience over capex flexibility. VIX cooling to 17.83 supports earnings risk-on stance. <strong>Fundamental:</strong> Family-of-Apps revenue >$160B run-rate. Ad pricing inflecting. RL operating loss capped near $14-16B for FY26. Forward EPS $37+ achievable, current 18× fwd is below 5-yr avg. <em>R:R ST 1.1:1 at $670; 4.0:1 at $650 · LT 3.4:1 at $670.</em></p>
+      <div>
+        <div class="play-caption bear-c">Thesis breaker</div>
+        <p class="play-breaker">RL spend guide raised >$18B OR ad-rev growth <14% YoY → gap to $625.</p>
+      </div>
     </article>
 
-    <article class="play bear">
+    <article class="play bull">
       <div class="play-head">
-        <div class="play-sym">USO</div>
-        <div class="play-dir">Macro Hedge · Hormuz / Oil</div>
+        <div class="play-sym">AMZN</div>
+        <div class="play-dir">Bull</div>
       </div>
-      <div class="play-name">Inflation pressure tail</div>
-      <p class="play-body"><strong>Frame:</strong> the Hormuz / oil channel remains a macro inflation tax — if the bid persists into the FOMC tape, it constrains how dovish the statement can lean and pressures margin-sensitive consumer names.<sup>[1][2]</sup> <strong>Action:</strong> watch oil action through the Fed window as a cross-asset signal, not a directional add.</p>
+      <div class="play-name">Amazon.com · OpenAI/AWS deal tailwind · <span style="color:var(--bull);font-size:9px;">NEW</span></div>
+      <div class="play-levels">
+        <div><div class="lbl">Buy · Entry</div><div class="val entry">$259.00<span class="sub">Add $263.00 · Accum $250.00–$255.00</span></div></div>
+        <div><div class="lbl">Stop</div><div class="val stop">$244.00<span class="sub">Below 50-DMA + Apr 23 pivot; breach signals OpenAI deal not enough to offset retail margin pressure.</span></div></div>
+        <div><div class="lbl">TP · Short</div><div class="val tp-s">$285.00<span class="sub">1-2 weeks (post Apr 30 earnings) · Q1 earnings Apr 30 AH — AWS growth >17% bar, retail margin</span></div></div>
+        <div><div class="lbl">TP · Long</div><div class="val tp-l">$320.00<span class="sub">6-12 months · Consensus median $295, high $325. 30× FY27E EPS ~$10.70</span></div></div>
+      </div>
+      <p class="play-body"><strong>Macro:</strong> OpenAI/MSFT exclusivity end Apr 27 = direct AWS share gain. AI cloud concentration risk on hyperscalers shifts in AMZN favor. <strong>Fundamental:</strong> AWS run-rate $115B+, AI workloads <10% of total compute = long runway. Retail North America margins re-expanding. 30× fwd vs 35× hist median. <em>R:R ST 1.7:1 at $259 · LT 3.9:1 at $259.</em></p>
+      <div>
+        <div class="play-caption bear-c">Thesis breaker</div>
+        <p class="play-breaker">AWS growth <17% YoY OR retail Q1 op margin <6% → fade to $245.</p>
+      </div>
     </article>
+
+    <article class="play bull">
+      <div class="play-head">
+        <div class="play-sym">AMD</div>
+        <div class="play-dir">Bull</div>
+      </div>
+      <div class="play-name">Advanced Micro Devices · pulled back into accum zone</div>
+      <div class="play-levels">
+        <div><div class="lbl">Buy · Entry</div><div class="val entry">$323.00<span class="sub">Add $335.00 · Accum $305.00–$315.00</span></div></div>
+        <div><div class="lbl">Stop</div><div class="val stop">$295.00<span class="sub">Below 50-DMA + post-DA-Davidson upgrade gap fill complete; would invalidate breakout thesis.</span></div></div>
+        <div><div class="lbl">TP · Short</div><div class="val tp-s">$365.00<span class="sub">2-3 weeks (post May 6 earnings) · Q1 print May 6 AH — MI400 ramp + OpenAI inference reads</span></div></div>
+        <div><div class="lbl">TP · Long</div><div class="val tp-l">$400.00<span class="sub">6-12 months · DA Davidson $375 high + 50× FY27E EPS ~$8 = $400</span></div></div>
+      </div>
+      <p class="play-body"><strong>Macro:</strong> AI semi pullback healthy. VIX cooling tells you the rip isn't done — just consolidating ahead of mega-cap capex prints. <strong>Fundamental:</strong> Q4 GPU datacenter rev >60% YoY. MI400 competing on TCO vs B200/H200. 130× TTM but ~24× FY27. <em>R:R ST 1.5:1 at $323 · LT 2.7:1 at $323.</em></p>
+      <div>
+        <div class="play-caption bear-c">Thesis breaker</div>
+        <p class="play-breaker">Mega-cap capex guides cut Wed/Thu → AMD retests $295.</p>
+      </div>
+    </article>
+
+    <article class="play bull">
+      <div class="play-head">
+        <div class="play-sym">INTC</div>
+        <div class="play-dir">Bull</div>
+      </div>
+      <div class="play-name">Intel · consolidation hold · ATH watch · <span style="color:var(--bull);font-size:9px;">NEW</span></div>
+      <div class="play-levels">
+        <div><div class="lbl">Buy · Entry</div><div class="val entry">$84.00<span class="sub">Add $87.50 · Accum $78.00–$81.00</span></div></div>
+        <div><div class="lbl">Stop</div><div class="val stop">$76.00<span class="sub">Below post-Q1-blowout consolidation + 20-DMA. Breach undoes the dot-com-peak break thesis.</span></div></div>
+        <div><div class="lbl">TP · Short</div><div class="val tp-s">$95.00<span class="sub">3-5 weeks · Analyst rerate wave + foundry partner news + May industry conferences</span></div></div>
+        <div><div class="lbl">TP · Long</div><div class="val tp-l">$110.00<span class="sub">6-12 months · Keybanc $110, Benchmark $105 — high cluster $105-110</span></div></div>
+      </div>
+      <p class="play-body"><strong>Macro:</strong> Sovereign US semi capacity is a structural multi-year bid. Foundry de-risks PC/server cycle. <strong>Fundamental:</strong> Q1 blowout confirmed. 18A yields ramping. Google AI foundry deal validates external demand. <em>R:R ST 1.4:1 at $84 · LT 3.1:1 at $84.</em></p>
+      <div>
+        <div class="play-caption bear-c">Thesis breaker</div>
+        <p class="play-breaker">18A yield miss on July earnings OR foundry ramp delay → retest $76.</p>
+      </div>
+    </article>
+
+    <article class="play bull">
+      <div class="play-head">
+        <div class="play-sym">MSFT</div>
+        <div class="play-dir">Bull</div>
+      </div>
+      <div class="play-name">Microsoft · OpenAI deal reset · cautious bull · <span style="color:var(--bull);font-size:9px;">NEW</span></div>
+      <div class="play-levels">
+        <div><div class="lbl">Buy · Entry</div><div class="val entry">$425.00<span class="sub">Add $440.00 · Accum $410.00–$418.00</span></div></div>
+        <div><div class="lbl">Stop</div><div class="val stop">$398.00<span class="sub">Below 200-DMA + 52-wk Mar lows zone. OpenAI deal change + Azure miss = thesis broken.</span></div></div>
+        <div><div class="lbl">TP · Short</div><div class="val tp-s">$460.00<span class="sub">1-2 weeks (post Apr 29 earnings) · Q1 print Apr 29 AH — Azure growth + Copilot ARR</span></div></div>
+        <div><div class="lbl">TP · Long</div><div class="val tp-l">$510.00<span class="sub">6-12 months · Consensus median $510, high $555 (Goldman). 28× FY27E EPS ~$18.20</span></div></div>
+      </div>
+      <p class="play-body"><strong>Macro:</strong> OpenAI/MSFT exclusivity drop reframes the AI cloud narrative. MSFT remains a top-tier AI execution story but loses pricing optionality vs AMZN/GOOG. <strong>Fundamental:</strong> Azure 28%+ growth, Copilot accelerating, FCF $90B+. Trades 22× fwd vs 25× peer median = discount on overhang. <em>R:R ST 1.1:1 at $425 · LT 2.8:1 at $425.</em></p>
+      <div>
+        <div class="play-caption bear-c">Thesis breaker</div>
+        <p class="play-breaker">Azure <26% YoY OR 2026 capex guide >$120B → fade to $410.</p>
+      </div>
+    </article>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
 
   </div>
 </section>
 
-<!-- WATCH / AVOID -->
+<!-- TOMORROW'S GAME PLAN -->
 <section class="section" data-reveal>
   <div class="section-head">
     <div class="sh-left">
       <span class="kicker">04</span>
-      <h2>Watch / <em>Avoid</em></h2>
+      <h2>Tomorrow's <em>Game Plan</em></h2>
     </div>
-    <div class="rhs">event window · catalyst frames</div>
+    <div class="rhs">Today · Apr 24 · 2026</div>
   </div>
-  <div class="sv-grid">
-    <div class="sv-item bear">
-      <div class="sv-label">MSFT</div>
-      <div class="sv-vibe">Print Watch</div>
-      <div class="sv-note">Azure / OpenAI growth + capex path are the load-bearing lines.<sup>[4]</sup></div>
-    </div>
-    <div class="sv-item bear">
-      <div class="sv-label">META</div>
-      <div class="sv-vibe">Print Watch</div>
-      <div class="sv-note">Ads + Family of Apps margin vs Reality Labs losses + AI spend.<sup>[4]</sup></div>
-    </div>
-    <div class="sv-item bear">
-      <div class="sv-label">GOOGL</div>
-      <div class="sv-vibe">Print Watch</div>
-      <div class="sv-note">Cloud, search, AI capex reaction — read vs MSFT same evening.<sup>[3]</sup></div>
-    </div>
-    <div class="sv-item bear">
-      <div class="sv-label">AMZN</div>
-      <div class="sv-vibe">Print Watch</div>
-      <div class="sv-note">AWS growth and retail margin path inside the AH cluster.<sup>[3]</sup></div>
-    </div>
-    <div class="sv-item bear">
-      <div class="sv-label">Pre-print Adds</div>
-      <div class="sv-vibe">Avoid</div>
-      <div class="sv-note">Stacked Fed + Mag 4 evening = binary outcome distribution; do not size into the print.<sup>[2][3]</sup></div>
-    </div>
-    <div class="sv-item bear">
-      <div class="sv-label">Bottom-fishing AI</div>
-      <div class="sv-vibe">Avoid</div>
-      <div class="sv-note">Tuesday's AI / chip selling tied to OpenAI doubts — wait for ROI evidence, not a dip.<sup>[1]</sup></div>
-    </div>
+  <div class="gameplan">
+    <ol>
+      <li><a href="https://finance.yahoo.com/markets/stocks/articles/intel-intc-q1-earnings-report-094123515.html">Yahoo — Intel Q1 Earnings Preview</a><span class="date">· Apr 22 2026</span></li>
+      <li><a href="https://electrek.co/2026/04/22/tesla-tsla-q1-2026-one-time-benefits-warranty-tariff-refunds-margins/">Electrek — Tesla Q1 2026 Quality Concerns</a><span class="date">· Apr 22 2026</span></li>
+      <li><a href="https://www.barchart.com/story/news/31451612/stocks-supported-by-iran-ceasefire-extension-and-strong-earnings">Barchart — Iran Ceasefire Extension</a><span class="date">· Apr 22 2026</span></li>
+      <li><a href="https://markets.financialcontent.com/stocks/article/stockstory-2026-4-22-intel-intc-q1-earnings-report-preview-what-to-look-for">FinancialContent — Intel Q1 Preview</a><span class="date">· Apr 22 2026</span></li>
+      <li><a href="https://www.reuters.com/markets/commodities/">Reuters — Commodities</a><span class="date">· Apr 23 2026</span></li>
+      <li><a href="https://www.cnn.com/markets/premarkets">CNN Premarket Apr 23</a><span class="date">· Apr 23 2026</span></li>
+      <li><a href="https://www.aol.com/finance/intel-report-first-quarter-earnings-191552683.html">AOL Finance — Intel Q1 EPS Consensus</a><span class="date">· Apr 22 2026</span></li>
+      <li><a href="https://www.intc.com/news-events/press-releases/detail/1763/intel-to-report-first-quarter-2026-financial-results">Intel IR — Q1 2026 Date</a><span class="date">· Mar 31 2026</span></li>
+    </ol>
   </div>
 </section>
 
-<!-- CATALYST MAP -->
-<section class="section" data-reveal>
-  <div class="section-head">
-    <div class="sh-left">
-      <span class="kicker">05</span>
-      <h2>Catalyst <em>Map</em></h2>
+<!-- LILITH CALLOUT -->
+<section class="lilith-section" data-reveal>
+  <div class="lilith-wrap">
+    <div class="lilith-portrait">
+      <img src="assets/lilith-portrait.jpg" alt="Lilith Devai, editorial portrait" />
+      <div class="lilith-credit">LILITH DEVAI · MARKET DESK · NYC</div>
     </div>
-    <div class="rhs">timing grid · Apr 29 → May 2</div>
-  </div>
-  <div class="card">
-    <ul class="bullet">
-      <li><strong>Wed Apr 29 · 14:00 ET</strong> — <strong>FOMC decision</strong> and statement; markets price a hold at 3.50–3.75%. Dovish vs hawkish drives rate-sensitive equities, the dollar, and yields in opposite directions.<sup>[2]</sup></li>
-      <li><strong>Wed Apr 29 · AH</strong> — <strong>MSFT · META · GOOGL · AMZN</strong> all print the same evening. ~19% of S&amp;P 500 weight + ~$650B 2026 capex on the line; a referendum on AI ROI as much as the quarter.<sup>[3]</sup></li>
-      <li><strong>Thu Apr 30 · AH</strong> — <strong>AAPL</strong> closes the cluster; services growth and China iPhone demand are the watchpoints.<sup>[1]</sup></li>
-      <li><strong>Through May 2</strong> — earnings tape stays dense post-Fed; treat each AM as a re-positioning window, not a directional add.</li>
-      <li><strong>Macro overlay</strong> — the Hormuz / oil channel and consumer confidence at 92.8 frame how much the Fed can lean dovish without re-igniting the inflation conversation.<sup>[1]</sup></li>
-    </ul>
-  </div>
-</section>
-
-<!-- DESK NOTE -->
-<section class="section" data-reveal>
-  <div class="section-head">
-    <div class="sh-left">
-      <span class="kicker">06</span>
-      <h2>Desk <em>Note</em></h2>
+    <div class="lilith-body">
+      <div class="callout-label">Lilith says</div>
+      <blockquote>
+        Profit-taking deepened into a proper selloff. PLTR cracked seven percent, Microsoft almost four, Tesla down three-four. Quantum legs snapped — IonQ down eight-six, D-Wave down nine-two-five. But the rotation is clean — Texas Instruments up seventeen eighty-five extending, United Rentals ripping another twenty-three, Intel squeezing into its 4 PM print. Oil at ninety-six twenty-six with an intraday above ninety-seven — Brent above ninety-five is no longer a question. Four hours to the Intel print. Stay sharp.
+      </blockquote>
+      <div class="lilith-signoff">— Midday Pulse · Session #019 · 12:43 PM PT</div>
     </div>
-    <div class="rhs">posture into the binary window</div>
-  </div>
-  <div class="card">
-    <p><strong>Setup posture:</strong> Tuesday's selling concentrated in AI and chips on OpenAI-related doubts — that is a leadership question, not a broad-tape collapse. Wednesday stacks the Fed at 14:00 ET and four hyperscaler prints into the same evening, with consensus 2026 hyperscaler capex already up around $250B versus 2025. Posture in: selective de-risking, hedge through the prints, and a willingness to react. The bigger trade is in the reaction tape, not in front of it. Private inbox / calendar checks added no public catalyst; no private details are published in this brief.</p>
   </div>
 </section>
 
@@ -423,36 +392,32 @@
 <section class="section" data-reveal id="sources">
   <div class="section-head">
     <div class="sh-left">
-      <span class="kicker">07</span>
+      <span class="kicker">05</span>
       <h2>Source <em>Citations</em></h2>
     </div>
     <div class="rhs">[N] markers in narrative</div>
   </div>
   <div class="sources">
-    <div class="sources-head">◆ Primary sources — Apr 28, 2026</div>
-    <!-- PT_SOURCES_START -->
+    <div class="sources-head">◆ Primary sources — Apr 24, 2026</div>
     <ol>
-      <li><a href="https://finance.yahoo.com/">Yahoo Finance — Apr 28 2026 cash close: Nasdaq Composite −1.3%, S&amp;P 500 −0.7%, Dow ~flat; AI / chip pressure on OpenAI doubts; Conference Board confidence 92.8</a><span class="date">· Apr 28 2026</span></li>
-      <li><a href="https://www.financialjuice.com/">FinancialJuice — FOMC preview: decision 14:00 ET Apr 29, expected hold at 3.75%; dovish-vs-hawkish reaction framework for rate-sensitive equities, dollar, yields</a><span class="date">· Apr 29 2026</span></li>
-      <li><a href="https://www.morningstar.com/">Morningstar / MarketWatch — Super Wednesday preview: FOMC + MSFT, META, GOOGL, AMZN print Apr 29; ~19% of S&amp;P 500 weight, combined ~$650B 2026 capex</a><span class="date">· Apr 29 2026</span></li>
-      <li><a href="https://www.spglobal.com/marketintelligence/">S&amp;P Global Market Intelligence — hyperscaler AI capex: 2026 consensus ~+$250B vs 2025 ($379B → $622B); MSFT (Azure / OpenAI / capex) and META (ads, FoA margin, Reality Labs, AI / data center) watchpoints</a><span class="date">· Apr 29 2026</span></li>
-      <li><a href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm">Federal Reserve — FOMC Meeting Calendars and Statements</a><span class="date">· public reference</span></li>
+      <li><a href="https://electrek.co/2026/04/21/tesla-tsla-q1-2026-earnings-preview-wall-street-expects-growth/">Electrek — Tesla Q1 2026 Earnings Preview</a><span class="date">· Apr 21 2026</span></li>
+      <li><a href="https://capital.com/en-int/market-updates/tesla-stock-forecast-21-04-2026">Capital.com — Tesla Q1 Delivery Miss</a><span class="date">· Apr 21 2026</span></li>
+      <li><a href="https://www.interactivebrokers.com/campus/traders-insight/securities/stocks/tesla-q1-2026-earnings-preview-key-events-from-the-past-three-months/">Interactive Brokers — TSLA Q1 2026 Preview</a><span class="date">· Apr 21 2026</span></li>
+      <li><a href="https://public.com/stocks/tsla/after-hours">Public — TSLA After-Hours</a><span class="date">· Apr 21 2026</span></li>
+      <li><a href="https://capital.com/en-int/market-updates/intel-stock-forecast-16-04-2026">Capital.com — INTC Stock Forecast Q4 Beat</a><span class="date">· Apr 16 2026</span></li>
+      <li><a href="https://seekingalpha.com/article/4892111-poet-technologies-massive-20-percent-monday-surge-makes-it-a-great-trading-candidate">Seeking Alpha — POET Short Rebuttal</a><span class="date">· Apr 20 2026</span></li>
+      <li><a href="https://polymarket.com/event/tsla-close-above-on-april-21-2026">Polymarket — TSLA Close Above</a><span class="date">· Apr 21 2026</span></li>
+      <li><a href="https://www.reuters.com/markets/commodities/">Reuters — Iran Tanker Escalation</a><span class="date">· Apr 21 2026</span></li>
     </ol>
-    <!-- PT_SOURCES_END -->
-    <div style="margin-top:18px;padding:14px 16px;border:1px solid var(--line);background:var(--bg-elev);font-family:var(--sans);font-size:var(--text-sm);color:var(--ink-mute);line-height:1.55;">
-      <span style="font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:6px;">◆ Privacy note</span>
-      Private calendar and inbox checks are used only for scheduling hygiene and are excluded from this public brief. No personal calendar entries, broker emails, holdings, or account data are reflected in this dispatch.
-    </div>
   </div>
 </section>
-<!-- PT_RUN_END -->
 
 <!-- FOOTER -->
 <footer class="footer">
   <div class="footer-wrap">
     <div class="fcol">
       <h4>Perplexing <em>Trades</em></h4>
-      <p style="color:var(--ink-mute);font-family:var(--sans);text-transform:none;letter-spacing:0;font-size:var(--text-sm);max-width:28ch;">Public-only market alpha dispatch. Educational use; LLM council · freshness mandate · self-healing QA.</p>
+      <p style="color:var(--ink-mute);font-family:var(--sans);text-transform:none;letter-spacing:0;font-size:var(--text-sm);max-width:28ch;">Institutional-grade market alpha, twice daily. LLM council · freshness mandate · self-healing QA.</p>
     </div>
     <div class="fcol">
       <h4>Sessions</h4>
@@ -464,7 +429,6 @@
     <div class="fcol">
       <h4>Pages</h4>
       <a href="index.html">Market Alpha</a>
-      <a href="archive.html">Archive</a>
       <a href="methodology.html">Methodology</a>
     </div>
     <div class="fcol">
@@ -473,10 +437,50 @@
     </div>
   </div>
   <div class="footer-bar">
-    <span><!-- PT_FOOTERBAR_START -->◆ Session #022 · Setup Brief · Super Wednesday · Apr 29, 2026<!-- PT_FOOTERBAR_END --></span>
+    <span>◆ Session #019 · Evening Playbook · Apr 23, 2026 · 12:43 PM PT</span>
     <span>© 2026 Perplexing Trades</span>
   </div>
 </footer>
+
+<!-- PERSISTENT DOCK -->
+<div class="dock" id="dock">
+  <!-- Lilith voice player -->
+  <div class="lvp">
+    <div class="lvp-avatar" id="lvp-avatar">
+      <img src="assets/lilith-portrait.jpg" alt="Lilith" />
+    </div>
+    <div class="lvp-meta">
+      <div class="lvp-who">Lilith Devai · After Hours Alpha</div>
+      <div class="lvp-title">Lilith · After Hours Alpha · Apr 28</div>
+    </div>
+    <div class="lvp-wave" id="lvp-wave" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="lvp-ctrls">
+      <button class="lvp-btn" id="lvp-restart" aria-label="Restart"></button>
+      <button class="lvp-btn primary" id="lvp-play" aria-label="Play / Pause"></button>
+    </div>
+  </div>
+
+  <div class="dock-divider"></div>
+
+  <!-- Music player -->
+  <div class="music-p">
+    <button class="lvp-btn" id="mp-play" aria-label="Play music"></button>
+    <div class="music-meta">
+      <div class="music-who">◆ Atmos · Music Player</div>
+      <div class="music-title" id="mp-title">Alright Pacha Mix</div>
+    </div>
+    <select class="music-select" id="mp-track">
+      <option value="alright-pacha-mix">Alright Pacha Mix</option>
+      <option value="singularity-spanish">Singularity (Spanish)</option>
+      <option value="quantum-love-msg">Quantum Love MSG</option>
+    </select>
+  </div>
+</div>
+
+<audio id="lilith-audio" src="assets/lilith-summary.mp3" preload="auto"></audio>
+<audio id="music-audio" src="assets/alright-pacha-mix.mp3" preload="auto" loop></audio>
 
 <script src="app.js"></script>
 </body>
